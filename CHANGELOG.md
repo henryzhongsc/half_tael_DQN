@@ -29,7 +29,7 @@
     * Jian: Research and present some insight regarding the possible designs of DQN model.
 
 
-### 2019-07-11 | Kick-off briefing | Anul Sinha, Henry, Jian, Steven
+### 2019-07-10 | Kick-off briefing | Anul Sinha, Henry, Jian, Steven
 * Anul gave a presentation of his `forex` side-project, mainly regarding the method of interaction with OANDA, his model try-out, and why he abandoned this project.
 * Due to the lacks of documentation of Anul's work, we decided to not to take over his project (also because he has moved on to a more combined design base on his `forex`), but to build our own bot. However, we will take his code as an important reference, especially regarding the OANDA API part and model environment setup.
 
