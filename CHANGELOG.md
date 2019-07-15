@@ -5,6 +5,19 @@
 ---
 ## Broadcast
 
+### Tentative Goals for Scrum Meeting 2019-07-19
+* **ALL**:
+    * Get familiar with basic Q-learning and DQN concept in general.
+* **Henry**:
+    * Build a basic wrapper to communicate with [OANDA](https://www.oanda.com/us-en/) API as the backend of the project. Anul's code [`Oanda_Trader.py`](placeholder) can be use as reference.
+* **Steven**:
+    * Run a trial DQN model on ~~SP 500~~ [`USD_JPY_0.csv`](https://github.com/choH/half_tael_DQN/blob/master/dummy_data/USD_JPY_0.csv).
+        * Task change due to CSV file of foreign exchange between USD and JPY is easily obtainable -- Henry.
+* **Jian**:
+    * ~~Research and present some insight regarding the possible designs of DQN model.~~
+    * Understand the concept of [Anita](https://www.graphen.ai/dev/anita/), and define a quantified standard for "trading personality" according to [Mapping Personality Traits to Investment Behavior (Revised)](https://github.com/choH/half_tael_DQN/blob/master/legacy_ref/anita/Mapping%20Personality%20Traits%20to%20Investment%20Behavior%20(Revised).pptx) and [Strategies and Metrics.xlsx](https://github.com/choH/half_tael_DQN/blob/master/legacy_ref/anita/Strategies%20and%20Metrics.xlsx)
+        * Task change due to update form Dr. Lin regarding [Anita](https://www.graphen.ai/dev/anita/). As "trading bot with personalities" is the unique selling point of this project, we should only research in designs which are compatible with such idea. Thus we should quantify the concept of "trading personality" first -- Henry.
+
 ### Upcoming Meetings:
 * **2019-07-19 | Scrum | Henry, Jian, Steven** — Checkout **Meeting** section for details.
 
@@ -22,14 +35,11 @@
 ## Meeting
 
 ### 2019-07-19 | Scrum | Henry, Jian, Steven
-* **Goal:**
-    * ALL: Get familiar with Q-learning and DQN concept in general.
-    * Henry: Build a basic wrapper base on [OANDA](https://www.oanda.com/us-en/) API for future input of the model.
-    * Steven: Run a trial DQN model on SP500 data
-    * Jian: Research and present some insight regarding the possible designs of DQN model.
+* Placeholder
 
 
-### 2019-07-10 | Kick-off briefing | Anul Sinha, Henry, Jian, Steven
+
+### 2019-07-11 | Kick-off briefing | Anul Sinha, Henry, Jian, Steven
 * Anul gave a presentation of his `forex` side-project, mainly regarding the method of interaction with OANDA, his model try-out, and why he abandoned this project.
 * Due to the lacks of documentation of Anul's work, we decided to not to take over his project (also because he has moved on to a more combined design base on his `forex`), but to build our own bot. However, we will take his code as an important reference, especially regarding the OANDA API part and model environment setup.
 
