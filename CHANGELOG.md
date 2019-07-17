@@ -46,7 +46,27 @@
 ---
 ## Development Journal
 
-### 2019-07-11 | Finished Q-learning Courses | Henry
+### 2019-7-17 | Developed wrapper functions output pricing record | Henry
+* Developed a set of wrapper functions in `oanda_interface.py`, which can interact with `oandapyV20` API and output pricing record according to user requested currency pair, start time, end time, interval.
+* Output is available in both `DataFrame` and CSV file with command line confirmation on both request and export stage:
+
+```
+REQUEST: v3/instruments/USD_JPY/candles InstrumentsCandles {'granularity': 'H1', 'includeFirst': True, 'from': '2018-01-01T00:00:00Z', 'to': '2018-01-21T20:00:00Z'}
+REQUEST: v3/instruments/USD_JPY/candles InstrumentsCandles {'granularity': 'H1', 'includeFirst': True, 'from': '2018-01-21T20:00:00Z', 'to': '2018-02-11T16:00:00Z'}
+...
+REQUEST: v3/instruments/USD_JPY/candles InstrumentsCandles {'granularity': 'H1', 'includeFirst': True, 'from': '2018-12-21T04:00:00Z', 'to': '2018-12-31T23:59:59Z'}
+```
+```
+The requested record has been successfully exported.
+	file path:      ./dummy_data/USD_JPY_2018-01-01T00:00:00_2018-12-31T23:59:59_H1.csv
+	currency pair:  USD_JPY
+	from:           2018-01-01T00:00:00Z
+	to:             2018-12-31T23:59:59Z
+	interval:       H1
+	total rows:     6217
+```
+
+### 2019-07-11 | Finished Q-learning courses | Henry
 * Finished the *Q-learning* section of the [Morvan](https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/) course.
 * Started the DQN section.
 * Hand over the pervious project to be fully committed on this one.
