@@ -74,10 +74,10 @@ OI = Oanda_Interface(my_account_id, my_access_token)
 # _currency_pair = "USD_JPY"
 
 
-_from = "2018-07-01T00:00:00Z"
-_to = "2018-12-31T23:59:59Z"
-_interval = "M1"
-_currency_pair = "USD_JPY"
+# _from = "2018-07-01T00:00:00Z"
+# _to = "2018-12-31T23:59:59Z"
+# _interval = "M1"
+# _currency_pair = "USD_JPY"
 
-df = OI.get_history_price(_from, _to, _interval, _currency_pair)
-df
+# df = OI.get_history_price(_from, _to, _interval, _currency_pair)
+# df
