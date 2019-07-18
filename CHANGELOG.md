@@ -66,6 +66,8 @@ The requested record has been successfully exported.
 	total rows:     6217
 ```
 
+* Experienced with [commit-message-emoji](https://github.com/dannyfritz/commit-message-emoji).
+
 ### 2019-07-11 | Finished Q-learning courses | Henry
 * Finished the *Q-learning* section of the [Morvan](https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/) course.
 * Started the DQN section.
