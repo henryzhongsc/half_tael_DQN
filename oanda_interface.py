@@ -15,15 +15,12 @@ import numpy as np
 
 
 
-
 class Oanda_Interface:
     def __init__(self, _account_id, _access_token):
         self.account_id = _account_id
         self.access_token = _access_token
         self.nationality = "USA"
         self.client = oandapyV20.API(access_token=self.access_token)
-        self.action = []
-        self.trade_history = []
 
     def get_history_price(self, _from, _to, _interval, _currency_pair):
         _params = {
@@ -69,6 +66,18 @@ OI = Oanda_Interface(my_account_id, my_access_token)
 # _to = "2018-12-31T23:59:59Z"
 # _interval = "H1"
 # _currency_pair = "USD_JPY"
+
+
+# _from = "2018-01-01T00:00:00Z"
+# _to = "2018-06-30T23:59:59Z"
+# _interval = "M1"
+# _currency_pair = "USD_JPY"
+
+
+_from = "2018-07-01T00:00:00Z"
+_to = "2018-12-31T23:59:59Z"
+_interval = "M1"
+_currency_pair = "USD_JPY"
 
 df = OI.get_history_price(_from, _to, _interval, _currency_pair)
 df
