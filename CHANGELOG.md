@@ -46,6 +46,33 @@
 ---
 ## Development Journal
 
+### 2019-7-18 | Developed internal trading interface for model testing | Henry
+* Developed a `Trade_Interface` class to regulate allowed trading behavior and review portal:
+    * Behaviors: short, long.
+    * Review: account, trade log.
+
+```
+Account dev_test is built.
+	currency_A:                   USD
+	currency_B:                   JPY
+	record_from:                  2018-01-01T22:00:00.000000000Z
+	record_to:                    2018-06-29T20:59:00.000000000Z
+	currency_A_balance:           9987.859210202378
+	currency_B_balance:           11364.3
+	trade_log_len:                4
+```
+```
+action_id:               0
+			trade_time:              2018-01-01T22:02:00.000000000Z
+			trade_type:              short
+			trade_price:             112.676
+			trade_currency:          JPY
+			trade_unit:              2000
+			currency_A_balance:      9982.249991124996
+			currency_B_balance:      12000
+```
+* Marked places which can be improved in future (exception-handling, decorator log generation).
+
 ### 2019-7-17 | Developed wrapper functions output pricing record | Henry
 * Developed a set of wrapper functions in `oanda_interface.py`, which can interact with `oandapyV20` API and output pricing record according to user requested currency pair, start time, end time, interval.
 * Output is available in both `DataFrame` and CSV file with command line confirmation on both request and export stage:
@@ -65,6 +92,7 @@ The requested record has been successfully exported.
 	interval:       H1
 	total rows:     6217
 ```
+
 
 * Experienced with [commit-message-emoji](https://github.com/dannyfritz/commit-message-emoji).
 
