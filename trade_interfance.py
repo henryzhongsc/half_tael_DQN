@@ -26,6 +26,7 @@ class Trade_Interface:
         elif isinstance(_record, pd.DataFrame):
             df = _record
         else:
+            #Exception2Handle: invalid record input.
             print("Invalid _record input: must be DataFrame or csv file path.")
             return 1
         self.record = df
@@ -34,12 +35,14 @@ class Trade_Interface:
         self.currency_A, self.currency_B = currency_pair
         self.action_id_counter = 0
         self.trade_log = []
+        #Exception2Handle: invalid account info input - negative balance value
 
 
     def market_LUT(self, _time):
         df = self.record
         target_df = df.loc[df['time'] == _time]
         if target_df.empty:
+            #Exception2Handle: invalid timeframe.
             print("no target found")
             return 2
         else:
@@ -77,12 +80,15 @@ class Trade_Interface:
         record_to = df.iloc[df.shape[0]-1, 0]
         print("\nAccount {} is built.\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\n".format(self.account_name, 'currency_A: ', self.currency_A, 'currency_B: ', self.currency_B, 'record_from: ', record_from, 'record_to: ', record_to, 'currency_A_balance: ', self.currency_A_balance, 'currency_B_balance: ', self.currency_B_balance, 'trade_log_len: ', len(self.trade_log)))
 
+    #Performance2Handle: do with decorator.
     def trade_log_review(self):
         # print(json.dumps(self.trade_log, indent=4))
         for i in self.trade_log:
             for k, v in dict.items(i):
                 print("\t\t\t{:25}{}".format(k+':', v))
             print("\n")
+
+    #Exception2Handle: trade action verify - timeframe not match, unit exceed volume, currency not match
 
 _account_name = 'dev_test'
 _record = 'dummy_data/USD_JPY_2018-01-01T00:00:00_2018-06-30T23:59:59_M1.csv'
