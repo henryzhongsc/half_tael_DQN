@@ -84,7 +84,7 @@ class Oanda_Trader:
         self.trade_history.append(sell_record)
         self.action.append('Sell')
         #print(sell_record)
-    
+
     def close_positions(self, ticker,value = 'ALL'):
         client = oandapyV20.API(access_token=self.access_token)
         positions_ = self.get_positions(ticker)
@@ -127,7 +127,7 @@ class Oanda_Trader:
             self.trade_history.append(close)
             #print("")
             return 1
-    
+
     def stop_profit(self, ticker, percent):
         position = self.get_positions(ticker)
         unit = position["long"] + position["short"]
@@ -172,7 +172,7 @@ class Oanda_Trader:
             position['unrealizedPL'] = 0.0
             position['pl'] = 0.0
 
-        
+
 
         return position  # current open position
 
