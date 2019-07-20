@@ -110,6 +110,9 @@ class Trade_Interface:
         print(col)
 
         price = self.market_LUT(_time).loc(axis=0)[:, col]
+        # cannot do label indexing on <class 'pandas.core.indexes.base.Index'> with these indexers [0] of <class 'int'>
+        # TypeError: unhashable type: 'slice'
+
         # print("price is {}.".format(price))
         #Exception2Handle: market_LUT return NaN.
 
