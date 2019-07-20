@@ -5,18 +5,15 @@
 ---
 ## Broadcast
 
-### Tentative Goals for Scrum Meeting 2019-07-19
-* **ALL**:
-    * Get familiar with basic Q-learning and DQN concept in general.
-* **Henry**:
-    * Build a basic wrapper to communicate with [OANDA](https://www.oanda.com/us-en/) API as the backend of the project. Anul's code [`Oanda_Trader.py`](placeholder) can be use as reference.
-* **Steven**:
-    * Run a trial DQN model on ~~SP 500~~ [`USD_JPY_0.csv`](https://github.com/choH/half_tael_DQN/blob/master/dummy_data/USD_JPY_0.csv).
-        * Task change due to CSV file of foreign exchange between USD and JPY is easily obtainable -- Henry.
-* **Jian**:
-    * ~~Research and present some insight regarding the possible designs of DQN model.~~
-    * Understand the concept of [Anita](https://www.graphen.ai/dev/anita/), and define a quantified standard for "trading personality" according to [Mapping Personality Traits to Investment Behavior (Revised)](https://github.com/choH/half_tael_DQN/blob/master/legacy_ref/anita/Mapping%20Personality%20Traits%20to%20Investment%20Behavior%20(Revised).pptx) and [Strategies and Metrics.xlsx](https://github.com/choH/half_tael_DQN/blob/master/legacy_ref/anita/Strategies%20and%20Metrics.xlsx)
-        * Task change due to update form Dr. Lin regarding [Anita](https://www.graphen.ai/dev/anita/). As "trading bot with personalities" is the unique selling point of this project, we should only research in designs which are compatible with such idea. Thus we should quantify the concept of "trading personality" first -- Henry.
+### Tentative Goals for Scrum Meeting #3 on 2019-07-24
+* **Goals**:
+    * **Henry**
+        * Trading interface done, with manual written.
+        * Draft version control standard and contribution guideline.
+    * **Steven**
+        * Run a trial DQN model on any `USD_JPY` file in [./dummy_data](https://github.com/choH/half_tael_DQN/tree/master/arena_data).
+
+
 
 ### Upcoming Meetings:
 * **2019-07-19 | Scrum | Henry, Jian, Steven** — Checkout **Meeting** section for details.
@@ -34,9 +31,39 @@
 ---
 ## Meeting
 
-### 2019-07-19 | Scrum | Henry, Jian, Steven
-* Placeholder
+### 2019-07-26 | Scrum #3 | Henry, Jian, Steven
+* **Goals**:
+    * **Henry & Steve**
+        * Integrate the trial DQN model with custom backend.
 
+### 2019-07-24 | Scrum #2 | Henry, Jian, Steven
+
+
+### 2019-07-19 | Scrum #1 | Henry, Steven
+* **Goals**
+    * **ALL**:
+        * Get familiar with basic Q-learning and DQN concept in general.
+    * **Henry**:
+        * Build a basic wrapper to communicate with [OANDA](https://www.oanda.com/us-en/) API as the backend of the project. Anul's code [`Oanda_Trader.py`](placeholder) can be use as reference.
+    * **Steven**:
+        * Run a trial DQN model on ~~SP 500~~ [`USD_JPY_0.csv`](https://github.com/choH/half_tael_DQN/blob/master/dummy_data/USD_JPY_0.csv).
+            * Task change due to CSV file of foreign exchange between USD and JPY is easily obtainable -- Henry.
+    * **Jian**:
+        * ~~Research and present some insight regarding the possible designs of DQN model.~~
+        * Understand the concept of [Anita](https://www.graphen.ai/dev/anita/), and define a quantified standard for "trading personality" according to [Mapping Personality Traits to Investment Behavior (Revised)](https://github.com/choH/half_tael_DQN/blob/master/legacy_ref/anita/Mapping%20Personality%20Traits%20to%20Investment%20Behavior%20(Revised).pptx) and [Strategies and Metrics.xlsx](https://github.com/choH/half_tael_DQN/blob/master/legacy_ref/anita/Strategies%20and%20Metrics.xlsx)
+            * Task change due to update form Dr. Lin regarding [Anita](https://www.graphen.ai/dev/anita/). As "trading bot with personalities" is the unique selling point of this project, we should only research in designs which are compatible with such idea. Thus we should quantify the concept of "trading personality" first -- Henry.
+
+
+* **Review**
+    * **Henry**
+        * ✅ Delivered by [commit `ac4d217`](https://github.com/choH/half_tael_DQN/commit/ac4d21741ae3a7c45a16025de1a4b93b42891e39).
+        * ❌ 🚧 Work-in-progress on DQN (**ALL**).
+    * **Steven**
+        * ❌ 🚧 Work-in-progress, will delivery by on 2019-07-24.
+        * ✅ Basic DQN learned (**ALL**)
+    * **Jian**
+        * ❓ Absent for the day, will catch up on 2019-07-22 -- Henry.
+        * ❓(**ALL**)
 
 
 ### 2019-07-11 | Kick-off briefing | Anul Sinha, Henry, Jian, Steven
@@ -45,6 +72,24 @@
 
 ---
 ## Development Journal
+
+### 2019-7-19 | Refactored trading interface to handle trading among multiple currency (Bug-fixing in progress) | Henry
+
+* Refactored the `trade_interface.py` to handle multiple currency.
+    * Bug on `market_LUT()` price retrive, see [commit `#8248b6f`](https://github.com/choH/half_tael_DQN/commit/8248b6ff8fbd73be7c2fc52935574d90ea422b9f).
+
+```
+The requested ARENA record has been successfully exported.
+
+	file path:      ./arena_data/USD_JPY_GBP_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
+	currency pair:  ['USD', 'JPY', 'GBP']
+	from:           2019-01-01T00:00:00Z
+	to:             2019-01-02T00:00:00Z
+	interval:       M1
+	total rows:     118
+```
+* Updated `oanda_interface.py` to wrap `DataFrame` return into a custom class `Oanda_Record`, so that when passed to other method info regarding such record shall preserve.
+* Setting goals and time for next two scrum meetings.
 
 ### 2019-7-18 | Developed internal trading interface for model testing | Henry
 * Developed a `Trade_Interface` class to regulate allowed trading behavior and review portal:
