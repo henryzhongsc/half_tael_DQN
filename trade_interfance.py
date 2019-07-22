@@ -10,6 +10,7 @@ import json
 
 import oanda_interface as OI
 from decimal import *
+import itertools
 
 
 
@@ -42,27 +43,39 @@ class Trade_Interface:
         self.from_time = _from_time
         self.to_time = _to_time
         self.request_interval = _request_interval
-        currency_pairs = ['USD_JPY', 'GBP_JPY', 'GBP_USD']
-        self.areana = self.get_arena(currency_pairs)
+        self.currency_pairs = self.get_currency_pairs([k for k in self.currency_balance])
+        self.areana = self.get_arena(self.currency_pairs)
 
         self.action_id_counter = 0
         self.trade_log = []
 
-    # def get_currency_pairs(self, mode=None, currency_A=None, currency_B=None):
-    def get_currency_pairs(self, currency_A, currency_B):
-        all_pairs = ['USD_JPY', 'GBP_JPY', 'GBP_USD']
-        # if mode == 'ALL':
-        #     print('there')
-        #     return all_pairs
-        #Exception2Handle: do not have C(len(currency_balance), 2) sets of data.
-        #Progess2Handle: return currency_pairs from `k in self.currenct_balance`.
-        # if currency_A != None and currency_B != None:
-        #     print("here")
 
-        if currency_A + '_' + currency_B in all_pairs:
-            return [currency_A + '_' + currency_B, True]
-        else:
-            return [currency_B + '_' + currency_A, False]
+    def get_currency_pairs(self, currency_list):
+        all_available_pairs = ['AUD_CAD', 'AUD_CHF', 'AUD_HKD', 'AUD_JPY', 'AUD_NZD', 'AUD_SGD', 'AUD_USD', 'CAD_CHF', 'CAD_HKD', 'CAD_JPY', 'CAD_SGD', 'CHF_HKD', 'CHF_JPY', 'CHF_ZAR', 'EUR_AUD', 'EUR_CAD', 'EUR_CHF', 'EUR_CZK', 'EUR_DKK', 'EUR_GBP', 'EUR_HKD', 'EUR_HUF', 'EUR_JPY', 'EUR_NOK', 'EUR_NZD', 'EUR_PLN', 'EUR_SEK', 'EUR_SGD', 'EUR_TRY', 'EUR_USD', 'EUR_ZAR', 'GBP_AUD', 'GBP_CAD', 'GBP_CHF', 'GBP_HKD', 'GBP_JPY', 'GBP_NZD', 'GBP_PLN', 'GBP_SGD', 'GBP_USD', 'GBP_ZAR', 'HKD_JPY', 'NZD_CAD', 'NZD_CHF', 'NZD_HKD', 'NZD_JPY', 'NZD_SGD', 'NZD_USD', 'SGD_CHF', 'SGD_HKD', 'SGD_JPY', 'TRY_JPY', 'USD_CAD', 'USD_CHF', 'USD_CNH', 'USD_CZK', 'USD_DKK', 'USD_HKD', 'USD_HUF', 'USD_JPY', 'USD_MXN', 'USD_NOK', 'USD_PLN', 'USD_SAR', 'USD_SEK', 'USD_SGD', 'USD_THB', 'USD_TRY', 'USD_ZAR', 'ZAR_JPY']
+
+        currency_combinations = list(itertools.combinations(currency_list, 2))
+        currency_pairs_list = []
+        for i in currency_combinations:
+            if '_'.join(i) in all_available_pairs:
+                currency_pairs_list.append('_'.join(i))
+            elif '_'.join(reversed(i)) in all_available_pairs:
+                currency_pairs_list.append('_'.join(reversed(i)))
+            else:
+                #Exception2Handle: No combination between these two currency
+                print("No combination between {} from Oanda".format(i))
+                return 2
+        return currency_pairs_list
+
+    def get_one_currency_pair(self, currency_A, currency_B):
+            if currency_A + '_' + currency_B in self.currency_pairs:
+                return [currency_A + '_' + currency_B, True]
+            elif currency_B + '_' + currency_A in self.currency_pairs:
+                return [currency_B + '_' + currency_A, False]
+            else:
+                #Exception2Handle:
+                print("No pair between {} and {} available in self.currency_pairs".format(currency_A, currency_B))
+                return 2
+
 
     def get_arena(self, currency_pairs):
         close_price_only_flag = True
@@ -82,7 +95,7 @@ class Trade_Interface:
 
 
         OR_arena = OI.Onada_Record(arena_df, arena_filename, self.from_time, self.to_time, self.request_interval, currency_list)
-        print("\n\nThe requested ARENA record has been successfully exported.")
+        print("\n\n### The requested ARENA record has been successfully exported. ###")
         return OR_arena
 
 
@@ -101,24 +114,24 @@ class Trade_Interface:
         #Progess2Handle: _trade_unit_in_buy_currenct = False.
         #Exception2Handle: _sell_currency, _buy_currency not in arena.
 
-        currency_pair, pair_reverse_flag = self.get_currency_pairs(_sell_currency, _buy_currency)
+        currency_pair, pair_reverse_flag = self.get_one_currency_pair(_sell_currency, _buy_currency)
 
-        price = float(self.market_LUT(_time)[currency_pair+'_close'].iloc[0,])
+        trade_ratio = float(self.market_LUT(_time)[currency_pair+'_close'].iloc[0,])
         #Exception2Handle: market_LUT return NaN.
 
         if pair_reverse_flag == True:
-            self.currency_balance[_sell_currency] -= _trade_unit / price
+            self.currency_balance[_sell_currency] -= _trade_unit / trade_ratio
             self.currency_balance[_buy_currency] += _trade_unit
         else:
-            self.currency_balance[_sell_currency] -= _trade_unit * price
+            self.currency_balance[_sell_currency] -= _trade_unit * trade_ratio
             self.currency_balance[_buy_currency] += _trade_unit
 
 
         trade_currency = _buy_currency if _trade_unit_in_buy_currenct else _sell_currency
 
 
-        val_list = [self.action_id_counter, _time, _sell_currency, _buy_currency, trade_currency, _trade_unit, price, pair_reverse_flag, self.currency_balance[_sell_currency], self.currency_balance[_buy_currency]]
-        key_list = ["action_id", "trade_time", "sell_currency", "buy_currency", "trade_currency", "trade_unit", "trade_price", "pair_reverse_flag", "sell_currency_balance", "buy_currency_balance"]
+        val_list = [self.action_id_counter, _time, _sell_currency, _buy_currency, trade_currency, _trade_unit, trade_ratio, pair_reverse_flag, self.currency_balance[_sell_currency], self.currency_balance[_buy_currency]]
+        key_list = ["action_id", "trade_time", "sell_currency", "buy_currency", "trade_currency", "trade_unit", "trade_ratio", "pair_reverse_flag", "sell_currency_balance", "buy_currency_balance"]
         new_trade_action = dict(zip(key_list, val_list))
         # print(json.dumps(new_trade_action, indent=4))
         self.trade_log.append(new_trade_action)
@@ -126,22 +139,28 @@ class Trade_Interface:
         #Exception2Handle: _time earlier than pervious action in log.
         self.action_id_counter += 1
 
-        print(json.dumps(self.currency_balance, indent=4))
+
+        # print(json.dumps(self.currency_balance, indent=4))
 
     #Performance2Handle: do with decorator.
     def trade_log_review(self):
-        # print(json.dumps(self.trade_log, indent=4))
+        print("#### Displaying the trade log of account{} ####\n".format(self.account_name))
         for i in self.trade_log:
             for k, v in dict.items(i):
-                print("\t\t\t{:25}{}".format(k+':', v))
+                print("\t\t{:25}{}".format(k+':', v))
             print("\n")
+        print("#### The trade log of account{} has been successfully displayed ####\n".format(self.account_name))
 
     def account_review(self):
         df = self.areana.record_df
         record_from = df.iloc[0, 0]
         record_to = df.iloc[df.shape[0]-1, 0]
-        print("\nCurrenct acount is {}.\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\n".format(self.account_name, 'record_from: ', record_from, 'record_to: ', record_to, 'trade_log_len: ', len(self.trade_log)))
-        print(json.dumps(self.currency_balance, indent=4))
+        record_rows = df.shape[0]
+        print("\n##### Displaying information regarding account {}. #####\n\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\n\t{:30}{}".format(self.account_name, 'record_from: ', record_from, 'record_to: ', record_to, 'request_interval: ', self.request_interval, 'record_rows: ', record_rows, 'trade_log_len: ', len(self.trade_log)))
+
+        for k, v in dict.items(self.currency_balance):
+            print("\t{:30}{}".format(k+': ', v))
+        print("\n##### The information of account{} has been successfully displayed. #####\n".format(self.account_name))
 
 ###############################################################################
 
