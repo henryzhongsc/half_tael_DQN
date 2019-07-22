@@ -78,6 +78,48 @@
 ---
 ## Development Journal
 
+### 2019-7-22 | Fully supports trading among multiple currency | Henry
+* Bug fixed for pervious mentioned [commit `#8248b6f`](https://github.com/choH/half_tael_DQN/commit/8248b6ff8fbd73be7c2fc52935574d90ea422b9f), trading among multiple currency is now fully supported ([commit `#443e4d1`](https://github.com/choH/half_tael_DQN/commit/443e4d16b9baf9f1c0d23cf85e7aaa3376fec320)).
+
+```
+##### Displaying information regarding account "dev_arena_test". #####
+
+	record_from:                  2019-01-01T22:00:00.000000000Z
+	record_to:                    2019-01-01T23:59:00.000000000Z
+	request_interval:             M1
+	record_rows:                  118
+
+	trade_log_len:                7
+	USD:                          49986.70879394646
+	JPY:                          46692.75
+	GBP:                          50034.09294861774
+
+##### The information of account "dev_arena_test" has been successfully displayed. #####
+```
+* Support for `trade_unit_in_buy_currency` is implemented ([commit `#49e1f01`](https://github.com/choH/half_tael_DQN/commit/49e1f01f4834493fd37ac228fca689c67db7d6d9)).
+* Readable `trade_log_review()` is implemented, now each trade action is expressed in natural language rather than pure JSON.
+
+```
+#### Displaying the READABLE trade log of account "dev_arena_test" ####
+        ......
+		action_id:               5
+		trade_time:              2019-01-01T23:05:00.000000000Z
+		Trade Decision:          Sold 0.547006053533659 USD for 60 JPY
+		Sell Currency Balance:   50056.70879394646 USD
+		Buy Currency Balance:    39016.06 JPY
+
+
+		action_id:               6
+		trade_time:              2019-01-01T23:55:00.000000000Z
+		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY
+		Sell Currency Balance:   49986.70879394646 USD
+		Buy Currency Balance:    46692.75 JPY
+
+#### The READABLE trade log of account "dev_arena_test" has been successfully displayed ####
+```
+
+
+
 ### 2019-7-19 | Refactored trading interface to handle trading among multiple currency (Bug-fixing in progress) | Henry
 
 * Refactored the `trade_interface.py` to handle multiple currency.
