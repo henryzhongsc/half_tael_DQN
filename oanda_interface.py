@@ -28,7 +28,7 @@ class Onada_Record:
         self.rows = _record.shape[0]
 
     def record_review(self):
-        print("\n\t{:20}{}\n\t{:20}{}\n\t{:20}{}\n\t{:20}{}\n\t{:20}{}\n\t{:20}{}\n".format('file path:', self.record_path, 'currency pair(s): ', self.currency_pair, 'from: ', self.from_time, 'to: ', self.to_time, 'interval: ', self.request_interval, 'total rows:', self.rows))
+        print("\t{:20}{}\n\t{:20}{}\n\t{:20}{}\n\t{:20}{}\n\t{:20}{}\n\t{:20}{}\n".format('file path:', self.record_path, 'currency pair(s): ', self.currency_pair, 'from: ', self.from_time, 'to: ', self.to_time, 'interval: ', self.request_interval, 'total rows:', self.rows))
 
 
 class Oanda_Interface:
@@ -60,7 +60,7 @@ class Oanda_Interface:
 
 
         temp_OR = Onada_Record(df, csv_filename, _from, _to, _interval, _currency_pair)
-        print("\n\nThe requested record has been successfully exported.")
+        print("\n\n## The requested record has been successfully exported. ##")
         temp_OR.record_review()
         return temp_OR
 
