@@ -110,8 +110,8 @@ class Trade_Interface:
             # print(target_df.head())
             return target_df
 
-    def execute_trade(self, _time, _sell_currency, _buy_currency, _trade_unit, _trade_unit_in_buy_currenct = True):
-        #Progess2Handle: _trade_unit_in_buy_currenct = False.
+    def execute_trade(self, _time, _sell_currency, _buy_currency, _trade_unit, _trade_unit_in_buy_currency = True):
+        #Progess2Handle: _trade_unit_in_buy_currency = False.
         #Exception2Handle: _sell_currency, _buy_currency not in arena.
 
         currency_pair, pair_reverse_flag = self.get_one_currency_pair(_sell_currency, _buy_currency)
@@ -119,19 +119,32 @@ class Trade_Interface:
         trade_ratio = float(self.market_LUT(_time)[currency_pair+'_close'].iloc[0,])
         #Exception2Handle: market_LUT return NaN.
 
-        if pair_reverse_flag == True:
-            self.currency_balance[_sell_currency] -= _trade_unit / trade_ratio
+        if _trade_unit_in_buy_currency:
+            if pair_reverse_flag:
+                self.currency_balance[_sell_currency] -= _trade_unit / trade_ratio
+            else:
+                self.currency_balance[_sell_currency] -= _trade_unit * trade_ratio
+            #Exception2Handle: no enough balance.
             self.currency_balance[_buy_currency] += _trade_unit
+
+        elif not _trade_unit_in_buy_currency:
+            self.currency_balance[_sell_currency] -= _trade_unit
+            #Exception2Handle: no enough balance.
+            if pair_reverse_flag:
+                self.currency_balance[_buy_currency] += _trade_unit * trade_ratio
+            else:
+                self.currency_balance[_buy_currency] += _trade_unit / trade_ratio
         else:
-            self.currency_balance[_sell_currency] -= _trade_unit * trade_ratio
-            self.currency_balance[_buy_currency] += _trade_unit
+            #Exception2Handle: invalid _trade_unit_in_buy_currency input
+            print("Invalid _trade_unit_in_buy_currency input.")
+            return 2
 
 
-        trade_currency = _buy_currency if _trade_unit_in_buy_currenct else _sell_currency
+        trade_currency = _buy_currency if _trade_unit_in_buy_currency else _sell_currency
 
 
-        val_list = [self.action_id_counter, _time, _sell_currency, _buy_currency, trade_currency, _trade_unit, trade_ratio, pair_reverse_flag, self.currency_balance[_sell_currency], self.currency_balance[_buy_currency]]
-        key_list = ["action_id", "trade_time", "sell_currency", "buy_currency", "trade_currency", "trade_unit", "trade_ratio", "pair_reverse_flag", "sell_currency_balance", "buy_currency_balance"]
+        val_list = [self.action_id_counter, _time, _sell_currency, _buy_currency, _trade_unit, trade_currency, trade_ratio, pair_reverse_flag, self.currency_balance[_sell_currency], self.currency_balance[_buy_currency]]
+        key_list = ["action_id", "trade_time", "sell_currency", "buy_currency", "trade_unit", "trade_currency", "trade_ratio", "pair_reverse_flag", "sell_currency_balance", "buy_currency_balance"]
         new_trade_action = dict(zip(key_list, val_list))
         # print(json.dumps(new_trade_action, indent=4))
         self.trade_log.append(new_trade_action)
@@ -143,24 +156,45 @@ class Trade_Interface:
         # print(json.dumps(self.currency_balance, indent=4))
 
     #Performance2Handle: do with decorator.
-    def trade_log_review(self):
-        print("#### Displaying the trade log of account{} ####\n".format(self.account_name))
-        for i in self.trade_log:
-            for k, v in dict.items(i):
-                print("\t\t{:25}{}".format(k+':', v))
-            print("\n")
-        print("#### The trade log of account{} has been successfully displayed ####\n".format(self.account_name))
+    def trade_log_review(self, raw_flag = False):
+        print("#### Displaying the {} trade log of account \"{}\" ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name))
+        if raw_flag:
+            for i in self.trade_log:
+                for k, v in dict.items(i):
+                    print("\t\t{:25}{}".format(k+': ', v))
+                print("\n")
+
+
+        else:
+            for i in self.trade_log:
+                for k, v in dict.items(i):
+                    if k == 'action_id' or k == 'trade_time':
+                        # print('\t\t-----not in {} ----'.format(k))
+                        print("\t\t{:25}{}".format(k+': ', v))
+
+                if i['trade_currency'] == i['buy_currency']:
+                    sold_currency_unit = i['trade_unit'] / i['trade_ratio'] if i['pair_reverse_flag'] else i['trade_unit'] * i['trade_ratio']
+                    print("\t\t{:25}Sold {} {} for {} {}".format('Trade Decision: ', sold_currency_unit, i['sell_currency'], i['trade_unit'], i['buy_currency']))
+                if i['trade_currency'] == i['sell_currency']:
+                    bought_currency_unit = i['trade_unit'] * i['trade_ratio'] if i['pair_reverse_flag'] else i['trade_unit'] / i['trade_ratio']
+                    print("\t\t{:25}Sold {} {} for {} {}".format('Trade Decision: ', i['trade_unit'], i['sell_currency'], bought_currency_unit, i['buy_currency']))
+
+                print("\t\t{:25}{} {}".format('Sell Currency Balance: ', i['sell_currency_balance'], i['sell_currency']))
+                print("\t\t{:25}{} {}".format('Buy Currency Balance: ', i['buy_currency_balance'], i['buy_currency']))
+                print("\n")
+
+        print("#### The {} trade log of account \"{}\" has been successfully displayed ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name))
 
     def account_review(self):
         df = self.areana.record_df
         record_from = df.iloc[0, 0]
         record_to = df.iloc[df.shape[0]-1, 0]
         record_rows = df.shape[0]
-        print("\n##### Displaying information regarding account {}. #####\n\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\n\t{:30}{}".format(self.account_name, 'record_from: ', record_from, 'record_to: ', record_to, 'request_interval: ', self.request_interval, 'record_rows: ', record_rows, 'trade_log_len: ', len(self.trade_log)))
+        print("\n##### Displaying information regarding account \"{}\". #####\n\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\t{:30}{}\n\n\t{:30}{}".format(self.account_name, 'record_from: ', record_from, 'record_to: ', record_to, 'request_interval: ', self.request_interval, 'record_rows: ', record_rows, 'trade_log_len: ', len(self.trade_log)))
 
         for k, v in dict.items(self.currency_balance):
             print("\t{:30}{}".format(k+': ', v))
-        print("\n##### The information of account{} has been successfully displayed. #####\n".format(self.account_name))
+        print("\n##### The information of account \"{}\" has been successfully displayed. #####\n".format(self.account_name))
 
 ###############################################################################
 
@@ -194,7 +228,7 @@ time_3 = '2019-01-01T22:55:00.000000000Z'
 time_4 = '2019-01-01T22:59:00.000000000Z'
 time_5 = '2019-01-01T23:02:00.000000000Z'
 time_6 = '2019-01-01T23:05:00.000000000Z'
-# time_7 = '2019-01-01T23:55:00.000000000Z'
+time_7 = '2019-01-01T23:55:00.000000000Z'
 
 TI_test.execute_trade(time_1, 'USD', 'GBP', 10)
 TI_test.execute_trade(time_2, 'GBP', 'USD', 20)
@@ -202,12 +236,13 @@ TI_test.execute_trade(time_3, 'GBP', 'JPY', 30)
 TI_test.execute_trade(time_4, 'JPY', 'GBP', 40)
 TI_test.execute_trade(time_5, 'JPY', 'USD', 50)
 TI_test.execute_trade(time_6, 'USD', 'JPY', 60)
-# TI_test.execute_trade(time_7, 'USD', 'JPY', 70, False)
+TI_test.execute_trade(time_7, 'USD', 'JPY', 70, False)
 
 
 
 
 TI_test.trade_log_review()
+# TI_test.trade_log_review(True)
 TI_test.account_review()
 
 
