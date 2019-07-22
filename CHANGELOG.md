@@ -12,6 +12,10 @@
         * Draft version control standard and contribution guideline.
     * **Steven**
         * Run a trial DQN model on any `USD_JPY` file in [./dummy_data](https://github.com/choH/half_tael_DQN/tree/master/arena_data).
+    * **Jian**
+        * Help Steven on building the basic DQN model.
+        * Quantified Anita's personality on trading behavior.
+        * Research some high-end DQN structure and make a presentation.
 
 
 
@@ -62,8 +66,9 @@
         * ❌ 🚧 Work-in-progress, will delivery by on 2019-07-24.
         * ✅ Basic DQN learned (**ALL**)
     * **Jian**
-        * ❓ Absent for the day, will catch up on 2019-07-22 -- Henry.
-        * ❓(**ALL**)
+        * ~~❓ Absent for the day, will catch up on 2019-07-22 -- Henry.~~
+        * ❌ 🚧 Work-in-progress, will delivery by on 2019-07-24.
+        * ✅ Basic DQN learned (**ALL**)
 
 
 ### 2019-07-11 | Kick-off briefing | Anul Sinha, Henry, Jian, Steven
