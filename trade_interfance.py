@@ -9,6 +9,7 @@ import re
 import json
 
 import oanda_interface as OI
+from decimal import *
 
 
 
@@ -100,43 +101,32 @@ class Trade_Interface:
         #Progess2Handle: _trade_unit_in_buy_currenct = False.
         #Exception2Handle: _sell_currency, _buy_currency not in arena.
 
-        currency_pair, pair_flag = self.get_currency_pairs(_sell_currency, _buy_currency)
+        currency_pair, pair_reverse_flag = self.get_currency_pairs(_sell_currency, _buy_currency)
 
-##########################BUG###################################################
-        col = currency_pair+'_close'
-        print(self.market_LUT(_time))
-        print(type(self.market_LUT(_time)))
-        print(currency_pair)
-        print(col)
-
-        price = self.market_LUT(_time).loc(axis=0)[:, col]
-        # cannot do label indexing on <class 'pandas.core.indexes.base.Index'> with these indexers [0] of <class 'int'>
-        # TypeError: unhashable type: 'slice'
-
-        # print("price is {}.".format(price))
+        price = float(self.market_LUT(_time)[currency_pair+'_close'].iloc[0,])
         #Exception2Handle: market_LUT return NaN.
 
-##########################BUG###################################################
-
-        if pair_flag == True:
-            self.currency_balance['_sell_currency'] -= _trade_unit / price
-            self.currency_balance['_buy_currency'] += _trade_unit
+        if pair_reverse_flag == True:
+            self.currency_balance[_sell_currency] -= _trade_unit / price
+            self.currency_balance[_buy_currency] += _trade_unit
         else:
-            self.currency_balance['_sell_currency'] -= _trade_unit * price
-            self.currency_balance['_buy_currency'] += _trade_unit
+            self.currency_balance[_sell_currency] -= _trade_unit * price
+            self.currency_balance[_buy_currency] += _trade_unit
 
 
+        trade_currency = _buy_currency if _trade_unit_in_buy_currenct else _sell_currency
 
 
-
-        val_list = [self.action_id_counter, _time, _sell_currency, _buy_currency, _trade_unit, price, pair_flag, self.self.currency_balance['_sell_currency'], self.currency_balance['_buy_currency']]
-        key_list = ["action_id", "trade_time", "sell_currency", "buy_currency", "trade_unit", "trade_price", "pair_flag", "sell_currency_balance", "buy_currency_balance"]
+        val_list = [self.action_id_counter, _time, _sell_currency, _buy_currency, trade_currency, _trade_unit, price, pair_reverse_flag, self.currency_balance[_sell_currency], self.currency_balance[_buy_currency]]
+        key_list = ["action_id", "trade_time", "sell_currency", "buy_currency", "trade_currency", "trade_unit", "trade_price", "pair_reverse_flag", "sell_currency_balance", "buy_currency_balance"]
         new_trade_action = dict(zip(key_list, val_list))
         # print(json.dumps(new_trade_action, indent=4))
         self.trade_log.append(new_trade_action)
 
         #Exception2Handle: _time earlier than pervious action in log.
         self.action_id_counter += 1
+
+        print(json.dumps(self.currency_balance, indent=4))
 
     #Performance2Handle: do with decorator.
     def trade_log_review(self):
@@ -176,6 +166,8 @@ TI_test.areana.record_review()
 # 2019-01-01T22:59:00.000000000Z,109.684,5.0,139.776,38.0,1.27398,15.0
 # 2019-01-01T23:02:00.000000000Z,109.658,7.0,139.859,7.0,1.27513,3.0
 # 2019-01-01T23:05:00.000000000Z,109.688,10.0,139.863,19.0,1.27509,2.0
+# 2019-01-01T23:55:00.000000000Z,109.667,5.0,139.884,8.0,1.27540,53.0
+
 
 time_1 = '2019-01-01T22:30:00.000000000Z'
 time_2 = '2019-01-01T22:41:00.000000000Z'
@@ -183,13 +175,17 @@ time_3 = '2019-01-01T22:55:00.000000000Z'
 time_4 = '2019-01-01T22:59:00.000000000Z'
 time_5 = '2019-01-01T23:02:00.000000000Z'
 time_6 = '2019-01-01T23:05:00.000000000Z'
+# time_7 = '2019-01-01T23:55:00.000000000Z'
 
 TI_test.execute_trade(time_1, 'USD', 'GBP', 10)
 TI_test.execute_trade(time_2, 'GBP', 'USD', 20)
 TI_test.execute_trade(time_3, 'GBP', 'JPY', 30)
 TI_test.execute_trade(time_4, 'JPY', 'GBP', 40)
 TI_test.execute_trade(time_5, 'JPY', 'USD', 50)
-TI_test.execute_trade(time_5, 'USD', 'JPY', 60)
+TI_test.execute_trade(time_6, 'USD', 'JPY', 60)
+# TI_test.execute_trade(time_7, 'USD', 'JPY', 70, False)
+
+
 
 
 TI_test.trade_log_review()
