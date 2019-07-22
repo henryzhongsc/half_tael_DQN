@@ -5,7 +5,7 @@
 ---
 ## Broadcast
 
-### Tentative Goals for Scrum Meeting #3 on 2019-07-24
+### Tentative Goals for Scrum Meeting #2 on 2019-07-24
 * **Goals**:
     * **Henry**
         * Trading interface done, with manual written.

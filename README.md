@@ -5,7 +5,7 @@
 A proper `README.md` file will be written once the project is fully developed. During the developing stage, the records will be update on [`CHANGELOG.md`](https://github.com/choH/half_tael_DQN/blob/master/CHANGELOG.md).
 
 ---
-# Tentative Goals for Scrum Meeting #3 on 2019-07-24
+# Tentative Goals for Scrum Meeting #2 on 2019-07-24
 
 * **Henry**
     * Trading interface done, with manual written.
