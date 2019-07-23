@@ -65,7 +65,7 @@ class Trade_Interface:
         self.from_time = _from_time
         self.to_time = _to_time
         self.request_interval = _request_interval
-        
+
         self.account_input_eval()
 
         try:
@@ -92,7 +92,6 @@ class Trade_Interface:
             raise TI_Account_Error('Invalid Oanda granularity input, self.request_interval: {}.'.format(self.request_interval))
 
         if not self.time_is_later(self.from_time, self.to_time):
-            print("$$$$$$$$ INNNNN $$$$$$$$")
             raise TI_Account_Error("self.from_time {} is earlier than self.to_time {}.".format(self.from_time, self.to_time))
 
 
@@ -238,19 +237,28 @@ class Trade_Interface:
                 continue
         return time_B_is_later_flag
 
-    #Performance2Handle: do with decorator.
-    #Performance2Handle: retrive a specific log.
-    def trade_log_review(self, raw_flag = False):
-        print("#### Displaying the {} trade log of account \"{}\" ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name))
-        if raw_flag:
+
+    def trade_log_review(self, tar_action_id = False, raw_flag = False):
+        print("#### Displaying the {} trade log of account \"{}\" (action: {}) ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name, 'ALL' if not tar_action_id else tar_action_id))
+
+        if not tar_action_id:
+            log_to_display = self.trade_log
+        else:
+            log_to_display = []
             for i in self.trade_log:
+                if i['action_id']  == tar_action_id:
+                    log_to_display.append(i)
+                    break
+
+        if raw_flag:
+            for i in log_to_display:
                 for k, v in dict.items(i):
                     print("\t\t{:25}{}".format(k+': ', v))
                 print("\n")
 
 
         else:
-            for i in self.trade_log:
+            for i in log_to_display:
                 for k, v in dict.items(i):
                     if k == 'action_id' or k == 'trade_time':
                         # print('\t\t-----not in {} ----'.format(k))
@@ -267,7 +275,7 @@ class Trade_Interface:
                 print("\t\t{:25}{} {}".format('Buy Currency Balance: ', i['buy_currency_balance'], i['buy_currency']))
                 print("\n")
 
-        print("#### The {} trade log of account \"{}\" has been successfully displayed ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name))
+        print("#### The {} trade log of account \"{}\" has been successfully displayed (action: {}) ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name, 'ALL' if not tar_action_id else tar_action_id))
 
     def account_review(self):
         df = self.areana.record_df
@@ -279,6 +287,7 @@ class Trade_Interface:
         for k, v in dict.items(self.currency_balance):
             print("\t{:30}{}".format(k+': ', v))
         print("\n##### The information of account \"{}\" has been successfully displayed. #####\n".format(self.account_name))
+
 
 ###############################################################################
 
