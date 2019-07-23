@@ -13,6 +13,8 @@ import datetime
 import pandas as pd
 import numpy as np
 
+from config import *
+
 ###############################################################################
 csv_export_dir = './test_data/'
 ###############################################################################

@@ -12,6 +12,8 @@ import oanda_interface as OI
 from decimal import *
 import itertools
 
+from config import *
+
 
 
 ###############################################################################
@@ -84,12 +86,13 @@ class Trade_Interface:
         arena_df = arena_df.rename(index=str, columns={'index': 'time'})
 
         currency_list = [k for k in self.currency_balance]
-        arena_filename = './arena_data/' + '_'.join(currency_list) + '_' + _from[0:19] + '_' + _to[0:19] + '_' + self.request_interval + '.csv'
+        arena_filename = './arena_data/' + '_'.join(currency_list) + '_' + self.from_time[0:19] + '_' + self.to_time[0:19] + '_' + self.request_interval + '.csv'
         arena_df.to_csv(arena_filename, index = None, header = True)
 
 
         OR_arena = OI.Onada_Record(arena_df, arena_filename, self.from_time, self.to_time, self.request_interval, currency_list)
         print("\n\n### The requested ARENA record has been successfully exported. ###")
+        OR_arena.record_review()
         return OR_arena
 
 
