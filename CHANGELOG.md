@@ -8,7 +8,8 @@
 ### Tentative Goals for Scrum Meeting #2 on 2019-07-24
 * **Goals**:
     * **Henry**
-        * Trading interface done, with manual written.
+        * Implement trading interface.
+        * Write user manual on such trading interface.
         * Draft version control standard and contribution guideline.
     * **Steven**
         * Run a trial DQN model on any `USD_JPY` file in [./dummy_data](https://github.com/choH/half_tael_DQN/tree/master/arena_data).
@@ -39,6 +40,8 @@
 * **Goals**:
     * **Henry & Steve**
         * Integrate the trial DQN model with custom backend.
+    * **Henry**
+        * Finish basic DQN learning.
 
 ### 2019-07-24 | Scrum #2 | Henry, Jian, Steven
 
@@ -78,8 +81,44 @@
 ---
 ## Development Journal
 
-### 2019-7-22 | Fully supports trading among multiple currency | Henry
-* Bug fixed for pervious mentioned [commit `#8248b6f`](https://github.com/choH/half_tael_DQN/commit/8248b6ff8fbd73be7c2fc52935574d90ea422b9f), trading among multiple currency is now fully supported ([commit `#443e4d1`](https://github.com/choH/half_tael_DQN/commit/443e4d16b9baf9f1c0d23cf85e7aaa3376fec320)).
+### 2019-07-23 | Implemented custom exceptions handling, and stand alone training input portal | Henry
+* Now all input should goes to — or in a form which is similar to — `train_interface.py` with the login info saved in `config.py`
+* Custom exceptions handling implemented, e.g.
+
+```
+During self.get_arena()
+	<class 'trade_interface.OI_Onanda_Error'> is raised due to: {"errorMessage":"Insufficient authorization to perform request."}
+
+During self.get_currency_pairs()
+	<class 'trade_interface.TI_Account_Error'> is raised due to: No currency pair(s) between ('USD', 'JAY') from Oanda
+
+During self.account_input_eval()
+	<class 'trade_interface.TI_Account_Error'> is raised as: Invalid Oanda granularity input, self.request_interval: H20.
+
+During self.account_input_eval()
+	<class 'trade_interface.TI_Account_Error'> is raised as: Invalid account input, self.currency_balance['USD'] must be >= 0 (currently -10).
+
+During self.market_LUT()
+	<class 'trade_interface.TI_Market_LUT_Error'> is raised due to: Invalid time input: 2019-01-01T22:30:20.000000000Z
+
+During self.execute_trade()
+	<class 'trade_interface.TI_Market_LUT_Error'> is raised as: Time input: 2019-01-01T22:03:00.000000000Z returns np.nan
+
+During self.execute_trade()
+	<class 'trade_interface.TI_Execution_Error'> is raised as: USB or GBP is(are) not in ['USD', 'JPY', 'GBP']
+
+During self.execute_trade()
+	<class 'trade_interface.TI_Execution_Error'> is raised as: USD balance < 0 after trade action #0 (currently -127412000.00000001).
+
+During self.execute_trade()
+	<class 'trade_interface.TI_Execution_Error'> is raised as: _time 2019-01-01T22:29:00.000000000Z is earlier than pervious action's trade_time 2019-01-01T22:30:00.000000000Z in log.
+
+During self.account_input_eval()
+	<class 'trade_interface.TI_Account_Error'> is raised as: self.from_time 2019-01-01T00:00:00Z is earlier than self.to_time 2018-01-02T00:00:00Z.
+```
+
+### 2019-07-22 | Fully supports trading among multiple currency | Henry
+* Bug fixed for perviously mentioned [commit `#8248b6f`](https://github.com/choH/half_tael_DQN/commit/8248b6ff8fbd73be7c2fc52935574d90ea422b9f), trading among multiple currency is now fully supported ([commit `#443e4d1`](https://github.com/choH/half_tael_DQN/commit/443e4d16b9baf9f1c0d23cf85e7aaa3376fec320)).
 
 ```
 ##### Displaying information regarding account "dev_arena_test". #####
@@ -120,7 +159,7 @@
 
 
 
-### 2019-7-19 | Refactored trading interface to handle trading among multiple currency (Bug-fixing in progress) | Henry
+### 2019-07-19 | Refactored trading interface to handle trading among multiple currency (Bug-fixing in progress) | Henry
 
 * Refactored the `trade_interface.py` to handle multiple currency.
     * Bug on `market_LUT()` price retrive, see [commit `#8248b6f`](https://github.com/choH/half_tael_DQN/commit/8248b6ff8fbd73be7c2fc52935574d90ea422b9f).
@@ -138,7 +177,7 @@ The requested ARENA record has been successfully exported.
 * Updated `oanda_interface.py` to wrap `DataFrame` return into a custom class `Oanda_Record`, so that when passed to other method info regarding such record shall preserve.
 * Setting goals and time for next two scrum meetings.
 
-### 2019-7-18 | Developed internal trading interface for model testing | Henry
+### 2019-07-18 | Developed internal trading interface for model testing | Henry
 * Developed a `Trade_Interface` class to regulate allowed trading behavior and review portal:
     * Behaviors: short, long.
     * Review: account, trade log.
@@ -165,7 +204,7 @@ action_id:               0
 ```
 * Marked places which can be improved in future (exception-handling, decorator log generation).
 
-### 2019-7-17 | Developed wrapper functions output pricing record | Henry
+### 2019-07-17 | Developed wrapper functions output pricing record | Henry
 * Developed a set of wrapper functions in `oanda_interface.py`, which can interact with `oandapyV20` API and output pricing record according to user requested currency pair, start time, end time, interval.
 * Output is available in both `DataFrame` and CSV file with command line confirmation on both request and export stage:
 
