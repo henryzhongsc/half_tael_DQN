@@ -116,6 +116,8 @@ During self.execute_trade()
 During self.account_input_eval()
 	<class 'trade_interface.TI_Account_Error'> is raised as: self.from_time 2019-01-01T00:00:00Z is earlier than self.to_time 2018-01-02T00:00:00Z.
 ```
+* Add feature to retrieve one trade action by `action_id` from `trade_log`.
+
 
 ### 2019-07-22 | Fully supports trading among multiple currency | Henry
 * Bug fixed for perviously mentioned [commit `#8248b6f`](https://github.com/choH/half_tael_DQN/commit/8248b6ff8fbd73be7c2fc52935574d90ea422b9f), trading among multiple currency is now fully supported ([commit `#443e4d1`](https://github.com/choH/half_tael_DQN/commit/443e4d16b9baf9f1c0d23cf85e7aaa3376fec320)).
