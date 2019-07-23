@@ -36,3 +36,4 @@ if __name__ == "__main__":
 
     TI_train.trade_log_review()
     TI_train.account_review()
+    # TI_train.trade_log_review(tar_action_id = 2)
