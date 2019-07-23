@@ -13,9 +13,10 @@ import datetime
 import pandas as pd
 import numpy as np
 
+###############################################################################
 csv_export_dir = './test_data/'
-my_account_id = '101-001-11707432-001'
-my_access_token = 'a10a1538b3fdaf3a8a2f3b9a496a3aeb-00a7b8f54791fb3132b22ca77419cc58'
+###############################################################################
+
 
 class Onada_Record:
     def __init__(self, _record, _record_path, _from, _to, _interval, _currency_pair):
@@ -70,16 +71,3 @@ class Oanda_Interface:
             record_json = self.client.request(r)
             new_df = pd.io.json.json_normalize(record_json['candles'])
             yield new_df
-
-
-
-# OI = Oanda_Interface(my_account_id, my_access_token)
-
-# _from = "2019-01-01T00:00:00Z"
-# _to = "2019-01-02T00:00:00Z"
-# _interval = "M1"
-# USD_JPY_currency_pair = "USD_JPY"
-# GBP_JPY_currency_pair = "GBP_JPY"
-# GBP_USD_currency_pair = "GBP_USD"
-
-# OR_test = OI.get_history_price(_from, _to, _interval, USD_JPY_currency_pair)

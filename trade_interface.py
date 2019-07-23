@@ -15,13 +15,7 @@ import itertools
 
 
 ###############################################################################
-
-
-my_account_id = '101-001-11707432-001'
-my_access_token = 'a10a1538b3fdaf3a8a2f3b9a496a3aeb-00a7b8f54791fb3132b22ca77419cc58'
 csv_dir = './test_data/'
-
-
 ###############################################################################
 
 
@@ -198,51 +192,5 @@ class Trade_Interface:
 
 ###############################################################################
 
-
-
-
-
-_account_name = 'dev_arena_test'
-_currency_balance = {'USD': 50000, 'JPY': 50000, 'GBP': 50000}
-_from = "2019-01-01T00:00:00Z"
-_to = "2019-01-02T00:00:00Z"
-_interval = "M1"
-
-TI_test = Trade_Interface(_account_name, _currency_balance, _from, _to, _interval)
-# TI_test.areana.record_df
-TI_test.areana.record_review()
-
-
-# 2019-01-01T22:30:00.000000000Z,109.646,14.0,139.736,145.0,1.27442,21.0
-# 2019-01-01T22:41:00.000000000Z,109.668,4.0,139.776,20.0,1.27450,12.0
-# 2019-01-01T22:55:00.000000000Z,109.684,1.0,139.780,202.0,1.27416,2.0
-# 2019-01-01T22:59:00.000000000Z,109.684,5.0,139.776,38.0,1.27398,15.0
-# 2019-01-01T23:02:00.000000000Z,109.658,7.0,139.859,7.0,1.27513,3.0
-# 2019-01-01T23:05:00.000000000Z,109.688,10.0,139.863,19.0,1.27509,2.0
-# 2019-01-01T23:55:00.000000000Z,109.667,5.0,139.884,8.0,1.27540,53.0
-
-
-time_1 = '2019-01-01T22:30:00.000000000Z'
-time_2 = '2019-01-01T22:41:00.000000000Z'
-time_3 = '2019-01-01T22:55:00.000000000Z'
-time_4 = '2019-01-01T22:59:00.000000000Z'
-time_5 = '2019-01-01T23:02:00.000000000Z'
-time_6 = '2019-01-01T23:05:00.000000000Z'
-time_7 = '2019-01-01T23:55:00.000000000Z'
-
-TI_test.execute_trade(time_1, 'USD', 'GBP', 10)
-TI_test.execute_trade(time_2, 'GBP', 'USD', 20)
-TI_test.execute_trade(time_3, 'GBP', 'JPY', 30)
-TI_test.execute_trade(time_4, 'JPY', 'GBP', 40)
-TI_test.execute_trade(time_5, 'JPY', 'USD', 50)
-TI_test.execute_trade(time_6, 'USD', 'JPY', 60)
-TI_test.execute_trade(time_7, 'USD', 'JPY', 70, False)
-
-
-
-
-TI_test.trade_log_review()
-# TI_test.trade_log_review(True)
-TI_test.account_review()
 
 
