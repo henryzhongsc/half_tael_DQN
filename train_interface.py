@@ -43,7 +43,7 @@ if __name__ == "__main__":
     TI_train.execute_trade(time_4, 'JPY', 'GBP', 40)
     TI_train.execute_trade(time_5, 'JPY', 'USD', 50)
     TI_train.execute_trade(time_6, 'USD', 'JPY', 60)
-    TI_train.execute_trade(time_7, 'USD', 'JPY', 70, False)
+    TI_train.execute_trade(time_7, 'USD', 'JPY', 70, _trade_unit_in_buy_currency = False)
 
     TI_train.trade_log_review()
     TI_train.account_review()
