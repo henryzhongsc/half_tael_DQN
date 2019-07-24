@@ -91,7 +91,7 @@ class Trade_Interface:
         if self.request_interval not in oanda_granularity:
             raise TI_Account_Error('Invalid Oanda granularity input, self.request_interval: {}.'.format(self.request_interval))
 
-        if not self.time_is_later(self.from_time, self.to_time):
+        if not self.time_is_later(self.from_time, self.to_time, equal_time_acceptable = False):
             raise TI_Account_Error("self.from_time {} is earlier than self.to_time {}.".format(self.from_time, self.to_time))
 
 
@@ -157,7 +157,7 @@ class Trade_Interface:
             return target_df
 
     @execution_report
-    def execute_trade(self, _time, _sell_currency, _buy_currency, _trade_unit, _trade_unit_in_buy_currency = True):
+    def execute_trade(self, _time, _sell_currency, _buy_currency, _trade_unit, _trade_unit_in_buy_currency = True, review_checkout_only = False):
         temp_currency_list = [k for k in self.currency_balance]
         if _sell_currency not in temp_currency_list or _buy_currency not in temp_currency_list:
             raise TI_Execution_Error('{} or {} is(are) not in {}'.format(_sell_currency, _buy_currency, temp_currency_list))
@@ -200,10 +200,17 @@ class Trade_Interface:
 
         trade_currency = _buy_currency if _trade_unit_in_buy_currency else _sell_currency
 
-        if self.action_id_counter != 0:
-            pervious_log = self.trade_log[-1]
-            if not self.time_is_later(pervious_log['trade_time'], _time):
-                raise TI_Execution_Error("_time {} is earlier than pervious action's trade_time {} in log.".format(_time, pervious_log['trade_time']))
+        if not review_checkout_only:
+            if self.action_id_counter != 0:
+                pervious_log = self.trade_log[-1]
+                if not self.time_is_later(pervious_log['trade_time'], _time, equal_time_acceptable = False):
+                    raise TI_Execution_Error("_time {} is earlier than pervious action's trade_time {} in log.".format(_time, pervious_log['trade_time']))
+        else:
+            if self.action_id_counter != 0:
+                pervious_log = self.trade_log[-1]
+                if not self.time_is_later(pervious_log['trade_time'], _time, equal_time_acceptable = True):
+                    raise TI_Execution_Error("_time {} is earlier than pervious action's trade_time {} in log.".format(_time, pervious_log['trade_time']))
+
 
         val_list = [self.action_id_counter, _time, _sell_currency, _buy_currency, _trade_unit, trade_currency, trade_ratio, pair_reverse_flag, self.currency_balance[_sell_currency], self.currency_balance[_buy_currency]]
         key_list = ["action_id", "trade_time", "sell_currency", "buy_currency", "trade_unit", "trade_currency", "trade_ratio", "pair_reverse_flag", "sell_currency_balance", "buy_currency_balance"]
@@ -219,13 +226,18 @@ class Trade_Interface:
 
         # print(json.dumps(self.currency_balance, indent=4))
 
-    def time_is_later(self, time_A, time_B):
+    def checkout_all_in(self, _time, tar_currency):
+        for k, v in dict.items(self.currency_balance):
+            if k != tar_currency:
+                self.execute_trade(_time, k, tar_currency, v, _trade_unit_in_buy_currency = False, review_checkout_only = True)
+
+    def time_is_later(self, time_A, time_B, equal_time_acceptable = False):
         time_A_strip = re.split('-|:|\.|T|Z', time_A)
         del time_A_strip[-1]
         time_B_strip = re.split('-|:|\.|T|Z', time_B)
         del time_B_strip[-1]
 
-        time_B_is_later_flag = False
+        time_B_is_later_flag = equal_time_acceptable
         for a, b in zip(time_A_strip, time_B_strip):
             if int(a) < int(b):
                 time_B_is_later_flag = True
