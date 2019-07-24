@@ -1,5 +1,5 @@
 import trade_interface as TI
-
+import copy
 
 ###############################################################################
 _account_name = 'dev_train_interface'
@@ -12,6 +12,7 @@ _interval = "M1"
 ###############################################################################
 
 # time_0 = '2019-01-01T22:03:00.000000000Z'
+
 time_1 = '2019-01-01T22:30:00.000000000Z'
 # time_2 = '2019-01-01T22:29:00.000000000Z'
 time_2 = '2019-01-01T22:41:00.000000000Z'
@@ -21,9 +22,19 @@ time_5 = '2019-01-01T23:02:00.000000000Z'
 time_6 = '2019-01-01T23:05:00.000000000Z'
 time_7 = '2019-01-01T23:55:00.000000000Z'
 
+time_initial = '2019-01-01T22:00:00.000000000Z'
+time_end = '2019-01-01T23:59:00.000000000Z'
+
 ###############################################################################
 if __name__ == "__main__":
     TI_train = TI.Trade_Interface(_account_name, _currency_balance, _from, _to, _interval)
+
+    TI_initial = copy.deepcopy(TI_train)
+    TI_initial.account_name = 'Initial_Checkout_Review'
+    TI_initial.checkout_all_in(time_initial, 'USD')
+    TI_initial.account_review()
+
+    print("!"*50)
 
     # TI_train.execute_trade(time_0, 'USD', 'JPY', 100)
     TI_train.execute_trade(time_1, 'USD', 'GBP', 10)
@@ -36,4 +47,15 @@ if __name__ == "__main__":
 
     TI_train.trade_log_review()
     TI_train.account_review()
+
+
+    print("@"*50)
+
+    TI_end = copy.deepcopy(TI_train)
+    TI_end.account_name = 'End_Checkout_Review'
+    TI_end.checkout_all_in(time_end, 'USD')
+    TI_end.account_review()
+
+
+
     # TI_train.trade_log_review(tar_action_id = 2)
