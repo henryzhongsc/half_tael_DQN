@@ -1,6 +1,6 @@
 # 🔰 User Manual for `trade_interface.py`
 
-> This file serves as the user manual for interacting with [`trade_interface`](https://github.com/choH/half_tael_DQN/blob/master/trade_interface.py). By convention, we name the file contains such interactions as `train_interface_SomethingReasonable.py`, e.g. [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/train_interface_demo.py).
+> This file serves as the user manual for interacting with [`trade_interface`](https://github.com/choH/half_tael_DQN/blob/master/trade_interface.py). By convention, we name the file contains such interactions as `train_interface_SomethingReasonable.py`, e.g. [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/train_interface_demo.py).
 >
 > 📌v1.0 | 2019.07.24 | Henry Zhong
 
@@ -177,7 +177,7 @@ During self.get_arena()
 
 ## 4. Sample Code & Sample Output
 
-Sample code available as [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/train_interface_demo.py).
+Sample code available as [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/train_interface_demo.py).
 
 Sample output available in *Section Sample Output of `train_interface_demo.py`.*
 
@@ -203,7 +203,7 @@ For every `k` in `_currency_balance` passed to `Trade_Interface()`, there must b
 
 e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD_JPY`, `GBP_JPY`, and `GBP_USD`.
 
-### 5.3. Sample Output of [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/train_interface_demo.py).
+### 5.3. Sample Output of [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/train_interface_demo.py).
 
 ```
 ## The requested record has been successfully exported. ##
