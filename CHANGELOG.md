@@ -5,15 +5,16 @@
 ---
 ## Broadcast
 
-### Tentative Goals for Scrum Meeting #3 on 2019-07-26
-* **Goals**:
-    * **Henry & Steven**
-        1. Integrate Steven's trial DQN model with Henry's custom virtual trading platform.
-    * **Henry**
-        1. Finish basic DQN learning.
-    * **Steven**
-        1. Refactor his trial DQN model to support trading among multiple currencies (data input as: [`USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv`](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv)).
-        * Research about the possibility of using `vector` as first layer nodes in ANN/RNN design.
+### Tentative Goals for Scrum Meeting #3 on 2019-08-02
+* **Henry**
+    1. Draft version control standard and contribution guideline (2019-07-26).
+    * Finish basic DQN learning.
+* **Steven**
+    1. Document the two-currency DQN model (2019-07-26).
+* **Jian**
+    1. Develop a set of evaluation functions to evaluate the status (weight) of certain metrics introduced in [Anita folder](https://github.com/choH/half_tael_DQN/tree/master/legacy_ref/anita).
+        * Such functions should take `_time`, `_currency_pair`, `_volume` and any other necessary parameters as inputs and return a `float` number between `-1` to `1` as a reflection of the status of such metrics at this particular position.
+        * Sample data is available at: [`USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv`](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv)
 
 
 ### 2019-07-10 | A short style guide for updating this `CHANGELOG.md`.
@@ -28,14 +29,17 @@
 ---
 ## Meeting
 
-### 2019-07-30 | Scrum #4 | Jian
+### 2019-08-02 | Scrum #4 | Henry, Steven
 * **Goals**:
-    * **Jian**
-        1. Develop a set of evaluation functions to evaluate the status (weight) of certain metrics introduced in [Anita folder](https://github.com/choH/half_tael_DQN/tree/master/legacy_ref/anita).
-            1. Such functions should take `_time`, `_currency_pair`, `_volume` and any other necessary parameters as inputs and return a `float` number between `-1` to `1` as a reflection of the status of such metrics at this particular position.
-            2. Sample data is available at: [`USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv`](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv)
+    * **Henry**
+        1. Integrate Steven's trial DQN model (two-currency) with Henry's custom virtual trading platform.
+    * **Steven**
+        1. Refactor his trial DQN model as DQN+RNN, present a runnable demo.
+            * To support trading among multiple (>2) currencies. Data input as: [`USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv`](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv).
+            * Research about the possibility of using `vector` as first layer nodes in RNN design.
 
-### 2019-07-26 | Scrum #3 | Henry, Steven
+
+### 2019-07-20 | Scrum #3 | Henry, Steven, Jian
 * Placeholder, tentative goals available in *section Broadcast*.
 
 
@@ -116,6 +120,7 @@
 ### 2019-07-24 | Drafted [`User Manual for trade_interface.py.md`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/User%20Manual%20for%20%60trade_interface.py%60.md), implemented `checkout_all_in()` method | Henry
 * Drafted [`User Manual for trade_interface.py.md`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/User%20Manual%20for%20%60trade_interface.py%60.md) with demo code available at [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/train_interface_demo.py).
 * Implemented `checkout_all_in()` method in `trade_interface.py` to checkout all currency(s) in account to a particular currency (e.g. `USD`).
+* Debugged with Steven on his trial DQN model.
 
     ```
     ##### Displaying information regarding account "End_Checkout_Review". #####
