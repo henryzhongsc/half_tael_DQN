@@ -106,7 +106,7 @@ This class method will perform a virtual trade decision you made on `_time`, exc
     		Buy Currency Balance:    26692.75 JPY   
     ```
 
-### 2.5. account_review(self)
+### 2.5. account_review()
 This class method will print out the current status of the account — determined by its `self.` variables. e.g.
 
 ```
