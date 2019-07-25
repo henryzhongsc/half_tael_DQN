@@ -13,9 +13,11 @@
     1. Document the two-currency DQN model (2019-07-26).
 * **Jian**
     1. Develop a set of evaluation functions to evaluate the status (weight) of certain metrics introduced in [Anita folder](https://github.com/choH/half_tael_DQN/tree/master/legacy_ref/anita).
-        * Such functions should take `_time`, `_currency_pair`, `_volume` and any other necessary parameters as inputs and return a `float` number between `-1` to `1` as a reflection of the status of such metrics at this particular position.
-        * Sample data is available at: [`USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv`](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv)
+        * Such functions should take `_time`, `_currency_pair`, `_volume`, `trade_action` (long, short, hold) and any other necessary parameters (e.g. historical `trade_log`) as inputs and return a `float` number between `-1` to `1` as a reflection of the status of such metrics at this particular position.
 
+        * Sample data as:
+            * [USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv) (74,277 rows).
+            * If the above data is too huge , you may always refer to [USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv) as a lightweight alternative (6,358 rows).
 
 ### 2019-07-10 | A short style guide for updating this `CHANGELOG.md`.
 * The `CHANGELOG.md` has three sections.
@@ -30,13 +32,19 @@
 ## Meeting
 
 ### 2019-08-02 | Scrum #4 | Henry, Steven
-* **Goals**:
+* **Goal**
     * **Henry**
         1. Integrate Steven's trial DQN model (two-currency) with Henry's custom virtual trading platform.
     * **Steven**
         1. Refactor his trial DQN model as DQN+RNN, present a runnable demo.
-            * To support trading among multiple (>2) currencies. Data input as: [`USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv`](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv).
+            1. Support trading among multiple (>2) currencies.
+            * Implement RNN design with DQN..
             * Research about the possibility of using `vector` as first layer nodes in RNN design.
+
+        * Sample data as:
+            * Train: [USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv) (74,277 rows).
+            * Test: [USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv) (74,590 rows).
+            * Lightweight trial data for development: [USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv) (6,358 rows).
 
 
 ### 2019-07-20 | Scrum #3 | Henry, Steven, Jian
