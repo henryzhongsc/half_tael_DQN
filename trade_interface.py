@@ -17,7 +17,7 @@ from config import *
 
 
 ###############################################################################
-csv_dir = './test_data/'
+arena_csv_export_dir = './arena_data/'
 ###############################################################################
 
 
@@ -137,7 +137,7 @@ class Trade_Interface:
         arena_df = arena_df.rename(index=str, columns={'index': 'time'})
 
         currency_list = [k for k in self.currency_balance]
-        arena_filename = './arena_data/' + '_'.join(currency_list) + '_' + self.from_time[0:19] + '_' + self.to_time[0:19] + '_' + self.request_interval + '.csv'
+        arena_filename = arena_csv_export_dir + '_'.join(currency_list) + '_' + self.from_time[0:19] + '_' + self.to_time[0:19] + '_' + self.request_interval + '.csv'
         arena_df.to_csv(arena_filename, index = None, header = True)
 
 

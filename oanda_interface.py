@@ -16,7 +16,7 @@ import numpy as np
 from config import *
 
 ###############################################################################
-csv_export_dir = './test_data/'
+two_currency_csv_export_dir = './raw_data/'
 ###############################################################################
 
 
@@ -54,7 +54,7 @@ class Oanda_Interface:
         df = existed_df.rename(index=str, columns={"mid.o": "open_price", "mid.h": "high_price", "mid.l": "low_price", "mid.c": "close_price"})
         df = df.reindex(columns=['time', 'open_price', 'high_price', 'low_price', 'close_price', 'complete', 'volume'])
 
-        csv_filename = csv_export_dir + _currency_pair + '_' + _from[0:19] + '_' + _to[0:19] + '_' + _interval + '.csv'
+        csv_filename = two_currency_csv_export_dir + _currency_pair + '_' + _from[0:19] + '_' + _to[0:19] + '_' + _interval + '.csv'
         if close_price_only:
             df = df.drop(['open_price', 'high_price', 'low_price', 'complete'], axis =1)
             df = df.rename(index=str, columns={'close_price': _currency_pair + '_close', 'volume': _currency_pair + '_volume'})
