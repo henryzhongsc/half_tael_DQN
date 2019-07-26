@@ -5,9 +5,10 @@
 ---
 ## Broadcast
 
-### Tentative Goals for Scrum Meeting #3 on 2019-08-02
+### Tentative Goals for Scrum Meeting #3 on 2019-07-30
 * **Henry**
     1. Draft version control standard and contribution guideline (2019-07-26).
+        * ✅ Delivered as [`CONTRIBUTING.md`](https://github.com/choH/half_tael_DQN/blob/master/CONTRIBUTING.md) by [commit `#dd7e0ce`](https://github.com/choH/half_tael_DQN/commit/dd7e0ce97c59fd023e22cda412bf0aa8ba18a44f).
     * Finish basic DQN learning.
 * **Steven**
     1. Document the two-currency DQN model (2019-07-26).
@@ -34,11 +35,11 @@
 ### 2019-08-02 | Scrum #4 | Henry, Steven
 * **Goal**
     * **Henry**
-        1. Integrate Steven's trial DQN model (two-currency) with Henry's custom virtual trading platform.
+    1. Integrate Steven's trial DQN model (two-currency) with Henry's custom virtual trading platform.
     * **Steven**
-        1. Refactor his trial DQN model as DQN+RNN, present a runnable demo.
+        1. Refactor his trial DQN with model improvement, present a runnable demo.
             1. Support trading among multiple (>2) currencies.
-            * Implement RNN design with DQN..
+            * Implement a model design which understand the relation between timeframe.
             * Research about the possibility of using `vector` as first layer nodes in RNN design.
 
         * Sample data as:
@@ -47,7 +48,8 @@
             * Lightweight trial data for development: [USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv) (6,358 rows).
 
 
-### 2019-07-20 | Scrum #3 | Henry, Steven, Jian
+
+### 2019-07-30 | Scrum #3 | Henry, Steven, Jian
 * Placeholder, tentative goals available in *section Broadcast*.
 
 
@@ -71,6 +73,7 @@
             * Demo code delivered by [commit `#5a62409`](https://github.com/choH/half_tael_DQN/commit/5a62409a1ea16b7762c9431eb75c67a4afc44f22)
             * User manual delivered by [commit `#042ef13`](https://github.com/choH/half_tael_DQN/commit/042ef13b1e1b8f43e1cdc1af90a639de7f70b40d)
         * ❌ *Version control standard and contribution guideline* postpone to 2019-07-25.
+
     * **Steven**
         1. ✅ Trial DQN is runnable, will commit after Henry's *version control standard and contribution guideline* becomes available.
     * **Jian**
@@ -117,7 +120,14 @@
 ---
 ## Development Journal
 
-### 2018-07-24 | Discussed merging Steven's experimental DQN code with Henry's trading environment code | Henry, Steve
+### 2019-07-26 | Initial commit for trial DQN between two currency | Steven, Henry
+* Initial commit for trial DQN between two currency -- Steven.
+* Release tag v1.0 set -- Henry.
+
+### 2019-07-25 | Draft contributors' guideline for the project | Henry
+* Research git `rebase` and git `branch`. Designed and drafted [`CONTRIBUTING.md`](https://github.com/choH/half_tael_DQN/blob/master/CONTRIBUTING.md) by [commit `#dd7e0ce`](https://github.com/choH/half_tael_DQN/commit/dd7e0ce97c59fd023e22cda412bf0aa8ba18a44f) to specify the workflow of this project.
+
+### 2019-07-24 | Discussed merging Steven's experimental DQN code with Henry's trading environment code | Henry, Steve
 * Discussed the design and concern of merging Steven's experimental DQN code with Henry's trading environment code, particularly in:
     * How to support trading between multiple currencies (> 2) while making the machine realize some `_close` value is in the same time.
     * Possibility of using `vector` as first layer nodes in ANN/RNN design.
