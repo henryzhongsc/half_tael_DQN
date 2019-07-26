@@ -2,7 +2,7 @@
 
 > This file serves as the user manual for interacting with [`trade_interface`](https://github.com/choH/half_tael_DQN/blob/master/trade_interface.py). By convention, we name the file contains such interactions as `train_interface_SomethingReasonable.py`, e.g. [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/train_interface_demo.py).
 >
-> 📌v1.0 | 2019.07.24 | Henry Zhong
+> 📌 v1.0 | 2019.07.24 | Henry Zhong
 
 ---
 ## 1. What does [`trade_interface`](https://github.com/choH/half_tael_DQN/blob/master/trade_interface.py) do?
@@ -189,19 +189,20 @@ Sample output available in *Section Sample Output of `train_interface_demo.py`.*
 ### 5.1. Supported `currenct_pair`s
 
 ```
-'S5', 'S10', 'S15', 'S30', 'M1', 'M2', 'M3', 'M4', 'M5', 'M10', 'M15', 'M30', 'H1', 'H2', 'H3', 'H4', 'H6', 'H8', 'H12', 'D'
-```
-
-### 5.2. Supported `request_interval`s
-
-
-```
 'AUD_CAD', 'AUD_CHF', 'AUD_HKD', 'AUD_JPY', 'AUD_NZD', 'AUD_SGD', 'AUD_USD', 'CAD_CHF', 'CAD_HKD', 'CAD_JPY', 'CAD_SGD', 'CHF_HKD', 'CHF_JPY', 'CHF_ZAR', 'EUR_AUD', 'EUR_CAD', 'EUR_CHF', 'EUR_CZK', 'EUR_DKK', 'EUR_GBP', 'EUR_HKD', 'EUR_HUF', 'EUR_JPY', 'EUR_NOK', 'EUR_NZD', 'EUR_PLN', 'EUR_SEK', 'EUR_SGD', 'EUR_TRY', 'EUR_USD', 'EUR_ZAR', 'GBP_AUD', 'GBP_CAD', 'GBP_CHF', 'GBP_HKD', 'GBP_JPY', 'GBP_NZD', 'GBP_PLN', 'GBP_SGD', 'GBP_USD', 'GBP_ZAR', 'HKD_JPY', 'NZD_CAD', 'NZD_CHF', 'NZD_HKD', 'NZD_JPY', 'NZD_SGD', 'NZD_USD', 'SGD_CHF', 'SGD_HKD', 'SGD_JPY', 'TRY_JPY', 'USD_CAD', 'USD_CHF', 'USD_CNH', 'USD_CZK', 'USD_DKK', 'USD_HKD', 'USD_HUF', 'USD_JPY', 'USD_MXN', 'USD_NOK', 'USD_PLN', 'USD_SAR', 'USD_SEK', 'USD_SGD', 'USD_THB', 'USD_TRY', 'USD_ZAR', 'ZAR_JPY'
 ```
 
 For every `k` in `_currency_balance` passed to `Trade_Interface()`, there must be a currency pair above which includes every two `k` as `k1_k2` or `k2_k1`.
 
 e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD_JPY`, `GBP_JPY`, and `GBP_USD`.
+
+
+
+### 5.2. Supported `request_interval`s
+
+```
+'S5', 'S10', 'S15', 'S30', 'M1', 'M2', 'M3', 'M4', 'M5', 'M10', 'M15', 'M30', 'H1', 'H2', 'H3', 'H4', 'H6', 'H8', 'H12', 'D'
+```
 
 ### 5.3. Sample Output of [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/train_interface_demo.py).
 
