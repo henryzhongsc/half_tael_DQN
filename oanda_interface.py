@@ -41,7 +41,7 @@ class Oanda_Interface:
         self.nationality = "USA"
         self.client = oandapyV20.API(access_token=self.access_token)
 
-    def get_history_price(self, _from, _to, _interval, _currency_pair, close_price_only = False):
+    def get_history_price(self, _from, _to, _interval, _currency_pair, close_price_only = False, nan_fill = True):
         _params = {
             "from": _from,
             "to": _to,
@@ -59,6 +59,7 @@ class Oanda_Interface:
             df = df.drop(['open_price', 'high_price', 'low_price', 'complete'], axis =1)
             df = df.rename(index=str, columns={'close_price': _currency_pair + '_close', 'volume': _currency_pair + '_volume'})
             # print(df)
+            df = df.fillna(method='ffill')
         df.to_csv(csv_filename, index = None, header = True)
 
 
