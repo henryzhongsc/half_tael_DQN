@@ -21,5 +21,17 @@ import copy
 # _interval = "M5"
 
 
+# _account_name = 'DQN_v1.0_trial_data_remix' # 4999 rows.
+# _currency_balance = {'EUR': 30000, 'GBP': 30000}
+# _from = "2018-04-13T18:30:00Z"
+# _to = "2018-04-19T14:58:00Z"
+# _interval = "M1"
+
+# _account_name = 'DQN_v1.0_trial_data_remix_with_USD' # 5488 rows.
+# _currency_balance = {'USD': 30000, 'EUR': 30000, 'GBP': 30000}
+# _from = "2018-04-13T18:30:00Z"
+# _to = "2018-04-19T14:58:00Z"
+# _interval = "M1"
+
 if __name__ == "__main__":
     TI_data_generate = TI.Trade_Interface(_account_name, _currency_balance, _from, _to, _interval)
