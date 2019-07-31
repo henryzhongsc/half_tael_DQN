@@ -23,17 +23,17 @@ class Maze:#(tk.Tk, object):
             #self.title('maze')
             #self._build_maze()
             self.step_count = 0
-            
+
             # 零假空 初始化 环境变量
             self.balance = 0
             self.trade_account = 0
             self.obs = []
             self.data_env = []
-            df = pd.read_csv('/Users/xingdanmou/Downloads/forex-master 2/Historical_Data/M1/EUR_GBP.csv')
+            df = pd.read_csv('./EUR_GBP.csv')
             self.data_env = list(df['avg'].iloc[0:4799])
-            
+
             self._build_maze()
-            
+
 
     def _build_maze(self): # GRAPHEN
             #df = pd.read_csv('/Users/xingdanmou/Downloads/forex-master 2/Historical_Data/M1/EUR_GBP.csv')
@@ -41,7 +41,7 @@ class Maze:#(tk.Tk, object):
             self.start_day = 300 # each time we trade, our state is 300 historical price
 
 
-            # create start balance 
+            # create start balance
             self.balance = 100000
             # create trading exchange account
             self.trade_account = 0
@@ -57,7 +57,7 @@ class Maze:#(tk.Tk, object):
             self.trade_account = 0 # 用于记录 日元 的 持有量
             self.obs = self.data_env[0:self.start_day]
             self.step_count = 0
-            
+
             print(np.asarray(self.data_env[0:self.start_day]).shape)
             return np.asarray(self.data_env[0:self.start_day]) #输出是一个 1D array
 
