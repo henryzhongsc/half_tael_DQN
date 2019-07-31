@@ -7,19 +7,19 @@ def run_maze():
     for episode in range(5):
         # initial observation
         observation = env.reset()
-        
-        print("###############################################")
+
+        # print("###############################################")
         print(type(observation))
-        print("###############################################")
+        # print("###############################################")
 
         while True:
             # fresh env
             #env.render()
 
             # RL choose action based on observation
-            
+
             action = RL.choose_action(observation)
-            
+
             # RL take action and get next observation and reward
             observation_, reward, done = env.step(action)
 
@@ -29,26 +29,26 @@ def run_maze():
                 RL.learn()
 
             # swap observation
-            print("################# observation_ ############################")
-            print(type(observation_))
-            print("################### observation_ ##########################")
+            # print("################# observation_ ############################")
+            # print(type(observation_))
+            # print("################### observation_ ##########################")
             observation = observation_
 
             # break while loop when end of this episode
             if done:
                 print('game over')
                 print(env.balance)
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$                             $$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$                             $$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$                             $$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$                             $$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
                 break
             step += 1
 
     # end of game
-            
-    
-    
+
+
+
     #env.destroy()
 
 
