@@ -135,6 +135,8 @@ class Trade_Interface:
 
         arena_df = pd.concat((i.record_df.set_index('time') for i in currency_ORs), axis=1, join='outer', sort=True).reset_index()
         arena_df = arena_df.rename(index=str, columns={'index': 'time'})
+        arena_df = arena_df.fillna(method='ffill')
+        print("NaN value within arena_df: {}".format(arena_df.isnull().sum().sum()))
 
         currency_list = [k for k in self.currency_balance]
         arena_filename = arena_csv_export_dir + '_'.join(currency_list) + '_' + self.from_time[0:19] + '_' + self.to_time[0:19] + '_' + self.request_interval + '.csv'
