@@ -1,3 +1,5 @@
+import sys
+sys.path.append('.')
 import trade_interface as TI
 import copy
 
@@ -31,6 +33,7 @@ time_4 = '2019-01-01T22:59:00.000000000Z'
 time_5 = '2019-01-01T23:02:00.000000000Z'
 time_6 = '2019-01-01T23:05:00.000000000Z'
 time_7 = '2019-01-01T23:55:00.000000000Z'
+time_8 = '2019-01-01T23:57:00.000000000Z'
 
 time_initial = '2019-01-01T22:00:00.000000000Z' # Initial time to checkout all currency in USD, in other to compare with time_end after experimenting the trade strategy.
 time_end = '2019-01-01T23:59:00.000000000Z' # End time to checkout profit in USD.
@@ -59,6 +62,8 @@ if __name__ == "__main__":
     TI_train.execute_trade(time_5, 'JPY', 'USD', 50)
     TI_train.execute_trade(time_6, 'USD', 'JPY', 60)
     TI_train.execute_trade(time_7, 'USD', 'JPY', 70, _trade_unit_in_buy_currency = False)
+    TI_train.execute_trade(time_8, 'JPY', 'USD', 1000000)
+
 
     TI_train.trade_log_review() # Review trade log.
     TI_train.account_review() # Review account balance after all trades, with decriptive info of this account.
