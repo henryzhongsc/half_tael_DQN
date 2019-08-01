@@ -133,17 +133,22 @@ class DQN:
         if np.random.uniform() < self.epsilon:
             # forward feed the observation and get q value for every actions
             actions_value = self.sess.run(self.q_eval, feed_dict={self.s: observation})
+            print('\t\tactions_value as: {}'.format(actions_value))
             action = np.argmax(actions_value)
+            print('\t\targmax actions as: {}'.format(action))
         else:
             action = np.random.randint(0, self.n_actions)
+
+        print('\tactions as: {}\n'.format(action))
         return action
 
     def learn(self):
         # check to replace target parameters
         if self.learn_step_counter % self.replace_target_iter == 0:
             self.sess.run(self.replace_target_op)
+            print('#'*200)
             print('\ntarget_params_replaced\n')
-
+            print('#'*200)
         # sample batch memory from all memory
         if self.memory_counter > self.memory_size:
             sample_index = np.random.choice(self.memory_size, size=self.batch_size)
