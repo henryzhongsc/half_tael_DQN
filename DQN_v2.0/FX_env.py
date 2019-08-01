@@ -55,24 +55,15 @@ class FX:
         c_1 = 'EUR'
         c_2 = 'GBP'
 
-        if action == 0:
-            pass
-        elif action == 1:
-            self.TI_train.execute_trade(current_time, c_1, c_2, 100, _trade_unit_in_buy_currency = False)
-        elif action == 2:
-            self.TI_train.execute_trade(current_time, c_2, c_1, 100)
-        elif action == 3:
-            self.TI_train.execute_trade(current_time, c_1, c_2, 100, _trade_unit_in_buy_currency = False)
-        elif action == 4:
-            self.TI_train.execute_trade(current_time, c_2, c_1, 200)
-        elif action == 5:
-            self.TI_train.execute_trade(current_time, c_1, c_2, 300, _trade_unit_in_buy_currency = False)
-        elif action == 6:
-            self.TI_train.execute_trade(current_time, c_2, c_1, 200)
-        else:
-            print("Invalid action input = {}".format(action))
-            return -1
-        self.step_count += 1
+        # Exception2Handle: BALANCE NOT ENOUGH handle, may consider remove the catch phrase code of TI_Execution_Error and let it pass to this script to handle.
+        try:
+            self.execute_action(action)
+        except balance_not_enough_error as e:
+            sys.exit("During execute_action()\n\t{} is raised due to: {}".format(type(e), e))
+        finally:
+            self.execute_action(0)
+
+
 
 
         # 更新 observation 的状态
@@ -104,3 +95,23 @@ class FX:
 
         s_ = np.asarray(self.obs)
         return s_, reward, done
+
+    def execute_action(self, action):
+        if action == 0:
+            pass
+        elif action == 1:
+            self.TI_train.execute_trade(current_time, c_1, c_2, 100, _trade_unit_in_buy_currency = False)
+        elif action == 2:
+            self.TI_train.execute_trade(current_time, c_2, c_1, 100)
+        elif action == 3:
+            self.TI_train.execute_trade(current_time, c_1, c_2, 100, _trade_unit_in_buy_currency = False)
+        elif action == 4:
+            self.TI_train.execute_trade(current_time, c_2, c_1, 200)
+        elif action == 5:
+            self.TI_train.execute_trade(current_time, c_1, c_2, 300, _trade_unit_in_buy_currency = False)
+        elif action == 6:
+            self.TI_train.execute_trade(current_time, c_2, c_1, 200)
+        else:
+            print("Invalid action input = {}".format(action))
+            return -1
+        self.step_count += 1
