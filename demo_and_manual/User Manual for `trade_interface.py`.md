@@ -62,6 +62,11 @@ This class method will build a virtual account with access to trading record (de
     * `True`: If the method `execute_trade()` will be called again later, the `_time` input of the future call can be same as the `_time` input of current call.
     * `False`: Similar, but the `_time` input of the future call must be chronologically later than the `_time` input of current call.
 
+* **`balance_protection`**
+    * Keyword argument, default to `True`.
+    * `True`: If the balance of sell currency is not enough to execute the requested trade, such trade will be canceled. The trade log will mark such trade as "failed."
+    * `False`: If the balance of sell currency is not enough to execute the requested trade, such trade will be executed (resulted in a negative sell currency balance), and `TI_Account_Balance_Error` will be raised.
+
 This class method will perform a virtual trade decision you made on `_time`, exchange `trade_unit` amount of currency defined by `_trade_unit_in_buy_currency`, between the two currencies you defined (`_buy_currency` and `sell_currency`). It will also accumulate the exchange record to the class's `self.currency_balance` and append this trading decision to `self.trade_log`.
 
 
@@ -94,6 +99,7 @@ This class method will perform a virtual trade decision you made on `_time`, exc
     		pair_reverse_flag:       True
     		sell_currency_balance:   29986.708793946465
     		buy_currency_balance:    26692.75
+    		balance_protection_flag: True
     ```
 
     * `False`: Loop though `self.trade_log` and print out every items in a  reading-friendly way. e.g.
@@ -101,7 +107,7 @@ This class method will perform a virtual trade decision you made on `_time`, exc
     ```
     		action_id:               6
     		trade_time:              2019-01-01T23:55:00.000000000Z
-    		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY
+    		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY (successed)
     		Sell Currency Balance:   29986.708793946465 USD
     		Buy Currency Balance:    26692.75 JPY   
     ```
@@ -163,13 +169,17 @@ During self.execute_trade()
 	<class 'trade_interface.TI_Execution_Error'> is raised as: USB or GBP is(are) not in ['USD', 'JPY', 'GBP']
 
 During self.execute_trade()
-	<class 'trade_interface.TI_Execution_Error'> is raised as: USD balance < 0 after trade action #0 (currently -127412000.00000001).
-
-During self.execute_trade()
 	<class 'trade_interface.TI_Execution_Error'> is raised as: _time 2019-01-01T22:29:00.000000000Z is earlier than pervious action's trade_time 2019-01-01T22:30:00.000000000Z in log.
 ```
 
-### 3.4. OI_Onanda_Error
+### 3.4. TI_Account_Balance_Error
+
+```
+During self.execute_trade()
+	<class 'trade_interface.TI_Account_Balance_Error'> is raised as: USD balance < 0 after trade action #0 (currently -127412000.00000001).
+```
+
+### 3.5. OI_Onanda_Error
 ```
 During self.get_arena()
 	<class 'trade_interface.OI_Onanda_Error'> is raised due to: {"errorMessage":"Insufficient authorization to perform request."}
@@ -208,7 +218,7 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 
 ```
 ## The requested record has been successfully exported. ##
-	file path:          ./test_data/USD_JPY_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
+	file path:          ./raw_data/USD_JPY_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
 	currency pair(s):   USD_JPY
 	from:               2019-01-01T00:00:00Z
 	to:                 2019-01-02T00:00:00Z
@@ -217,7 +227,7 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 
 
 ## The requested record has been successfully exported. ##
-	file path:          ./test_data/GBP_USD_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
+	file path:          ./raw_data/GBP_USD_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
 	currency pair(s):   GBP_USD
 	from:               2019-01-01T00:00:00Z
 	to:                 2019-01-02T00:00:00Z
@@ -226,13 +236,14 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 
 
 ## The requested record has been successfully exported. ##
-	file path:          ./test_data/GBP_JPY_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
+	file path:          ./raw_data/GBP_JPY_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
 	currency pair(s):   GBP_JPY
 	from:               2019-01-01T00:00:00Z
 	to:                 2019-01-02T00:00:00Z
 	interval:           M1
 	total rows:         117
 
+NaN value within arena_df: 0
 
 ### The requested ARENA record has been successfully exported. ###
 	file path:          ./arena_data/USD_JPY_GBP_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
@@ -241,7 +252,6 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 	to:                 2019-01-02T00:00:00Z
 	interval:           M1
 	total rows:         118
-
 
 ##### Displaying information regarding account "Initial_Checkout_Review". #####
 
@@ -262,51 +272,59 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 
 		action_id:               0
 		trade_time:              2019-01-01T22:30:00.000000000Z
-		Trade Decision:          Sold 12.744200000000001 USD for 10 GBP
+		Trade Decision:          Sold 12.744200000000001 USD for 10 GBP (successed)
 		Sell Currency Balance:   29987.2558 USD
 		Buy Currency Balance:    30010 GBP
 
 
 		action_id:               1
 		trade_time:              2019-01-01T22:41:00.000000000Z
-		Trade Decision:          Sold 15.69242840329541 GBP for 20 USD
+		Trade Decision:          Sold 15.69242840329541 GBP for 20 USD (successed)
 		Sell Currency Balance:   29994.307571596706 GBP
 		Buy Currency Balance:    30007.2558 USD
 
 
 		action_id:               2
 		trade_time:              2019-01-01T22:55:00.000000000Z
-		Trade Decision:          Sold 0.21462297896694807 GBP for 30 JPY
+		Trade Decision:          Sold 0.21462297896694807 GBP for 30 JPY (successed)
 		Sell Currency Balance:   29994.092948617737 GBP
 		Buy Currency Balance:    30030 JPY
 
 
 		action_id:               3
 		trade_time:              2019-01-01T22:59:00.000000000Z
-		Trade Decision:          Sold 5591.040000000001 JPY for 40 GBP
+		Trade Decision:          Sold 5591.040000000001 JPY for 40 GBP (successed)
 		Sell Currency Balance:   24438.96 JPY
 		Buy Currency Balance:    30034.092948617737 GBP
 
 
 		action_id:               4
 		trade_time:              2019-01-01T23:02:00.000000000Z
-		Trade Decision:          Sold 5482.9 JPY for 50 USD
+		Trade Decision:          Sold 5482.9 JPY for 50 USD (successed)
 		Sell Currency Balance:   18956.059999999998 JPY
 		Buy Currency Balance:    30057.2558 USD
 
 
 		action_id:               5
 		trade_time:              2019-01-01T23:05:00.000000000Z
-		Trade Decision:          Sold 0.547006053533659 USD for 60 JPY
+		Trade Decision:          Sold 0.547006053533659 USD for 60 JPY (successed)
 		Sell Currency Balance:   30056.708793946465 USD
 		Buy Currency Balance:    19016.059999999998 JPY
 
 
 		action_id:               6
 		trade_time:              2019-01-01T23:55:00.000000000Z
-		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY
+		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY (successed)
 		Sell Currency Balance:   29986.708793946465 USD
 		Buy Currency Balance:    26692.75 JPY
+
+
+		action_id:               7
+		trade_time:              2019-01-01T23:57:00.000000000Z
+		Trade Decision:          Sold 109678000.0 JPY for 1000000 USD (failed)
+		Sell Balance Protection: Trade unsuccessful as 26692.75 JPY is not enough for the sell
+		Sell Currency Balance:   26692.75 JPY
+		Buy Currency Balance:    29986.708793946465 USD
 
 
 #### The READABLE trade log of account "dev_train_interface" has been successfully displayed (action: ALL) ####
@@ -319,7 +337,7 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 	request_interval:             M1
 	record_rows:                  118
 
-	trade_log_len:                7
+	trade_log_len:                8
 	USD:                          29986.708793946465
 	JPY:                          26692.75
 	GBP:                          30034.092948617737
@@ -335,7 +353,7 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 	request_interval:             M1
 	record_rows:                  118
 
-	trade_log_len:                9
+	trade_log_len:                10
 	USD:                          68536.17872218802
 	JPY:                          0.0
 	GBP:                          0.0
