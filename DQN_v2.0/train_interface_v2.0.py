@@ -59,7 +59,7 @@ if __name__ == "__main__":
 ###########################################################################################
 
 
-    env = FX(TI_train)
+    env = FX(TI_train, trade_on = 'EUR_GBP_close', base_currency = 'EUR')
     DQN = DQN(env.n_actions, env.n_features,
                       learning_rate=0.01,
                       reward_decay=0.9,
