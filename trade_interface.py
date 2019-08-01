@@ -73,7 +73,7 @@ class Trade_Interface:
         except TI_Account_Error as e:
             sys.exit("During self.get_currency_pairs()\n\t{} is raised due to: {}".format(type(e), e))
         try:
-            self.areana = self.get_arena(self.currency_pairs)
+            self.arena = self.get_arena(self.currency_pairs)
         except OI_Onanda_Error as e:
             sys.exit("During self.get_arena()\n\t{} is raised due to: {}".format(type(e), e))
         except TI_Account_Error as e:
@@ -150,7 +150,7 @@ class Trade_Interface:
 
 
     def market_LUT(self, _time):
-        df = self.areana.record_df
+        df = self.arena.record_df
         target_df = df.loc[df['time'] == _time]
         if target_df.empty:
             raise TI_Market_LUT_Error('Invalid time input: {}'.format(_time))
@@ -292,7 +292,7 @@ class Trade_Interface:
         print("#### The {} trade log of account \"{}\" has been successfully displayed (action: {}) ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name, 'ALL' if not tar_action_id else tar_action_id))
 
     def account_review(self):
-        df = self.areana.record_df
+        df = self.arena.record_df
         record_from = df.iloc[0, 0]
         record_to = df.iloc[df.shape[0]-1, 0]
         record_rows = df.shape[0]
