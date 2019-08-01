@@ -33,5 +33,11 @@ import copy
 # _to = "2018-04-19T14:58:00Z"
 # _interval = "M1"
 
+_account_name = 'DQN_v1.0_trial_data_4800_line' # 4800 rows.
+_currency_balance = {'USD': 0, 'EUR': 100000, 'GBP': 0}
+_from = "2018-04-13T18:30:00Z"
+_to = "2018-04-19T03:27:00Z"
+_interval = "M1"
+
 if __name__ == "__main__":
     TI_data_generate = TI.Trade_Interface(_account_name, _currency_balance, _from, _to, _interval)
