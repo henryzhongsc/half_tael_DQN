@@ -24,7 +24,7 @@ class FX:
         self.data_env = []
 
         # 零假空 初始化 环境变量
-        self.TI_train = TI_account
+        self.TI_train = copy.deepcopy(TI_account)
         self.TI_initial = copy.deepcopy(TI_account)
 
         df = self.TI_initial.arena.record_df
@@ -45,9 +45,10 @@ class FX:
             self.obs_time = self.data_time[0 : self.start_day]
             self.step_count = 0
 
+            del self.TI_train
             self.TI_train = copy.deepcopy(self.TI_initial)
 
-            return np.asarray(self.obs) #输出是一个 1D array
+            return np.asarray(self.obs), self.TI_train, self.data_time[0] #输出是一个 1D array
 
     def step(self, action):
         current_time = self.obs_time[-1]
@@ -55,48 +56,7 @@ class FX:
         c_1 = 'EUR'
         c_2 = 'GBP'
 
-        # Exception2Handle: BALANCE NOT ENOUGH handle, may consider remove the catch phrase code of TI_Execution_Error and let it pass to this script to handle.
-        try:
-            self.execute_action(action)
-        except balance_not_enough_error as e:
-            sys.exit("During execute_action()\n\t{} is raised due to: {}".format(type(e), e))
-        finally:
-            self.execute_action(0)
 
-
-
-
-        # 更新 observation 的状态
-        if self.step_count < self.max_usable_row - self.n_features:
-            self.obs = self.data_env[self.step_count : (self.start_day + self.step_count)]
-            self.obs_time = self.data_time[self.step_count : (self.start_day + self.step_count)]
-        elif self.step_count == self.max_usable_row - self.n_features:
-            self.obs = self.data_env[self.step_count : ]
-            self.obs_time = self.data_time[self.step_count : ]
-
-        # reward function
-        initial_checkout_balance = self.TI_initial.currency_balance[c_1]
-        TI_checkout = copy.deepcopy(self.TI_train)
-        TI_checkout.checkout_all_in(current_time, c_1)
-        # TI_checkout.account_review()
-        current_checkout_balance = TI_checkout.currency_balance[c_1]
-
-        if (current_checkout_balance > initial_checkout_balance) & (self.step_count == self.max_usable_row - self.n_features):
-            reward = 1
-            done = True
-        elif (current_checkout_balance <= initial_checkout_balance)  & (self.step_count == self.max_usable_row - self.n_features):
-            reward = -1
-            done = True
-        else:
-            reward = 0
-            done = False
-
-        print("Done = {}, {} = {}, {} = {}, step_count = {}".format(done, c_1, self.TI_train.currency_balance[c_1], c_2, self.TI_train.currency_balance[c_2], self.step_count))
-
-        s_ = np.asarray(self.obs)
-        return s_, reward, done
-
-    def execute_action(self, action):
         if action == 0:
             pass
         elif action == 1:
@@ -115,3 +75,43 @@ class FX:
             print("Invalid action input = {}".format(action))
             return -1
         self.step_count += 1
+
+
+
+
+        # 更新 observation 的状态
+        if self.step_count < self.max_usable_row - self.n_features:
+            self.obs = self.data_env[self.step_count : (self.start_day + self.step_count)]
+            self.obs_time = self.data_time[self.step_count : (self.start_day + self.step_count)]
+        elif self.step_count == self.max_usable_row - self.n_features:
+            self.obs = self.data_env[self.step_count : (self.start_day + self.step_count - 1)]
+            self.obs.append(self.data_env[-1])
+            self.obs_time = self.data_time[self.step_count : (self.start_day + self.step_count - 1)]
+            self.obs_time.append(self.data_time[-1])
+
+        # reward function
+        initial_checkout_balance = self.TI_initial.currency_balance[c_1]
+        TI_checkout = copy.deepcopy(self.TI_train)
+        TI_checkout.checkout_all_in(current_time, c_1)
+        # TI_checkout.account_review()
+        current_checkout_balance = TI_checkout.currency_balance[c_1]
+
+
+
+        if (current_checkout_balance > initial_checkout_balance) & (self.step_count == self.max_usable_row - self.n_features):
+            reward = 1
+            done = True
+        elif (current_checkout_balance <= initial_checkout_balance)  & (self.step_count == self.max_usable_row - self.n_features):
+            reward = -1
+            done = True
+        else:
+            reward = 0
+            done = False
+
+
+
+        # print("Done = {}, {} = {}, {} = {}, step_count = {}".format(done, c_1, self.TI_train.currency_balance[c_1], c_2, self.TI_train.currency_balance[c_2], self.step_count))
+
+        s_ = np.asarray(self.obs)
+        return s_, reward, done, self.TI_train, self.data_time[-1]
+
