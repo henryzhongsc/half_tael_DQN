@@ -12,12 +12,13 @@ import trade_interface as TI
 
 
 class FX:
-    def __init__(self, TI_account, n_features = 300):
+    def __init__(self, TI_account, trade_on, base_currency = 'USD', n_features = 300):
         #super(Maze, self).__init__()
         self.action_space = ['hold','buy_100','sell_100','buy_200','sell_200','buy_300','sell_300']
         self.n_actions = len(self.action_space)
         self.n_features = n_features # each time, we consider 300 days historical records
         self.step_count = 0
+        self.base_currency = base_currency
 
 
         self.obs = []
@@ -30,7 +31,7 @@ class FX:
         df = self.TI_initial.arena.record_df
         left_over_row = df.shape[0] % self.n_features
         self.max_usable_row = df.shape[0] - left_over_row
-        self.data_env = list(df['EUR_GBP_close'].iloc[0 : (self.max_usable_row - 1)])
+        self.data_env = list(df[trade_on].iloc[0 : (self.max_usable_row - 1)])
         self.data_time = list(df['time'].iloc[0 : (self.max_usable_row - 1)])
         self.obs_time = []
 
@@ -53,7 +54,7 @@ class FX:
     def step(self, action):
         current_time = self.obs_time[-1]
 
-        c_1 = 'EUR'
+        c_1 = self.base_currency
         c_2 = 'GBP'
 
 
