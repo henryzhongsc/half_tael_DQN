@@ -8,40 +8,28 @@ def run_maze():
         # initial observation
         observation = env.reset()
 
-        # print("###############################################")
-        print(type(observation))
-        # print("###############################################")
-
         while True:
             # fresh env
             #env.render()
 
             # RL choose action based on observation
-
-            action = RL.choose_action(observation)
+            action = DQN.choose_action(observation)
 
             # RL take action and get next observation and reward
             observation_, reward, done = env.step(action)
 
-            RL.store_transition(observation, action, reward, observation_)
+            DQN.store_transition(observation, action, reward, observation_)
 
             if (step > 200) and (step % 5 == 0):
-                RL.learn()
+                DQN.learn()
 
             # swap observation
-            # print("################# observation_ ############################")
-            # print(type(observation_))
-            # print("################### observation_ ##########################")
             observation = observation_
 
             # break while loop when end of this episode
             if done:
                 print('game over')
                 print(env.balance)
-                # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$                             $$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$                             $$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
                 break
             step += 1
 
@@ -55,7 +43,7 @@ def run_maze():
 if __name__ == "__main__":
     # maze game
     env = FX()
-    RL = DQN(env.n_actions, env.n_features,
+    DQN = DQN(env.n_actions, env.n_features,
                       learning_rate=0.01,
                       reward_decay=0.9,
                       e_greedy=0.9,
@@ -66,4 +54,4 @@ if __name__ == "__main__":
 #     env.after(100, run_maze)
     run_maze()
 #     env.mainloop()
-    RL.plot_cost()
+    DQN.plot_cost()
