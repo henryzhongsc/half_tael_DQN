@@ -5,20 +5,6 @@
 ---
 ## Broadcast
 
-### Tentative Goals for Scrum Meeting #3 on 2019-07-30
-* **Henry**
-    1. Draft version control standard and contribution guideline (2019-07-26).
-        * ✅ Delivered as [`CONTRIBUTING.md`](https://github.com/choH/half_tael_DQN/blob/master/CONTRIBUTING.md) by [commit `#dd7e0ce`](https://github.com/choH/half_tael_DQN/commit/dd7e0ce97c59fd023e22cda412bf0aa8ba18a44f).
-    * Finish basic DQN learning.
-* **Steven**
-    1. Document the two-currency DQN model (2019-07-26).
-* **Jian**
-    1. Develop a set of evaluation functions to evaluate the status (weight) of certain metrics introduced in [Anita folder](https://github.com/choH/half_tael_DQN/tree/master/legacy_ref/anita).
-        * Such functions should take `_time`, `_currency_pair`, `_volume`, `trade_action` (long, short, hold) and any other necessary parameters (e.g. historical `trade_log`) as inputs and return a `float` number between `-1` to `1` as a reflection of the status of such metrics at this particular position.
-
-        * Sample data as:
-            * [USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv) (74,277 rows).
-            * If the above data is too huge , you may always refer to [USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv) as a lightweight alternative (6,358 rows).
 
 ### 2019-07-10 | A short style guide for updating this `CHANGELOG.md`.
 * The `CHANGELOG.md` has three sections.
@@ -46,11 +32,39 @@
             * Train: [USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv) (74,277 rows).
             * Test: [USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2018-01-01T00:00:00_2019-01-01T00:00:00_M5.csv) (74,590 rows).
             * Lightweight trial data for development: [USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv) (6,358 rows).
-
+* **Review**
+    * **Henry**
+        1. ✅ Delivered as [DQN_v2.0 Folder](https://github.com/choH/half_tael_DQN/tree/half_tael_v2.0/DQN_v2.0) by [commit `#6a051da`](https://github.com/choH/half_tael_DQN/commit/6a051dab9e63ec483e97f8b39b5fe6e1d5910e3f). Check [milestone #2](https://github.com/choH/half_tael_DQN/milestone/2).
+    * **Steven**
+        2. ❓ Placeholder. Check [milestone #3](https://github.com/choH/half_tael_DQN/milestone/3)
 
 
 ### 2019-07-30 | Scrum #3 | Henry, Steven, Jian
-* Placeholder, tentative goals available in *section Broadcast*.
+* **Goals**
+    * **Henry**
+        1. Draft version control standard and contribution guideline (2019-07-26).
+        * Finish basic DQN learning.
+    * **Steven**
+        2. Document the two-currency DQN model (2019-07-26).
+    * **Jian**
+        3. Develop a set of evaluation functions to evaluate the status (weight) of certain metrics introduced in [Anita Folder](https://github.com/choH/half_tael_DQN/tree/master/legacy_ref/anita).
+            * Such functions should take `_time`, `_currency_pair`, `_volume`, `trade_action` (long, short, hold) and any other necessary parameters (e.g. historical `trade_log`) as inputs and return a `float` number between `-1` to `1` as a reflection of the status of such metrics at this particular position.
+
+            * Sample data as:
+                * [USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2017-01-01T00:00:00_2018-01-01T00:00:00_M5.csv) (74,277 rows).
+                * If the above data is too huge , you may always refer to [USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv](https://github.com/choH/half_tael_DQN/blob/master/arena_data/USD_JPY_GBP_2019-01-01T00:00:00_2019-02-01T00:00:00_M5.csv) as a lightweight alternative (6,358 rows).
+* **Review**
+    * **Henry**
+        1. ✅ Delivered as [`CONTRIBUTING.md`](https://github.com/choH/half_tael_DQN/blob/master/CONTRIBUTING.md) by [commit `#dd7e0ce`](https://github.com/choH/half_tael_DQN/commit/dd7e0ce97c59fd023e22cda412bf0aa8ba18a44f).
+        2. ✅ Finished most DQN part. Check [issue #2](https://github.com/choH/half_tael_DQN/issues/2).
+    * **Steven**
+        3. ✅ Delivered as [trial_DQN_doc.docx](https://github.com/choH/half_tael_DQN/blob/half_tael_v2.0/demo_and_manual/trial_DQN_doc.docx) by [commit `#2b10528`](https://github.com/choH/half_tael_DQN/commit/2b105286c2d6aed95595cbcfb605390e1bab92c3). Check [issue #1](https://github.com/choH/half_tael_DQN/issues/1).
+            * Absent due to sickness, showed up and discussed on 2019-08-01.
+    * **Jian**
+        1. ✅ Delivered a bunch of file in [anita_v1.1 folder](https://github.com/choH/half_tael_DQN/tree/anita_v1.1/anita_v1.1) by [commit `#90fd3c0`](https://github.com/choH/half_tael_DQN/commit/90fd3c0e38bdc56d32045a0467c31e8659a54dc5), [commit `#4e93d2b`](https://github.com/choH/half_tael_DQN/commit/4e93d2b937c3b049e93e99dffa72384da46e0e9f), and [commit `#d9bd1aa`](https://github.com/choH/half_tael_DQN/commit/d9bd1aaf1c0757c660d70797643020aeaee8f4d2).
+            * ❓ QA not yet performed. Will update [milestone #1](https://github.com/choH/half_tael_DQN/milestone/1) once performed.
+            * Absent due to interview conflict, not yet showed up.
+
 
 
 ### 2019-07-24 | Scrum #2 | Henry, Jian, Steven
@@ -120,9 +134,66 @@
 ---
 ## Development Journal
 
+### 2019-08-01 | Delivered half_tael_v2.0 running on DQN v2.0 | Henry
+* Implemented `balance_protection` feature on `trade_interface.py`. If the balance of sell currency is not enough to execute the requested trade, such trade will be canceled. The trade log will mark such trade as "failed." ([commit `#b735aff`](https://github.com/choH/half_tael_DQN/commit/b735aff1ccaf9ff9b34e6b6a215974597ef54e58))
+* Discussed with Steven on the action update policy, decided the model does not need to know if an action is actually executed since the NN design will understand that at this `state` the `x` action will have bad reward (since equal balance will result in a reward of `-1`).
+* Delivered half_tael_v2.0 by [commit `#6a051da`](https://github.com/choH/half_tael_DQN/commit/6a051dab9e63ec483e97f8b39b5fe6e1d5910e3f), Still hardcored to GBP due to the fact that DQN v1.0 only supports two-currency. Thus the non-base_currency is set manually. Will automate such part when refactoring with DQN v2.5 to avoid reengineering.  
+    * Check [milestone #2](https://github.com/choH/half_tael_DQN/milestone/2?closed=1).
+
+
+```
+...
+####################game over####################
+##### Displaying information regarding account "Initial_Checkout_Review (episode: 2)". #####
+
+	record_from:                  2018-04-13T18:30:00.000000000Z
+	record_to:                    2018-04-16T09:29:00.000000000Z
+	request_interval:             M1
+	record_rows:                  889
+
+	trade_log_len:                2
+	USD:                          0
+	EUR:                          100000.0
+	GBP:                          0
+
+##### The information of account "Initial_Checkout_Review (episode: 2)" has been successfully displayed. #####
+
+##### Displaying information regarding account "End_Checkout_Review (episode: 2)". #####
+
+	record_from:                  2018-04-13T18:30:00.000000000Z
+	record_to:                    2018-04-16T09:29:00.000000000Z
+	request_interval:             M1
+	record_rows:                  889
+
+	trade_log_len:                293
+	USD:                          0
+	EUR:                          100025.13121083906
+	GBP:                          0.0
+
+##### The information of account "End_Checkout_Review (episode: 2)" has been successfully displayed. #####
+...
+```
+
+### 2019-07-31 | Starting to refactor DQN v1.0 | Henry
+* Till [30ec22c](https://github.com/choH/half_tael_DQN/commit/30ec22c343cb27f5338b1454d63b035df3b340ec), a understanding of DQN v1.0 is built.
+* Bug fix on account cumulation with `execute_trade()` from `trade_interface.py`.
+* Update hardcore setting (`n_features = 300`, record length to `4800` etc, currency as `EUR` and `GBP`) with relatively more universal adaptability.
+* Work in progress on [commit `#0e0b676`](https://github.com/choH/half_tael_DQN/commit/0e0b6766cff67db23e79430caccd9726dc06b93ac), as a redesign of exception handling on `currency_balance[_sell_currency] < 0` is needed.
+    * Ask Steven if the model need to know that some of its actions are not executed due to the balance issue.
+
+
+### 2019-07-30 | Finished basic DQN learning | Henry
+* Finished most DQN part ([4.3](https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-3-DQN3/), up to date with what DQN v1.0 uses).
+    * Check [issue #2](https://github.com/choH/half_tael_DQN/issues/2).
+
+
+### 2019-07-29 | Dev branches base on half_tael_v1.0 | Henry
+* Branches [half_tael_v2.0](https://github.com/choH/half_tael_DQN/tree/half_tael_v2.0), [DQN_v2.5](https://github.com/choH/half_tael_DQN/tree/DQN_v2.5), and [anita_v1.1](https://github.com/choH/half_tael_DQN/tree/anita_v1.1) checked out from this commit — aka [Release half_tale_DQN v1.0: Virtual Trading Platform + Trial DQN](https://github.com/choH/half_tael_DQN/releases/tag/v1.0). ([commit `#113431e`](https://github.com/choH/half_tael_DQN/commit/113431e8247f200f5a0800b23e355072c5a9280b))
+
 ### 2019-07-26 | Initial commit for trial DQN between two currency | Steven, Henry
 * Initial commit for trial DQN between two currency -- Steven.
 * Release tag v1.0 set -- Henry.
+    * [half_tale_DQN v1.0: Virtual Trading Platform + Trial DQN](https://github.com/choH/half_tael_DQN/releases)
 
 ### 2019-07-25 | Draft contributors' guideline for the project | Henry
 * Research git `rebase` and git `branch`. Designed and drafted [`CONTRIBUTING.md`](https://github.com/choH/half_tael_DQN/blob/master/CONTRIBUTING.md) by [commit `#dd7e0ce`](https://github.com/choH/half_tael_DQN/commit/dd7e0ce97c59fd023e22cda412bf0aa8ba18a44f) to specify the workflow of this project.
