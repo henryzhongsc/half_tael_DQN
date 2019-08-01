@@ -31,6 +31,9 @@ class TI_Market_LUT_Error(Exception):
 class TI_Execution_Error(Exception):
     pass
 
+class TI_Accunt_Balance_Error(Exception):
+    pass
+
 class OI_Onanda_Error(Exception):
     pass
 
@@ -53,6 +56,8 @@ def execution_report(decorated):
         except TI_Market_LUT_Error as e:
             sys.exit("During self.execute_trade()\n\t{} is raised as: {}".format(type(e), e))
         except TI_Execution_Error as e:
+            sys.exit("During self.execute_trade()\n\t{} is raised as: {}".format(type(e), e))
+        except TI_Accunt_Balance_Error as e:
             sys.exit("During self.execute_trade()\n\t{} is raised as: {}".format(type(e), e))
     return inner
 
@@ -159,7 +164,7 @@ class Trade_Interface:
             return target_df
 
     @execution_report
-    def execute_trade(self, _time, _sell_currency, _buy_currency, _trade_unit, _trade_unit_in_buy_currency = True, review_checkout_only = False):
+    def execute_trade(self, _time, _sell_currency, _buy_currency, _trade_unit, _trade_unit_in_buy_currency = True, review_checkout_only = False, balance_protection = True):
         temp_currency_list = [k for k in self.currency_balance]
         if _sell_currency not in temp_currency_list or _buy_currency not in temp_currency_list:
             raise TI_Execution_Error('{} or {} is(are) not in {}'.format(_sell_currency, _buy_currency, temp_currency_list))
@@ -178,20 +183,20 @@ class Trade_Interface:
             raise TI_Market_LUT_Error('Time input: {} returns np.nan'.format(_time))
 
 
+        sell_currency_balance_before_trade = self.currency_balance[_sell_currency]
+        buy_currency_balance_before_trade = self.currency_balance[_buy_currency]
+
+
+
         if _trade_unit_in_buy_currency:
             if pair_reverse_flag:
                 self.currency_balance[_sell_currency] -= _trade_unit / trade_ratio
             else:
                 self.currency_balance[_sell_currency] -= _trade_unit * trade_ratio
-
-            if self.currency_balance[_sell_currency] < 0:
-                raise TI_Execution_Error('{} balance < 0 after trade action #{} (currently {}).'.format(_sell_currency, self.action_id_counter,  self.currency_balance[_sell_currency]))
             self.currency_balance[_buy_currency] += _trade_unit
 
         elif not _trade_unit_in_buy_currency:
             self.currency_balance[_sell_currency] -= _trade_unit
-            if self.currency_balance[_sell_currency] < 0:
-                raise TI_Execution_Error('{} balance < 0 after trade action #{} (currently {}).'.format(_sell_currency, self.action_id_counter,  self.currency_balance[_sell_currency]))
             if pair_reverse_flag:
                 self.currency_balance[_buy_currency] += _trade_unit * trade_ratio
             else:
@@ -199,6 +204,14 @@ class Trade_Interface:
         else:
             raise TI_Execution_Error('Invalid _trade_unit_in_buy_currency input: {}'.format(_trade_unit_in_buy_currency))
 
+        balance_protection_flag = False
+        if self.currency_balance[_sell_currency] < 0:
+            if balance_protection:
+                self.currency_balance[_sell_currency] = sell_currency_balance_before_trade
+                self.currency_balance[_buy_currency] = buy_currency_balance_before_trade
+                balance_protection_flag = True
+            else:
+                raise TI_Accunt_Balance_Error('{} balance < 0 after trade action #{} (currently {}).'.format(_sell_currency, self.action_id_counter,  self.currency_balance[_sell_currency]))
 
         trade_currency = _buy_currency if _trade_unit_in_buy_currency else _sell_currency
 
@@ -214,8 +227,8 @@ class Trade_Interface:
                     raise TI_Execution_Error("_time {} is earlier than pervious action's trade_time {} in log.".format(_time, pervious_log['trade_time']))
 
 
-        val_list = [self.action_id_counter, _time, _sell_currency, _buy_currency, _trade_unit, trade_currency, trade_ratio, pair_reverse_flag, self.currency_balance[_sell_currency], self.currency_balance[_buy_currency]]
-        key_list = ["action_id", "trade_time", "sell_currency", "buy_currency", "trade_unit", "trade_currency", "trade_ratio", "pair_reverse_flag", "sell_currency_balance", "buy_currency_balance"]
+        val_list = [self.action_id_counter, _time, _sell_currency, _buy_currency, _trade_unit, trade_currency, trade_ratio, pair_reverse_flag, self.currency_balance[_sell_currency], self.currency_balance[_buy_currency], balance_protection_flag]
+        key_list = ["action_id", "trade_time", "sell_currency", "buy_currency", "trade_unit", "trade_currency", "trade_ratio", "pair_reverse_flag", "sell_currency_balance", "buy_currency_balance", "balance_protection_flag"]
         new_trade_action = dict(zip(key_list, val_list))
         # print(json.dumps(new_trade_action, indent=4))
         self.trade_log.append(new_trade_action)
@@ -278,12 +291,16 @@ class Trade_Interface:
                         # print('\t\t-----not in {} ----'.format(k))
                         print("\t\t{:25}{}".format(k+': ', v))
 
+
                 if i['trade_currency'] == i['buy_currency']:
                     sold_currency_unit = i['trade_unit'] / i['trade_ratio'] if i['pair_reverse_flag'] else i['trade_unit'] * i['trade_ratio']
-                    print("\t\t{:25}Sold {} {} for {} {}".format('Trade Decision: ', sold_currency_unit, i['sell_currency'], i['trade_unit'], i['buy_currency']))
+                    print("\t\t{:25}Sold {} {} for {} {} ({})".format('Trade Decision: ', sold_currency_unit, i['sell_currency'], i['trade_unit'], i['buy_currency'], 'failed' if i["balance_protection_flag"] else 'successed'))
                 if i['trade_currency'] == i['sell_currency']:
                     bought_currency_unit = i['trade_unit'] * i['trade_ratio'] if i['pair_reverse_flag'] else i['trade_unit'] / i['trade_ratio']
-                    print("\t\t{:25}Sold {} {} for {} {}".format('Trade Decision: ', i['trade_unit'], i['sell_currency'], bought_currency_unit, i['buy_currency']))
+                    print("\t\t{:25}Sold {} {} for {} {} ({})".format('Trade Decision: ', i['trade_unit'], i['sell_currency'], bought_currency_unit, i['buy_currency'], 'failed' if i["balance_protection_flag"] else 'successed'))
+
+                if i["balance_protection_flag"]:
+                    print("\t\t{:25}Trade unsuccessful as {} {} is not enough for the sell".format('Sell Balance Protection: ', i['sell_currency_balance'], i['sell_currency']))
 
                 print("\t\t{:25}{} {}".format('Sell Currency Balance: ', i['sell_currency_balance'], i['sell_currency']))
                 print("\t\t{:25}{} {}".format('Buy Currency Balance: ', i['buy_currency_balance'], i['buy_currency']))
