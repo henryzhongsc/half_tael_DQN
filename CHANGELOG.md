@@ -36,7 +36,7 @@
     * **Henry**
         1. ✅ Delivered as [DQN_v2.0 Folder](https://github.com/choH/half_tael_DQN/tree/half_tael_v2.0/DQN_v2.0) by [commit `#6a051da`](https://github.com/choH/half_tael_DQN/commit/6a051dab9e63ec483e97f8b39b5fe6e1d5910e3f). Check [milestone #2](https://github.com/choH/half_tael_DQN/milestone/2).
     * **Steven**
-        2. ❓ Placeholder. Check [milestone #3](https://github.com/choH/half_tael_DQN/milestone/3)
+        2. ❌ 🚧 Work in progress as required to set up with server, will deliver on 2019-08-05. Check [milestone #3](https://github.com/choH/half_tael_DQN/milestone/3)
 
 
 ### 2019-07-30 | Scrum #3 | Henry, Steven, Jian
