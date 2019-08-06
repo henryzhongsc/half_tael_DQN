@@ -18,6 +18,9 @@
 ---
 ## Meeting
 
+### 2019-08-05 | Scrum #5 | Henry, Steven
+* Steven absent, postpone to 2019-08-06 to discuss DQN v2.5.
+
 ### 2019-08-02 | Scrum #4 | Henry, Steven
 * **Goal**
     * **Henry**
