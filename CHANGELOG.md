@@ -18,8 +18,22 @@
 ---
 ## Meeting
 
-### 2019-08-05 | Scrum #5 | Henry, Steven
-* Steven absent, postpone to 2019-08-06 to discuss DQN v2.5.
+### 2019-08-06 | Scrum #5 | Henry, Steven
+* ~~Steven absent, postpone to 2019-08-06 to discuss DQN v2.5.~~
+* ❌ 🚧 DQN v2.5
+    * Tried to utilize CNN to scan input with multiple dimension (support trading among multiple (>2) currencies). But it is indeed technically challenged since:
+        * The original DQN v1.0 (and also DQN v2.0) was built on a modification of Morvan's environment, which only considered one-dimensional input.
+        * There aren't too much readable tensorflow CNN+DQN source code we can referenced on. And it will forgo a serious portion of work on DQN v1.0 and v2.0 if we want to redesign our environment base on another project.
+    * Resolution: Steven will try to deliver his demo by Scrum #6 (2019-08-07). If not, we will shift focus from Morvan to another tutorial and redesign the environment. We want to stick with Morvan if possible as DQN v2.0 is fully developed, but as the reward part is relatively stand-alone from DQN v1.0 but more coupled to the trading platform (which is fully developed and will keep using), the cost is still acceptable as long as we can quickly implement the transformation code to change the environment from pixel games to numerical forex market. Potential reference include:
+        * [reinforcement-learning/DQN](https://github.com/dennybritz/reinforcement-learning/tree/master/DQN)
+        * [https://www.datahubbs.com/deepmind-dqn/](https://www.datahubbs.com/deepmind-dqn/)
+        * [Using Keras and Deep Q-Network to Play FlappyBird | Ben Lau](https://yanpanlau.github.io/2016/07/10/FlappyBird-Keras.html)
+        * [Beat Atari with Deep Reinforcement Learning! (Part 1: DQN)](https://becominghuman.ai/lets-build-an-atari-ai-part-1-dqn-df57e8ff3b26)
+        * [floodsung/DQN-Atari-Tensorflow](https://github.com/floodsung/DQN-Atari-Tensorflow)
+        * With LSTM:
+            * [附：强化学习——DRQN分析详解 | ECKai](https://zhuanlan.zhihu.com/p/54898904)
+            * [论文笔记之：Deep Recurrent Q-Learning for Partially Observable MDPs | uuummmmiiii](https://zhuanlan.zhihu.com/p/37294342)
+            * [Deep Recurrent Q-Learning for Partially Observable MDPs | Matthew Hausknecht, Peter Stone](https://arxiv.org/abs/1507.06527v3)
 
 ### 2019-08-02 | Scrum #4 | Henry, Steven
 * **Goal**
