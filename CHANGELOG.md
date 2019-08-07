@@ -18,12 +18,27 @@
 ---
 ## Meeting
 
+### 2019-08-09 | Scrum $7 | Henry, Steven
+* **Henry**
+    * ✅ Test the reward design (for Anita).
+    * Anita v2.0
+* **Steven**
+    * 🚧 DQN v2.5
+
+### 2019-08-07 | Scrum #6 | Henry, Steven
+* **Henry**
+    * ✅ Understand CNN basic.
+* **Steven**
+    * ✅ Fully understand the basic of RNN as in the relationship between `w_1`, `b_1`, `n_features`, and input `data_env`
+    * ❌ 🚧 DQN v2.5
+        * Postpone to 2019-08-09, but made significant progress on understanding the mapping of matrix convolution.
+
 ### 2019-08-06 | Scrum #5 | Henry, Steven
 * ~~Steven absent, postpone to 2019-08-06 to discuss DQN v2.5.~~
 * ❌ 🚧 DQN v2.5
     * Tried to utilize CNN to scan input with multiple dimension (support trading among multiple (>2) currencies). But it is indeed technically challenged since:
         * The original DQN v1.0 (and also DQN v2.0) was built on a modification of Morvan's environment, which only considered one-dimensional input.
-        * There aren't too much readable tensorflow CNN+DQN source code we can referenced on. And it will forgo a serious portion of work on DQN v1.0 and v2.0 if we want to redesign our environment base on another project.
+        * There aren't too much readable TensorFlow CNN+DQN source code we can referenced on. And it will forgo a serious portion of work on DQN v1.0 and v2.0 if we want to redesign our environment base on another project.
     * Resolution: Steven will try to deliver his demo by Scrum #6 (2019-08-07). If not, we will shift focus from Morvan to another tutorial and redesign the environment. We want to stick with Morvan if possible as DQN v2.0 is fully developed, but as the reward part is relatively stand-alone from DQN v1.0 but more coupled to the trading platform (which is fully developed and will keep using), the cost is still acceptable as long as we can quickly implement the transformation code to change the environment from pixel games to numerical forex market. Potential reference include:
         * [reinforcement-learning/DQN](https://github.com/dennybritz/reinforcement-learning/tree/master/DQN)
         * [https://www.datahubbs.com/deepmind-dqn/](https://www.datahubbs.com/deepmind-dqn/)
