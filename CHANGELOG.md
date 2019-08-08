@@ -166,6 +166,21 @@
 ---
 ## Development Journal
 
+### 2019-08-08 | Legacy Anita plot hole discovered | Henry
+
+* **Findings:**
+    * After some careful review of [legacy_ref/anita folder](https://github.com/choH/half_tael_DQN/tree/master/legacy_ref/anita), I found that the mapping is between **personality** and **financial products**. e.g. (letter referred Big Five Personality Traits)
+        * A persona with high E and low N is good for small cap investment.
+        * A person with high C, high E, low A, low N is good for foreign exchange investment.
+    * There are also many disparities between the [presentation slides](https://github.com/choH/half_tael_DQN/blob/master/legacy_ref/anita/Mapping%20Personality%20Traits%20to%20Investment%20Behavior%20(Revised).pptx) and the [metrics spreadsheet](https://github.com/choH/half_tael_DQN/blob/master/legacy_ref/anita/Strategies%20and%20Metrics.xlsx). e.g.
+        * Slides indicate *"Momentum Investing (med-high c, high e, high a),"* but OCEAN value being 41.25, 40, 36.875, 36.25, and 35 respectively. Where the "mid-high C" is higher than the "high E" and "high A."
+        * Slide indicate *"Income Investing (medium-high e, high n),"* but OCEAN value being 36.25, 35, 30, 30, and 32.5. Where the "mid-high E" is in fact the lowest value among five, and the supposedly "high N" ranks only among middle.
+
+
+* **Conclusion:** Thus, this is essentially useless to our model as it cannot evaluate if a `trade_action` fits a given personality of not.
+* **Solution:** My thinking is I will discard all Anita legacy and use some technical/fundamental analysis indicators to evaluate the "suitableness between a `trade_action` and given indicator" and therefore influent the reward. How a personality is defined by the indicators will left to future development.
+
+
 ### 2019-08-01 | Delivered half_tael_v2.0 running on DQN v2.0 | Henry
 * Implemented `balance_protection` feature on `trade_interface.py`. If the balance of sell currency is not enough to execute the requested trade, such trade will be canceled. The trade log will mark such trade as "failed." ([commit `#b735aff`](https://github.com/choH/half_tael_DQN/commit/b735aff1ccaf9ff9b34e6b6a215974597ef54e58))
 * Discussed with Steven on the action update policy, decided the model does not need to know if an action is actually executed since the NN design will understand that at this `state` the `x` action will have bad reward (since equal balance will result in a reward of `-1`).
