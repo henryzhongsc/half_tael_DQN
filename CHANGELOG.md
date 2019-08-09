@@ -18,7 +18,7 @@
 ---
 ## Meeting
 
-### 2019-08-09 | Scrum $7 | Henry, Steven
+### 2019-08-12 | Scrum #7 | Henry, Steven
 * **Henry**
     * ✅ Test the reward design (for Anita).
     * Anita v2.0
@@ -165,6 +165,18 @@
 
 ---
 ## Development Journal
+
+### 2019-08-09 | Debug DQN_v2.0 | Henry, Steven
+* Debug DQV_v2.0
+    * solved bugs related to `self.s` and `self.s_` for `placeholder` and `reshape`.
+    * solved bugs related to `self.x` and `self.x_` on `conv2d()`.
+    * Work in progress on figuring out the bugs related to:
+
+    ```
+    transition = np.hstack((s, [a, r], s_))
+    index = self.memory_counter % self.memory_size
+    self.memory[index, :] = transition
+    ```
 
 ### 2019-08-08 | Legacy Anita plot hole discovered | Henry
 
