@@ -260,9 +260,11 @@ class DeepQNetwork:
 
 
         temp_s_ = batch_memory[:, -self.n_features*2:]
+        # temp_s_ = batch_memory[:, -self.n_features:]
         feed_s_ = np.array(temp_s_).reshape(-1,2,300,1)
 
         temp_s = batch_memory[:, :self.n_features*2]
+        # temp_s = batch_memory[:, :self.n_features]
         feed_s = np.array(temp_s).reshape(-1,2,300,1)
 
 
@@ -310,6 +312,9 @@ class DeepQNetwork:
 
     def plot_cost(self):
         import matplotlib.pyplot as plt
+        print("COST^!^ "*20)
+        print(self.cost_his)
+        print("COST^!^ "*20)
         plt.plot(np.arange(len(self.cost_his)), self.cost_his)
         plt.ylabel('Cost')
         plt.xlabel('training steps')

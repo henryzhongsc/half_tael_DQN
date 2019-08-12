@@ -123,7 +123,7 @@ class DeepQNetwork:
 
     def choose_action(self, observation):
         # to have batch dimension when feed into tf placeholder
-        
+
         #print("###############################################")
         #print(type(observation))
         #print("###############################################")
@@ -135,7 +135,7 @@ class DeepQNetwork:
         #print(observation)
         #此处新增修改
         #observation = np.array([observation])
-        
+
         #print(observation)
         #print(observation.shape)
 
@@ -210,6 +210,9 @@ class DeepQNetwork:
 
     def plot_cost(self):
         import matplotlib.pyplot as plt
+        print("COST^!^ "*20)
+        print(self.cost_his)
+        print("COST^!^ "*20)
         plt.plot(np.arange(len(self.cost_his)), self.cost_his)
         plt.ylabel('Cost')
         plt.xlabel('training steps')
