@@ -4,7 +4,7 @@ from RL_brain import DeepQNetwork
 
 def run_maze():
     step = 0
-    for episode in range(5):
+    for episode in range(2):
         # initial observation
         observation = env.reset()
 

@@ -29,7 +29,7 @@ class Maze:#(tk.Tk, object):
             self.trade_account = 0
             self.obs = []
             self.data_env = []
-            df = pd.read_csv('./EUR_GBP.csv')
+            df = pd.read_csv('trial_DQN/EUR_GBP.csv')
             self.data_env = list(df['avg'].iloc[0:4799])
 
             self._build_maze()
