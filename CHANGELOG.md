@@ -20,22 +20,28 @@
 
 ### 2019-08-12 | Scrum #7 | Henry, Steven
 * **Henry**
-    * ✅ Test the reward design (for Anita).
-    * Anita v2.0
+    1. ✅ Test the reward design (for Anita).
+    * ~~Anita v2.0~~
+            * Postponed due to prioritized on debugging DQN v2.5.
+    * ✅ DQN v2.5: Debugged and partially adjusted the CNN + DQN model which supports multiple (>2) currencies based on Steven X.'s design ([ef6e716](https://github.com/choH/half_tael_DQN/commit/ef6e716af132541a0720bcb456f602c4f13cba06)). Presented a runnable demo only on [a specific dummy data set](https://github.com/choH/half_tael_DQN/tree/v2.0/DQV_v2.5/EUR_GBP.csv) -- Henry.
+        * Main works presented as [f7259b3](https://github.com/choH/half_tael_DQN/commit/f7259b3eff2cf9e0d9886ea613d87bee958bdb68). Stored as [DQN_v2.5](https://github.com/choH/half_tael_DQN/tree/v2.0/master/DQN_v2.5).
+
 * **Steven**
-    * 🚧 DQN v2.5
+    1. ✅ DQN v2.5: Research and redesigned [DQN_v1.0](https://github.com/choH/half_tael_DQN/tree/v1.0/trial_DQN) as [DQN_v2.5](https://github.com/choH/half_tael_DQN/tree/v2.0/master/DQN_v2.5) to support multiple (>2) currencies using a CNN + DQN structure.
+        * Works presented as [ef6e716](https://github.com/choH/half_tael_DQN/commit/ef6e716af132541a0720bcb456f602c4f13cba06). Need debug.
+        * Absent, but marked as "green check" since goal (DQN v2.5) accomplished -- Henry.
 
 ### 2019-08-07 | Scrum #6 | Henry, Steven
 * **Henry**
-    * ✅ Understand CNN basic.
+    1. ✅ Understand CNN basic.
 * **Steven**
-    * ✅ Fully understand the basic of RNN as in the relationship between `w_1`, `b_1`, `n_features`, and input `data_env`
-    * ❌ 🚧 DQN v2.5
+    1. ✅ Fully understand the basic of CNN as in the relationship between `w_1`, `b_1`, `n_features`, and input `data_env`
+    * ❌ 🚧 DQN v2.5.
         * Postpone to 2019-08-09, but made significant progress on understanding the mapping of matrix convolution.
 
 ### 2019-08-06 | Scrum #5 | Henry, Steven
 * ~~Steven absent, postpone to 2019-08-06 to discuss DQN v2.5.~~
-* ❌ 🚧 DQN v2.5
+* ❌ 🚧 DQN v2.5.
     * Tried to utilize CNN to scan input with multiple dimension (support trading among multiple (>2) currencies). But it is indeed technically challenged since:
         * The original DQN v1.0 (and also DQN v2.0) was built on a modification of Morvan's environment, which only considered one-dimensional input.
         * There aren't too much readable TensorFlow CNN+DQN source code we can referenced on. And it will forgo a serious portion of work on DQN v1.0 and v2.0 if we want to redesign our environment base on another project.
@@ -165,6 +171,11 @@
 
 ---
 ## Development Journal
+
+### 2019-08-11 | Bugfix and partial adjustments on DQN_v2.0 | Henry
+* Debugged on Steven's sketch code [ef6e716](https://github.com/choH/half_tael_DQN/commit/ef6e716af132541a0720bcb456f602c4f13cba06) with various `reshape` manipulations regarding `self.memory`, `store_transition` and `batch_memory`'s slicing in `feed_dict`.
+* Several cosmetic on monitory print-outs.
+* [Cost converges unreasonable fast and smooth](https://github.com/choH/half_tael_DQN/tree/v2.0/DQV_v2.5/cost_log.txt), potentially overfit, need investigation.
 
 ### 2019-08-09 | Debug DQN_v2.0 | Henry, Steven
 * Debug DQV_v2.0
