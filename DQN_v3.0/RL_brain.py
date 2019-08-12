@@ -81,29 +81,20 @@ class DeepQNetwork:
         return tf.Variable(initial)
 
     def conv2d(self,x, W):
-
         temp = tf.nn.conv2d(x, W, strides=[1, 2, 25, 1], padding='SAME')
-
         print('CONV2d !#!'*20)
         print(x, W, temp)
         print('CONV2d !#!'*20)
-
         return temp
 
     def max_pool_2x2(self,x):
-        return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],     # 纵2 横25
-                              strides=[1, 2, 2, 1], padding='SAME')
-
-
-
+        return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
 
     def _build_net(self):
 
         print('in build net')
         # ------------------ build evaluate_net ------------------
-        #self.s = tf.placeholder(tf.float32, [None, self.n_features], name='s')  # input
-        #tf.placeholder(tf.float32, [None, 784]) # [-1,2,self.n_features,1]
         self.x = tf.placeholder(tf.float32, [None, 600])
         self.s = tf.reshape(self.x, [-1,2,300,1])
         W = tf.Variable(tf.zeros([self.n_features*2,7]))
@@ -184,52 +175,20 @@ class DeepQNetwork:
             self.memory_counter = 0
 
         transition = np.hstack((s, [a, r], s_))
+
         print('TRANS $'*20)
         print(transition[0:10])
         print(transition[-10:])
         print('TRANS $'*20)
-        # print("#"*20)
-        # print(len(s))
-        # print(len([a,r]))
-        # print(len(s_))
-        # print(transition)
-        # print(type(transition))
-        # print(len(transition))
 
-        # replace the old memory with new memory
         index = self.memory_counter % self.memory_size
-
-        # print(self.memory_counter, self.memory_size, index)
-        # print(len(self.memory[index, :]))
-        #
-        # print("#"*21)
-        # print(self.memory)
-        # print(len(self.memory))
-        # print(index)
-
         self.memory[index, :] = transition
-
-
         self.memory_counter += 1
 
     def choose_action(self, observation):
         # to have batch dimension when feed into tf placeholder
 
-        #print("###############################################")
-        #print(type(observation))
-        #print("###############################################")
-        #print(observation.shape)
-        #print(observation)
         observation = observation[np.newaxis, :]
-
-        #print('after: ','observation = observation[np.newaxis, :]')
-        #print(observation.shape)
-        #print(observation)
-        #此处新增修改
-        #observation = np.array([observation])
-
-        #print(observation)
-        #print(observation.shape)
 
         if np.random.uniform() < self.epsilon:
             # forward feed the observation and get q value for every actions
@@ -254,10 +213,6 @@ class DeepQNetwork:
 
         print('SELF.S &'*20)
         print(self.s)
-        # print(self.s.shape)
-        # print(batch_memory[:, :self.n_features*2])
-        # print(batch_memory[:, :self.n_features*2].shape)
-
 
         temp_s_ = batch_memory[:, -self.n_features*2:]
         # temp_s_ = batch_memory[:, -self.n_features:]
