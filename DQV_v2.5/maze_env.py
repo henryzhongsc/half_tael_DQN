@@ -30,11 +30,11 @@ class Maze:#(tk.Tk, object):
             self.start_day = 300
             self.obs = []
             self.data_env = []
-            df = pd.read_csv('./EUR_GBP.csv')
+            df = pd.read_csv('DQV_v2.5/EUR_GBP.csv')
             # 把两个 1d array 拼成一个 2d array
             self.tempDf = list(df['avg'].iloc[0:4799])
             self.temp = np.asarray(self.tempDf[0:4799]).reshape((1, 4799))
-            self.data_env = np.concatenate((self.temp,self.temp), axis=0)
+            self.data_env = np.concatenate((self.temp,self.temp[::-1]), axis=0)
 
             self.obs = self.data_env[:,0:self.start_day].reshape((600,))
             print(self.obs.shape)
@@ -122,22 +122,33 @@ class Maze:#(tk.Tk, object):
             # 更新 observation 的状态
             if self.step_count < 4500:
                 #self.obs = self.data_env[(0 + self.step_count):(self.start_day + self.step_count)]
+                print('!'*50)
+                print('been there', self.step_count)
+                print('!'*50)
                 self.obs = self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)].reshape((600,))
                 #self.obs =np.concatenate(np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]),
                 #                         np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]))
                 #print(self.obs.shape)
             elif self.step_count == 4500:
-#                 print("############# self.data_env[] ##########################")
-#                 print(type(self.data_env[(0 + self.step_count):(self.start_day + self.step_count-1)]))
-#                 print("################# self.data_env[] ######################")
-#                 print("################# self.data_env[-1] ######################")
-#                 print(type(list(self.data_env[-1])))
-#                 print("################# self.data_env[-1] ######################")
-                #self.obs = self.data_env[(0 + self.step_count):(self.start_day + self.step_count-1)]
-                self.obs = self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)].reshape((600,))
+                print('dats_env len: ',len(self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)]))
+                print('$')
+                print(self.data_env)
+                print(self.data_env.shape)
+
+                temp_obs = self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)]
                 #self.obs = self.obs =np.concatenate(np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]),
                 #                                    np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]))
-                #self.obs.append(self.data_env[-1])
+                print('^')
+                print(temp_obs.shape)
+                print(self.data_env[:, -1])
+                print(self.data_env[: , -1].shape)
+                temp_obs = np.append(temp_obs, self.data_env[:, -1])
+                # temp_obs = np.append(temp_obs, self.data_env[-1])
+                print('*')
+                print(len(temp_obs))
+                print(temp_obs.shape)
+                temp_obs.reshape((600,))
+                self.obs = temp_obs
                 #print
                 #print(self.obs)
 

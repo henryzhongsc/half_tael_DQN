@@ -4,7 +4,7 @@ from RL_brain import DeepQNetwork
 
 def run_maze():
     step = 0
-    for episode in range(5):
+    for episode in range(2):
         # initial observation
         observation = env.reset()
 
@@ -38,10 +38,6 @@ def run_maze():
             if done:
                 print('game over')
                 print(env.balance)
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$                             $$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$                             $$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
                 break
             step += 1
 
@@ -61,7 +57,7 @@ if __name__ == "__main__":
                       reward_decay=0.9,
                       e_greedy=0.9,
                       replace_target_iter=200,
-                      memory_size=2000,
+                      # memory_size=50000,
                       # output_graph=True
                       )
 #     env.after(100, run_maze)

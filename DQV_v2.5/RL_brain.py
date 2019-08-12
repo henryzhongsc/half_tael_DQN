@@ -25,8 +25,8 @@ class DeepQNetwork:
             learning_rate=0.01,
             reward_decay=0.9,
             e_greedy=0.9,
-            replace_target_iter=500,
-            memory_size=500,
+            replace_target_iter=300,
+            memory_size=800,
             batch_size=32,
             e_greedy_increment=None,
             output_graph=False,
@@ -46,12 +46,14 @@ class DeepQNetwork:
         self.learn_step_counter = 0
 
         # initialize zero memory [s, a, r, s_]
-        self.memory = np.zeros((self.memory_size, n_features * 2 + 2))
-        print("@"*30)
-        print(len(self.memory))
-        print("@"*30)
+        self.memory = np.zeros((self.memory_size, n_features * 4 + 2))
+        # print("@"*30)
+        # print(len(self.memory))
+        # print("@"*30)
         # consist of [target_net, evaluate_net]
+        print('before build net')
         self._build_net()
+        print('after build net')
         t_params = tf.get_collection('target_net_params')
         e_params = tf.get_collection('eval_net_params')
         self.replace_target_op = [tf.assign(t, e) for t, e in zip(t_params, e_params)]
@@ -79,7 +81,14 @@ class DeepQNetwork:
         return tf.Variable(initial)
 
     def conv2d(self,x, W):
-        return tf.nn.conv2d(x, W, strides=[1, 2, 25, 1], padding='SAME')
+
+        temp = tf.nn.conv2d(x, W, strides=[1, 2, 25, 1], padding='SAME')
+
+        print('CONV2d !#!'*20)
+        print(x, W, temp)
+        print('CONV2d !#!'*20)
+
+        return temp
 
     def max_pool_2x2(self,x):
         return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],     # 纵2 横25
@@ -90,6 +99,8 @@ class DeepQNetwork:
 
 
     def _build_net(self):
+
+        print('in build net')
         # ------------------ build evaluate_net ------------------
         #self.s = tf.placeholder(tf.float32, [None, self.n_features], name='s')  # input
         #tf.placeholder(tf.float32, [None, 784]) # [-1,2,self.n_features,1]
@@ -125,7 +136,7 @@ class DeepQNetwork:
                 b_fc2 = self.bias_variable([7])         # 可以把10 改成 7，也就是 action_space
 
                 self.q_eval=tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
-                print("### q_eval shape: {} ###".format(self.q_eval))
+                # print("### q_eval shape: {} ###".format(self.q_eval))
 
         with tf.variable_scope('loss'):
             self.loss = tf.reduce_mean(tf.squared_difference(self.q_target, self.q_eval))
@@ -165,8 +176,7 @@ class DeepQNetwork:
 
                 self.q_next=tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
 
-
-
+            print('out build net')
 
 
     def store_transition(self, s, a, r, s_):
@@ -174,15 +184,29 @@ class DeepQNetwork:
             self.memory_counter = 0
 
         transition = np.hstack((s, [a, r], s_))
-        print("#"*20)
-        print(len(s))
-        print(len([a,r]))
-        print(len(s_))
+        print('TRANS $'*20)
+        print(transition[0:10])
+        print(transition[-10:])
+        print('TRANS $'*20)
+        # print("#"*20)
+        # print(len(s))
+        # print(len([a,r]))
+        # print(len(s_))
+        # print(transition)
+        # print(type(transition))
+        # print(len(transition))
 
         # replace the old memory with new memory
         index = self.memory_counter % self.memory_size
-        print(self.memory_counter, self.memory_size, index)
-        print(len(self.memory[index, :]))
+
+        # print(self.memory_counter, self.memory_size, index)
+        # print(len(self.memory[index, :]))
+        #
+        # print("#"*21)
+        # print(self.memory)
+        # print(len(self.memory))
+        # print(index)
+
         self.memory[index, :] = transition
 
 
@@ -228,14 +252,35 @@ class DeepQNetwork:
             sample_index = np.random.choice(self.memory_counter, size=self.batch_size)
         batch_memory = self.memory[sample_index, :]
 
-        q_next, q_eval = self.sess.run(
-            [self.q_next, self.q_eval],
-            feed_dict={
-                self.s_: batch_memory[:, -self.n_features:],  # fixed params
-                self.s: batch_memory[:, :self.n_features],  # newest params
+        print('SELF.S &'*20)
+        print(self.s)
+        # print(self.s.shape)
+        # print(batch_memory[:, :self.n_features*2])
+        # print(batch_memory[:, :self.n_features*2].shape)
+
+
+        temp_s_ = batch_memory[:, -self.n_features*2:]
+        feed_s_ = np.array(temp_s_).reshape(-1,2,300,1)
+
+        temp_s = batch_memory[:, :self.n_features*2]
+        feed_s = np.array(temp_s).reshape(-1,2,300,1)
+
+
+        q_next = self.sess.run(self.q_next, feed_dict={
+                self.s_: feed_s_,  # fixed params
+                self.s: feed_s,  # newest params
+            })
+
+        # print('@'*30)
+
+        q_eval = self.sess.run(self.q_eval, feed_dict={
+                self.s_: feed_s_,  # fixed params
+                self.s: feed_s,  # newest params
             })
         print("self.s_: ",self.s_)
         print("self.s: ",self.s)
+
+        print('SELF.S &'*20)
 
         # change q_target w.r.t q_eval's action
         q_target = q_eval.copy()
@@ -244,18 +289,18 @@ class DeepQNetwork:
         eval_act_index = batch_memory[:, self.n_features].astype(int)
         reward = batch_memory[:, self.n_features + 1]
 
-        print("#"*30)
+        print("REWARD^ "*20)
         print(reward)
 
         q_target[batch_index, eval_act_index] = reward + self.gamma * np.max(q_next, axis=1)
 
-        print(q_target[batch_index, eval_act_index])
+        # print(q_target[batch_index, eval_act_index])
 
-        print("#"*30)
+        print("REWARD^ "*20)
 
         # train eval network
         _, self.cost = self.sess.run([self._train_op, self.loss],
-                                     feed_dict={self.s: batch_memory[:, :self.n_features],
+                                     feed_dict={self.s: feed_s,
                                                 self.q_target: q_target})
         self.cost_his.append(self.cost)
 
