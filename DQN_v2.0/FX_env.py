@@ -31,11 +31,15 @@ class FX:
         df = self.TI_initial.arena.record_df
         left_over_row = df.shape[0] % self.n_features
         self.max_usable_row = df.shape[0] - left_over_row
-        self.data_env = list(df[trade_on].iloc[0 : (self.max_usable_row - 1)])
-        self.data_time = list(df['time'].iloc[0 : (self.max_usable_row - 1)])
+        print("__init__ max_usable_row: {}".format(self.max_usable_row))
+        self.data_env = list(df[trade_on].iloc[0 : (self.max_usable_row)])
+        self.data_time = list(df['time'].iloc[0 : (self.max_usable_row)])
         self.obs_time = []
 
+        print("__init__ len(data_env): {}, len(data_time): {}".format(len(self.data_env), len(self.data_time)))
         self.reset()
+        print("__init__ reset len(data_env): {}, len(data_time): {}".format(len(self.data_env), len(self.data_time)))
+
 
 
     def reset(self):
@@ -85,10 +89,16 @@ class FX:
             self.obs = self.data_env[self.step_count : (self.start_day + self.step_count)]
             self.obs_time = self.data_time[self.step_count : (self.start_day + self.step_count)]
         elif self.step_count == self.max_usable_row - self.n_features:
-            self.obs = self.data_env[self.step_count : (self.start_day + self.step_count - 1)]
-            self.obs.append(self.data_env[-1])
-            self.obs_time = self.data_time[self.step_count : (self.start_day + self.step_count - 1)]
-            self.obs_time.append(self.data_time[-1])
+
+            # print("step_count: {}, start_date: {}, data_env[-1]: {}, data_time[-1]: {}, max_usable_row: {}".format(self.step_count, self.start_day, self.data_env[-1], self.data_time[-1], self.max_usable_row))
+
+            self.obs = self.data_env[(self.max_usable_row - self.n_features) : ]
+            self.obs_time = self.data_time[(self.max_usable_row - self.n_features) : ]
+
+            # print("len(obs): {}, len(obs_time): {}".format(len(self.obs), len(self.obs_time)))
+            # print("len(obs_fix): {}, len(obs_time_fix): {}".format(len(self.data_env[self.max_usable_row : ]), len(self.data_time[self.max_usable_row :])))
+            # print("len(data_env): {}, len(data_time): {}".format(len(self.data_env), len(self.data_time)))
+
 
         # reward function
         initial_checkout_balance = self.TI_initial.currency_balance[c_1]
