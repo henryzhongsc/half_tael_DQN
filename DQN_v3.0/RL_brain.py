@@ -17,7 +17,7 @@ tf.set_random_seed(1)
 
 
 # Deep Q Network off-policy
-class DeepQNetwork:
+class DQN:
     def __init__(
             self,
             n_actions,
@@ -46,7 +46,8 @@ class DeepQNetwork:
         self.learn_step_counter = 0
 
         # initialize zero memory [s, a, r, s_]
-        self.memory = np.zeros((self.memory_size, n_features * 4 + 2))
+        # self.memory = np.zeros((self.memory_size, n_features * 4 + 2))
+        self.memory = np.zeros((self.memory_size, n_features * 6 + 2))
         # print("@"*30)
         # print(len(self.memory))
         # print("@"*30)
@@ -95,9 +96,12 @@ class DeepQNetwork:
 
         print('in build net')
         # ------------------ build evaluate_net ------------------
-        self.x = tf.placeholder(tf.float32, [None, 600])
-        self.s = tf.reshape(self.x, [-1,2,300,1])
-        W = tf.Variable(tf.zeros([self.n_features*2,7]))
+        # self.x = tf.placeholder(tf.float32, [None, 600])
+        self.x = tf.placeholder(tf.float32, [None, 900])
+        # self.s = tf.reshape(self.x, [-1,2,300,1])
+        self.s = tf.reshape(self.x, [-1,3,300,1])
+        # W = tf.Variable(tf.zeros([self.n_features*2,7]))
+        W = tf.Variable(tf.zeros([self.n_features * 3,7]))
         b = tf.Variable(tf.zeros([7]))
 
         self.q_target = tf.placeholder(tf.float32, [None, 7], name='Q_target')  # for calculating loss
@@ -137,8 +141,10 @@ class DeepQNetwork:
 
         # ------------------ build target_net ------------------
 
-        self.x_ = tf.placeholder(tf.float32, [None, 600],name = 's_' )
-        self.s_ = tf.reshape(self.x_, [-1,2,300,1])
+        # self.x_ = tf.placeholder(tf.float32, [None, 600],name = 's_' )
+        self.x_ = tf.placeholder(tf.float32, [None, 900],name = 's_' )
+        # self.s_ = tf.reshape(self.x_, [-1,2,300,1])
+        self.s_ = tf.reshape(self.x_, [-1,3,300,1])
 
         #self.s_ = tf.placeholder(tf.float32, [-1,2,self.n_features,1],name = 's_' )    # input
         with tf.variable_scope('target_net'):
@@ -214,13 +220,17 @@ class DeepQNetwork:
         print('SELF.S &'*20)
         print(self.s)
 
-        temp_s_ = batch_memory[:, -self.n_features*2:]
+        # temp_s_ = batch_memory[:, -self.n_features*2:]
+        temp_s_ = batch_memory[:, -self.n_features*3:]
         # temp_s_ = batch_memory[:, -self.n_features:]
-        feed_s_ = np.array(temp_s_).reshape(-1,2,300,1)
+        # feed_s_ = np.array(temp_s_).reshape(-1,2,300,1)
+        feed_s_ = np.array(temp_s_).reshape(-1,3,300,1)
 
-        temp_s = batch_memory[:, :self.n_features*2]
+        # temp_s = batch_memory[:, :self.n_features*2]
+        temp_s = batch_memory[:, :self.n_features*3]
         # temp_s = batch_memory[:, :self.n_features]
-        feed_s = np.array(temp_s).reshape(-1,2,300,1)
+        # feed_s = np.array(temp_s).reshape(-1,2,300,1)
+        feed_s = np.array(temp_s).reshape(-1,3,300,1)
 
 
         q_next = self.sess.run(self.q_next, feed_dict={
