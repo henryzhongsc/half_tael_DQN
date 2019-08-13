@@ -34,7 +34,7 @@ class Maze:#(tk.Tk, object):
             # 把两个 1d array 拼成一个 2d array
             self.tempDf = list(df['avg'].iloc[0:4799])
             self.temp = np.asarray(self.tempDf[0:4799]).reshape((1, 4799))
-            self.data_env = np.concatenate((self.temp,self.temp[::-1]), axis=0)
+            self.data_env = np.concatenate((self.temp,self.temp[:, ::-1]), axis=0)
 
             self.obs = self.data_env[:,0:self.start_day].reshape((600,))
             print(self.obs.shape)
