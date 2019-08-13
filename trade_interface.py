@@ -70,11 +70,12 @@ class Trade_Interface:
         self.from_time = _from_time
         self.to_time = _to_time
         self.request_interval = _request_interval
+        self.all_currency_list = [k for k in self.currency_balance]
 
         self.account_input_eval()
 
         try:
-            self.currency_pairs = self.get_currency_pairs([k for k in self.currency_balance])
+            self.currency_pairs = self.get_currency_pairs(self.all_currency_list)
         except TI_Account_Error as e:
             sys.exit("During self.get_currency_pairs()\n\t{} is raised due to: {}".format(type(e), e))
         try:
@@ -143,12 +144,12 @@ class Trade_Interface:
         arena_df = arena_df.fillna(method='ffill')
         print("NaN value within arena_df: {}".format(arena_df.isnull().sum().sum()))
 
-        currency_list = [k for k in self.currency_balance]
-        arena_filename = arena_csv_export_dir + '_'.join(currency_list) + '_' + self.from_time[0:19] + '_' + self.to_time[0:19] + '_' + self.request_interval + '.csv'
+
+        arena_filename = arena_csv_export_dir + '_'.join(self.all_currency_list) + '_' + self.from_time[0:19] + '_' + self.to_time[0:19] + '_' + self.request_interval + '.csv'
         arena_df.to_csv(arena_filename, index = None, header = True)
 
 
-        OR_arena = OI.Onada_Record(arena_df, arena_filename, self.from_time, self.to_time, self.request_interval, currency_list)
+        OR_arena = OI.Onada_Record(arena_df, arena_filename, self.from_time, self.to_time, self.request_interval, self.all_currency_list)
         print("\n\n### The requested ARENA record has been successfully exported. ###")
         OR_arena.record_review()
         return OR_arena
@@ -165,7 +166,7 @@ class Trade_Interface:
 
     @execution_report
     def execute_trade(self, _time, _sell_currency, _buy_currency, _trade_unit, _trade_unit_in_buy_currency = True, review_checkout_only = False, balance_protection = True):
-        temp_currency_list = [k for k in self.currency_balance]
+        temp_currency_list = self.all_currency_list
         if _sell_currency not in temp_currency_list or _buy_currency not in temp_currency_list:
             raise TI_Execution_Error('{} or {} is(are) not in {}'.format(_sell_currency, _buy_currency, temp_currency_list))
 
@@ -268,9 +269,13 @@ class Trade_Interface:
     def trade_log_review(self, tar_action_id = False, raw_flag = False):
         print("#### Displaying the {} trade log of account \"{}\" (action: {}) ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name, 'ALL' if not tar_action_id else tar_action_id))
 
-        if not tar_action_id:
+        if tar_action_id is False:
             log_to_display = self.trade_log
         else:
+            if tar_action_id == 'LAST':
+                all_action_ids = [i['action_id'] for i in self.trade_log]
+                tar_action_id = max(all_action_ids)
+
             log_to_display = []
             for i in self.trade_log:
                 if i['action_id']  == tar_action_id:
@@ -294,10 +299,10 @@ class Trade_Interface:
 
                 if i['trade_currency'] == i['buy_currency']:
                     sold_currency_unit = i['trade_unit'] / i['trade_ratio'] if i['pair_reverse_flag'] else i['trade_unit'] * i['trade_ratio']
-                    print("\t\t{:25}Sold {} {} for {} {} ({})".format('Trade Decision: ', sold_currency_unit, i['sell_currency'], i['trade_unit'], i['buy_currency'], 'failed' if i["balance_protection_flag"] else 'successed'))
+                    print("\t\t{:25}Sold {} {} for {} {} ({})".format('Trade Decision: ', sold_currency_unit, i['sell_currency'], i['trade_unit'], i['buy_currency'], 'failed' if i["balance_protection_flag"] else 'succeeded'))
                 if i['trade_currency'] == i['sell_currency']:
                     bought_currency_unit = i['trade_unit'] * i['trade_ratio'] if i['pair_reverse_flag'] else i['trade_unit'] / i['trade_ratio']
-                    print("\t\t{:25}Sold {} {} for {} {} ({})".format('Trade Decision: ', i['trade_unit'], i['sell_currency'], bought_currency_unit, i['buy_currency'], 'failed' if i["balance_protection_flag"] else 'successed'))
+                    print("\t\t{:25}Sold {} {} for {} {} ({})".format('Trade Decision: ', i['trade_unit'], i['sell_currency'], bought_currency_unit, i['buy_currency'], 'failed' if i["balance_protection_flag"] else 'succeeded'))
 
                 if i["balance_protection_flag"]:
                     print("\t\t{:25}Trade unsuccessful as {} {} is not enough for the sell".format('Sell Balance Protection: ', i['sell_currency_balance'], i['sell_currency']))
