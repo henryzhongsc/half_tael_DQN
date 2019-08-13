@@ -14,7 +14,7 @@ time_end = '2018-04-19T03:26:00.000000000Z'
 def run_model():
     step = 0
 
-    for episode in range(5):
+    for episode in range(2):
         observation, TI_initial, initial_time = env.reset()
         TI_initial_balance = copy.deepcopy(TI_initial)
 
@@ -34,10 +34,18 @@ def run_model():
                 TI_initial_balance.checkout_all_in(initial_time, 'EUR')
                 TI_initial_balance.account_review()
 
+                print('@'*20)
+                TI_end.trade_log_review(tar_action_id = 0)
+                TI_end.trade_log_review(tar_action_id = 'LAST')
+                print('@'*20)
+
+
                 TI_end_balance = copy.deepcopy(TI_end)
                 TI_end_balance.account_name = 'End_Checkout_Review' + ' (episode: ' + str(episode+1) + ')'
                 TI_end_balance.checkout_all_in(end_time, 'EUR')
                 TI_end_balance.account_review()
+
+
                 # TI_end_balance.trade_log_review()
                 break
 
