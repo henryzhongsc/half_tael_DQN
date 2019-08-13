@@ -1,175 +1,167 @@
-
 import pandas as pd
 import numpy as np
 import time
 import sys
-if sys.version_info.major == 2:
-    import Tkinter as tk
-else:
-    import tkinter as tk
+import copy
 
-UNIT = 40   # pixels
-MAZE_H = 4  # grid height
-MAZE_W = 4  # grid width
+from os.path import dirname, abspath
+file_parent_dir = dirname(dirname(abspath(__file__)))
 
-
-class Maze:#(tk.Tk, object):
-
-    def __init__(self): # GRAPHEN
-            #super(Maze, self).__init__()
-            self.action_space = ['hold','buy_100','sell_100','buy_200','sell_200','buy_300','sell_300']
-            self.n_actions = len(self.action_space)
-            self.n_features = 300 # each time, we consider 300 days historical records
-            #self.title('maze')
-            #self._build_maze()
-            self.step_count = 0
-
-            # 零假空 初始化 环境变量
-            self.balance = 0
-            self.trade_account = 0
-            self.start_day = 300
-            self.obs = []
-            self.data_env = []
-            df = pd.read_csv('DQV_v2.5/EUR_GBP.csv')
-            # 把两个 1d array 拼成一个 2d array
-            self.tempDf = list(df['avg'].iloc[0:4799])
-            self.temp = np.asarray(self.tempDf[0:4799]).reshape((1, 4799))
-            self.data_env = np.concatenate((self.temp,self.temp[::-1]), axis=0)
-
-            self.obs = self.data_env[:,0:self.start_day].reshape((600,))
-            print(self.obs.shape)
-            self._build_maze()
-            #self.obs = np.concatenate(np.asarray(self.data_env[0:self.start_day]),np.asarray(self.data_env[0:self.start_day]))
-
-    def _build_maze(self): # GRAPHEN
-            #df = pd.read_csv('/Users/xingdanmou/Downloads/forex-master 2/Historical_Data/M1/EUR_GBP.csv')
-            #self.data_env = list(df['avg'].iloc[0:4799])
-            self.start_day = 300 # each time we trade, our state is 300 historical price
+sys.path.append('.')
+import trade_interface as TI
 
 
-            # create start balance
-            self.balance = 100000
-            # create trading exchange account
-            self.trade_account = 0
-            # create current observation (也就是 例子中的 red rect)
-            #self.obs = self.data_env[(0):(self.start_day)]
+class FX:
 
-            #print((np.asarray(self.data_env[0:self.start_day]).shape))
-            #print(np.asarray(self.data_env[0:self.start_day]).reshape((1, 300)).shape)
-            #temp = np.asarray(self.data_env[0:4799]).reshape((1, 4799))
+    def __init__(self, _TI_account, _base_currency = 'USD', _n_features = 300):
+        #super(Maze, self).__init__()
+        self.action_space = ['hold','buy_100_A','sell_100_A','buy_100_B','sell_100_B','buy_100_C','sell_100_C']
+        # self.action_space = ['hold','buy_100','sell_100','buy_200','sell_200','buy_300','sell_300']
+        self.n_actions = len(self.action_space)
+        self.n_features = _n_features # each time, we consider 300 days historical records
+        self.step_count = 0
+        self.base_currency = _base_currency
 
 
-            #self.obs = np.concatenate((temp,temp), axis=0)
+        # self.start_day = 300
 
-            #np.concatenate((array2D_1, array2D_2))
+        self.obs = []
+        self.data_env = []
 
+        self.TI_train = copy.deepcopy(_TI_account)
+        self.TI_initial = copy.deepcopy(_TI_account)
+
+
+        df = self.TI_initial.arena.record_df
+        left_over_row = df.shape[0] % self.n_features
+        self.max_usable_row = df.shape[0] - left_over_row
+
+
+        # self.data_env = list(df[trade_on].iloc[0 : (self.max_usable_row - 1)])
+
+
+
+        # for i, j in zip(self.TI_initial.currency_pairs, [i for i in range(len(self.TI_initial.currency_pairs) + 1)]:
+        #     df_one_pair = list(df[i+'_close'].iloc[0: (self.max_usable_row - 1)])
+        #     df_one_pair = np.asarray(df_one_pair[0 : (self.max_usable_row - 1)]).reshape((j, (self.max_usable_row - 1)))
+
+        self.data_env = np.empty((0, self.max_usable_row))
+        for i in self.TI_initial.currency_pairs:
+            price_list_one_pair = list(df[i+'_close'].iloc[0: self.max_usable_row])
+            temp_array = np.asarray(price_list_one_pair).reshape(1, len(price_list_one_pair))
+            self.data_env = np.vstack((self.data_env, temp_array))
+
+        self.data_time = list(df['time'].iloc[0 : (self.max_usable_row)])
+        self.obs_time = []
+
+        self.reset()
 
 
 
     def reset(self): #GRAPHEN
-            time.sleep(0.1)
 
-            self.balance = 100000
-            self.trade_account = 0 # 用于记录 日元 的 持有量
-            #self.obs = self.data_env[0:self.start_day]
-            self.obs = self.data_env[:,0:self.start_day].reshape((600,))
-            self.step_count = 0
-            print(self.obs.shape)
-            #print(np.asarray(self.data_env[0:self.start_day]).shape)
-            #return np.asarray(self.data_env[0:self.start_day]) #输出是一个 1D array
-            print("reset(self): self.obs:  ",self.obs.shape )
-            return self.obs # 输出是一个 2D array
+        self.step_count = 0
+        self.start_day = self.n_features
+        self.obs = self.data_env[:, 0 : self.start_day].reshape((len(self.TI_train.all_currency_list) * self.start_day,))
+        self.obs_time = self.data_time[0 : self.start_day]
+
+        del self.TI_train
+        self.TI_train = copy.deepcopy(self.TI_initial)
+
+        return np.asarray(self.obs), self.TI_train, self.data_time[0] #输出是一个 1D array
+
+
 
     def step(self, action):
-            s = self.obs
+        current_time = self.obs_time[-1]
 
-            if action == 0:
-                self.trade_account += 0
-                self.balance += 0
-                self.step_count += 1
+        c_list = self.TI_train.all_currency_list
+        c_list.remove(self.base_currency)
+        c_list.insert(0, self.base_currency)
 
-            elif action == 1 :
-                self.trade_account += 100
-                self.balance -= s[-1]*100 # s[-1] 代表当前价格
-                self.step_count += 1
-
-            elif action == 2 :
-                self.trade_account -= 100
-                self.balance += s[-1]*100
-                self.step_count += 1
-
-            elif action == 3:
-                self.trade_account += 200
-                self.balance -= s[-1]*200
-                self.step_count += 1
-
-            elif action == 4:
-                self.trade_account -= 200
-                self.balance += s[-1]*200
-                self.step_count += 1
-
-            elif action == 5:
-                self.trade_account += 300 #买入 300
-                self.balance -= s[-1]*300
-                self.step_count += 1
-
-            elif action == 6:
-                self.trade_account -= 300 #卖出 300
-                self.balance += s[-1]*300
-                self.step_count += 1
+        # ['hold','buy_100_A','sell_100_A','buy_100_B','sell_100_B','buy_100_C','sell_100_C']
+        if action == 0:
+            pass
+        elif action == 1:
+            self.TI_train.execute_trade(current_time, c_list[0], c_list[1], 100, _trade_unit_in_buy_currency = False)
+        elif action == 2:
+            self.TI_train.execute_trade(current_time, c_list[1], c_list[0], 100)
+        elif action == 3:
+            self.TI_train.execute_trade(current_time, c_list[0], c_list[2], 100, _trade_unit_in_buy_currency = False)
+        elif action == 4:
+            self.TI_train.execute_trade(current_time, c_list[2], c_list[0], 100)
+        elif action == 5:
+            self.TI_train.execute_trade(current_time, c_list[1], c_list[2], 100, _trade_unit_in_buy_currency = False)
+        elif action == 6:
+            self.TI_train.execute_trade(current_time, c_list[2], c_list[1], 100)
+        else:
+            print("Invalid action input = {}".format(action))
+            return -1
+        self.step_count += 1
 
 
-            # 更新 observation 的状态
-            if self.step_count < 4500:
-                #self.obs = self.data_env[(0 + self.step_count):(self.start_day + self.step_count)]
-                print('!'*50)
-                print('been there', self.step_count)
-                print('!'*50)
-                self.obs = self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)].reshape((600,))
-                #self.obs =np.concatenate(np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]),
-                #                         np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]))
-                #print(self.obs.shape)
-            elif self.step_count == 4500:
-                print('dats_env len: ',len(self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)]))
-                print('$')
-                print(self.data_env)
-                print(self.data_env.shape)
+        if self.step_count < self.max_usable_row - self.n_features:
+            print('!'*50)
+            print('been there', self.step_count)
+            print('!'*50)
+            self.obs = self.data_env[:, self.step_count : (self.start_day + self.step_count)].reshape((len(c_list) * self.start_day,))
+            self.obs_time = self.data_time[self.step_count : (self.start_day + self.step_count)]
 
-                temp_obs = self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)]
-                #self.obs = self.obs =np.concatenate(np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]),
-                #                                    np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]))
-                print('^')
-                print(temp_obs.shape)
-                print(self.data_env[:, -1])
-                print(self.data_env[: , -1].shape)
-                temp_obs = np.append(temp_obs, self.data_env[:, -1])
-                # temp_obs = np.append(temp_obs, self.data_env[-1])
-                print('*')
-                print(len(temp_obs))
-                print(temp_obs.shape)
-                temp_obs.reshape((600,))
-                self.obs = temp_obs
-                #print
-                #print(self.obs)
-
-            # reward function
-
-            if (self.balance >100000) & (self.step_count == 4500):
-                reward = 1
-                done = True
-            elif (self.balance <= 100000)  & (self.step_count == 4500):
-                reward = -1
-                done = True
-
-            else:
-                reward = 0
-                done = False
+        elif self.step_count == self.max_usable_row - self.n_features:
+            print('dats_env len: ',len(self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)]))
+            print('$')
+            print(self.data_env)
+            print(self.data_env.shape)
+            self.obs = self.data_env[:, (self.max_usable_row - self.n_features) : ].reshape((len(c_list) * self.start_day,))
+            self.obs_time = self.data_time[(self.max_usable_row - self.n_features) : ]
 
 
-            s_ = np.asarray(self.obs)
+        # # 更新 observation 的状态
+        # if self.step_count < 4500:
+        #     #self.obs = self.data_env[(0 + self.step_count):(self.start_day + self.step_count)]
+        #
+        #     self.obs = self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)].reshape((600,))
+        #     #self.obs =np.concatenate(np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]),
+        #     #                         np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]))
+        #     #print(self.obs.shape)
+        # elif self.step_count == 4500:
+        #
+        #
+        #     temp_obs = self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)]
+        #     #self.obs = self.obs =np.concatenate(np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]),
+        #     #                                    np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]))
+        #     print('^')
+        #     print(temp_obs.shape)
+        #     print(self.data_env[:, -1])
+        #     print(self.data_env[: , -1].shape)
+        #     temp_obs = np.append(temp_obs, self.data_env[:, -1])
+        #     # temp_obs = np.append(temp_obs, self.data_env[-1])
+        #     print('*')
+        #     print(len(temp_obs))
+        #     print(temp_obs.shape)
+        #     temp_obs.reshape((600,))
+        #     self.obs = temp_obs
+            #print
+            #print(self.obs)
 
-            return s_, reward, done
+        # reward function
+        initial_checkout_balance = self.TI_initial.currency_balance[self.base_currency]
+        TI_checkout = copy.deepcopy(self.TI_train)
+        TI_checkout.checkout_all_in(current_time, self.base_currency)
+        current_checkout_balance = TI_checkout.currency_balance[self.base_currency]
 
-    #def render(self):
-        # time.sleep(0.01)
-        # self.update()
+        if (current_checkout_balance > initial_checkout_balance) & (self.step_count == self.max_usable_row - self.n_features):
+            reward = 1
+            done = True
+        elif (current_checkout_balance <= initial_checkout_balance)  & (self.step_count == self.max_usable_row - self.n_features):
+            reward = -1
+            done = True
+        else:
+            reward = 0
+            done = False
+
+
+        s_ = np.asarray(self.obs)
+
+        return s_, reward, done, self.TI_train, self.data_time[-1]
+
