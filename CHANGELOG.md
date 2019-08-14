@@ -1,4 +1,4 @@
-# CHANGELOG
+# CHANGELOG
 
 > This file serves as the journal for the [half_tael_DQN](https://github.com/choH/half_tael_DQN) project.
 
@@ -172,7 +172,51 @@
 ---
 ## Development Journal
 
-### 2019-08-11 | Bugfix and partial adjustments on DQN_v2.0 | Henry
+### 2019-08-14 | Redesigned the setting on CNN  | Henry, with help from [Ziyu, CHEN](https://www.linkedin.com/in/zailchen17/).
+
+* As Steven X. is absent for three days and unresponsive on IM for four days probably due to some unexpected urgencies, I seek Ziyu for help.
+* Ziyu noticed the original `strides` were set to `strides = [1, 2, 25, 1]`, combine with`padding = 'SAME'` and `filter = [6, 6, 1, 32]` on input `[-1, 3, 300, 1]`, which effectively "over-padded" the input. as:
+
+    \\[
+    W_{out} = \frac{W - F_W + 2P}{S_W} + 1 \\
+    \Rightarrow 300 = \frac{300 - 6 + 2P}{25} + 1  \ \ \Rightarrow P = 3603 \ (\text{too many}) \\
+    H_{out} = \frac{H - F_H + 2P}{S_H} + 1 \\
+    \Rightarrow 3 = \frac{3 - 6 + 2P}{2} + 1  \ \ \Rightarrow P = 1.5 \ (\text{not int?}) \\
+    \\]
+
+* We adjusted the setting to be:
+
+    ```
+    strides = [1, 1, 1, 1]
+    filter = [3, 3, 1, 32]
+    ```
+* I also adjusted the reshape setting in `l1` from `32` to `3200` to work with `stride = [1, 1, 1, 1]` as there will be more output:
+
+    ```
+    W_fc1 = self.weight_variable([3 * 3200, 100])
+    h_pool1_flat = tf.reshape(h_pool1, [-1, 3*3200])
+    ```
+    Otherwise the line will break on:
+
+    ```
+    q_target[batch_index, eval_act_index] = reward + self.gamma * np.max(q_next, axis=1)
+
+    # Before adjustment
+    # q_target[batch_index, eval_act_index].shape: (32, 7)
+    # q_target.shape: (3200, 7)
+    # np.max(q_next, axis =1): (3200, 7)
+    ```
+
+* Problem regarding cost converging too fast and smooth remains unsolved, updated [`cost_log.txt`](https://github.com/choH/half_tael_DQN/commit/7c081777ae285053d288ebf1abc53a4cc66fb27d) for future investigation.
+    * After discussion with Ziyu, it is believed that the CNN part is correctly implemented, but mostly on the DQN part — however Ziyu is not particularly familiar with DQN, I will therefore continue the investigation. It is probably just a simple overfit issue as we only feeds `300` rows of train data and `300` rows of test data chronologically right after the training set, due to the power limitation of the laptop.
+
+
+
+### 2019-08-13 | Refactored DQN_v2.5 to work with the trading platform | Henry
+* Be able to trade among three currencies with hardcore setting used in [`RL_brain.py`](https://github.com/choH/half_tael_DQN/commit/5ce65e38a0fdb52e428a2963e8bada26e299fb21).
+* Problem regarding cost converging too fast and smooth remains unsolved, [`cost_log.txt`](https://github.com/choH/half_tael_DQN/commit/0d7164e8ce7b0621088a3715c014f630048bf799) saved for future investigation.
+
+### 2019-08-11 | Bugfix and partial adjustments on DQN_v2.0, DQN_v2.5 delivered | Henry
 * Debugged on Steven's sketch code [ef6e716](https://github.com/choH/half_tael_DQN/commit/ef6e716af132541a0720bcb456f602c4f13cba06) with various `reshape` manipulations regarding `self.memory`, `store_transition` and `batch_memory`'s slicing in `feed_dict`.
 * Several cosmetic on monitory print-outs.
 * [Cost converges unreasonable fast and smooth](https://github.com/choH/half_tael_DQN/tree/v2.0/DQV_v2.5/cost_log.txt), potentially overfit, need investigation.
