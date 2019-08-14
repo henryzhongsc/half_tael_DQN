@@ -291,8 +291,24 @@ class DeepQNetwork:
         eval_act_index = batch_memory[:, self.n_features].astype(int)
         reward = batch_memory[:, self.n_features + 1]
 
+        print("TEMP^FEED "*20)
+
+        print("\n\n\n temp_s_: {}\n temp_s_.shape: {}".format(temp_s_, temp_s_.shape))
+        print("\n\n\n feed_s_: {}\n feed_s_.shape: {}".format(feed_s_, feed_s_.shape))
+        print("\n\n\n temp_s: {}\n temp_s.shape: {}".format(temp_s, temp_s.shape))
+        print("\n\n\n feed_s: {}\n feed_s.shape: {}".format(feed_s, feed_s.shape))
+
+        print("TEMP^FEED "*20)
+
         print("REWARD^ "*20)
-        print(reward)
+        print("batch_index: {} ({})\neval_act_index: {} ({})\n\n\nq_target[batch_index, eval_act_index]: {}\nq_target[b, e].shape: {}\n\n\nq_target: {}\nq_target.shape: {}".format(batch_index, len(batch_index), eval_act_index, len(eval_act_index), q_target[batch_index, eval_act_index], q_target[batch_index, eval_act_index].shape, q_target, q_target.shape))
+
+
+
+        print("\n\n\nreward: {}\nreward.shape: {}".format(reward, reward.shape))
+        print("\n\n\nnp.max(q_next): {}\nnp.max(q_next).shape: {}".format(np.max(q_next, axis=1), (np.max(q_next, axis=1).shape)))
+        print("\n\n\nq_target: {}\nq_target.shape: {}".format(q_target, q_target.shape))
+        print("\n\n\nq_next: {}\nq_next.shape: {}".format(q_next, q_next.shape))
 
         q_target[batch_index, eval_act_index] = reward + self.gamma * np.max(q_next, axis=1)
 
