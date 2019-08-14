@@ -82,7 +82,9 @@ class DQN:
         return tf.Variable(initial)
 
     def conv2d(self,x, W):
-        temp = tf.nn.conv2d(x, W, strides=[1, 2, 25, 1], padding='SAME')
+        # temp = tf.nn.conv2d(x, W, strides=[1, 2, 25, 1], padding='SAME')
+        # temp_filter = tf.Variable(tf.random_normal([2, 2, 1, 1]))
+        temp = tf.nn.conv2d(x, filter=W, strides=[1, 1, 1, 1], padding='SAME')
         print('CONV2d !#!'*20)
         print(x, W, temp)
         print('CONV2d !#!'*20)
@@ -111,16 +113,20 @@ class DQN:
             c_names = ['eval_net_params', tf.GraphKeys.GLOBAL_VARIABLES]
 
             with tf.variable_scope('l1'):
-                W_conv1 = self.weight_variable([6, 6, 1, 32])
+                W_conv1 = self.weight_variable([3, 3, 1, 32])
                 b_conv1 = self.bias_variable([32])
 
+
+                # self.s = [-1,3,300,1]
+                # strides = [1, 2, 25, 1]
+                # filter = [6, 6, 1, 32]
                 h_conv1 = tf.nn.relu(self.conv2d(self.s, W_conv1) + b_conv1)
                 h_pool1 = self.max_pool_2x2(h_conv1)
 
-                W_fc1 = self.weight_variable([6 * 32, 100])  # 这一行要改，用colab 打印 输入 来协助完成
+                W_fc1 = self.weight_variable([3 * 3200, 100])  # 这一行要改，用colab 打印 输入 来协助完成
                 b_fc1 = self.bias_variable([100])                # 这一行要改，用colab 打印 输入 来协助完成
 
-                h_pool1_flat = tf.reshape(h_pool1, [-1, 6*32])
+                h_pool1_flat = tf.reshape(h_pool1, [-1, 3*3200])
                 h_fc1 = tf.nn.relu(tf.matmul(h_pool1_flat, W_fc1) + b_fc1)
 
 
@@ -131,7 +137,7 @@ class DQN:
                 b_fc2 = self.bias_variable([7])         # 可以把10 改成 7，也就是 action_space
 
                 self.q_eval=tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
-                # print("### q_eval shape: {} ###".format(self.q_eval))
+                print("\n\n self.q_eval.shape: {}".format(self.q_eval.shape))
 
         with tf.variable_scope('loss'):
             self.loss = tf.reduce_mean(tf.squared_difference(self.q_target, self.q_eval))
@@ -152,16 +158,21 @@ class DQN:
             c_names = ['target_net_params', tf.GraphKeys.GLOBAL_VARIABLES]
             # first layer. collections is used later when assign to target net
             with tf.variable_scope('l1'):
-                W_conv1 = self.weight_variable([6, 6, 1, 32])
+
+                W_conv1 = self.weight_variable([3, 3, 1, 32])
                 b_conv1 = self.bias_variable([32])
 
-                h_conv1 = tf.nn.relu(self.conv2d(self.s_, W_conv1) + b_conv1)
+
+                # self.s = [-1,3,300,1]
+                # strides = [1, 2, 25, 1]
+                # filter = [6, 6, 1, 32]
+                h_conv1 = tf.nn.relu(self.conv2d(self.s, W_conv1) + b_conv1)
                 h_pool1 = self.max_pool_2x2(h_conv1)
 
-                W_fc1 = self.weight_variable([ 6 * 32, 100])  # 这一行要改，用colab 打印 输入 来协助完成
+                W_fc1 = self.weight_variable([3 * 3200, 100])  # 这一行要改，用colab 打印 输入 来协助完成
                 b_fc1 = self.bias_variable([100])                # 这一行要改，用colab 打印 输入 来协助完成
 
-                h_pool1_flat = tf.reshape(h_pool1, [-1, 6*32])
+                h_pool1_flat = tf.reshape(h_pool1, [-1, 3*3200])
                 h_fc1 = tf.nn.relu(tf.matmul(h_pool1_flat, W_fc1) + b_fc1)
 
 
@@ -244,6 +255,8 @@ class DQN:
                 self.s_: feed_s_,  # fixed params
                 self.s: feed_s,  # newest params
             })
+
+
         print("self.s_: ",self.s_)
         print("self.s: ",self.s)
 
@@ -254,11 +267,29 @@ class DQN:
 
         batch_index = np.arange(self.batch_size, dtype=np.int32)
         eval_act_index = batch_memory[:, self.n_features].astype(int)
+        # eval_act_index = [0] * 32
         reward = batch_memory[:, self.n_features + 1]
 
-        print("REWARD^ "*20)
-        print(reward)
+        print("TEMP^FEED "*20)
 
+        print("\n\n\n temp_s_: {}\n temp_s_.shape: {}".format(temp_s_, temp_s_.shape))
+        print("\n\n\n feed_s_: {}\n feed_s_.shape: {}".format(feed_s_, feed_s_.shape))
+        print("\n\n\n temp_s: {}\n temp_s.shape: {}".format(temp_s, temp_s.shape))
+        print("\n\n\n feed_s: {}\n feed_s.shape: {}".format(feed_s, feed_s.shape))
+
+        print("TEMP^FEED "*20)
+
+        print("REWARD^ "*20)
+        print("batch_index: {} ({})\neval_act_index: {} ({})\n\n\nq_target[batch_index, eval_act_index]: {}\nq_target[b, e].shape: {}\n\n\nq_target: {}\nq_target.shape: {}".format(batch_index, len(batch_index), eval_act_index, len(eval_act_index), q_target[batch_index, eval_act_index], q_target[batch_index, eval_act_index].shape, q_target, q_target.shape))
+
+
+
+        print("\n\n\nreward: {}\nreward.shape: {}".format(reward, reward.shape))
+        print("\n\n\nnp.max(q_next): {}\nnp.max(q_next).shape: {}".format(np.max(q_next, axis=1), (np.max(q_next, axis=1).shape)))
+        print("\n\n\nq_target: {}\nq_target.shape: {}".format(q_target, q_target.shape))
+        print("\n\n\nq_next: {}\nq_next.shape: {}".format(q_next, q_next.shape))
+
+        #ValueError: operands could not be broadcast together with shapes (32,) (3200,)
         q_target[batch_index, eval_act_index] = reward + self.gamma * np.max(q_next, axis=1)
 
         # print(q_target[batch_index, eval_act_index])
