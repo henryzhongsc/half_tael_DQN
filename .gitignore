@@ -1,5 +1,6 @@
-# break_out_parms
+# Ignored folders
 BreakoutNoFrameskip-v4/*
+playground/*
 
 # macOS
 **/.DS_Store
