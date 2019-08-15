@@ -1,4 +1,4 @@
-# CHANGELOG
+# CHANGELOG
 
 > This file serves as the journal for the [half_tael_DQN](https://github.com/choH/half_tael_DQN) project.
 
@@ -171,6 +171,22 @@
 
 ---
 ## Development Journal
+
+### 2019-08-15 | Bugfix cost converges too quick & smooth | Henry
+* Fixed the issued regarding [Cost (loss) graph converges way too quick and smooth](https://github.com/choH/half_tael_DQN/issues/15).
+    * Wrong index for `a, r` in `batch_memory` while retrieving `eval_act_index`. So when replacing the reward(s), it is not the `a, r` being replaced, but two `_close` prices data at `batch_memory[: , self.n_features]` and `batch_memory[: , self.n_features + 1]` (therefore it is usually `0` or `1` as we use `as type(int)` during the retrieval) .
+    * Changed to:
+
+
+        ```
+        eval_act_index = batch_memory[:, self.n_features * self.n_currencys].astype(int)
+        reward = batch_memory[: , self.n_features * self.n_currencys + 1]
+        ```    
+     and fixed the bug in commit [d2fa6e7](https://github.com/choH/half_tael_DQN/commit/d2fa6e7a6b5fd7187fb7d41cc03cb269e05b49be).
+
+* Partially removed hardcore code regarding `self.n_features` and `self.n_currency`.
+    * CNN `conv2d()` part not yet done, but fixed all reshape-related setting to accept dynamic input.
+
 
 ### 2019-08-14 | Redesigned the setting on CNN  | Henry, with help from [Ziyu, CHEN](https://www.linkedin.com/in/zailchen17/).
 
