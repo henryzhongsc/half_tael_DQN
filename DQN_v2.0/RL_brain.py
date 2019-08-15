@@ -127,6 +127,10 @@ class DQN:
         #此处新增修改
         #observation = np.array([observation])
 
+        # print('observation\n')
+        # print(observation)
+        # print(observation.shape)
+
         #print(observation)
         #print(observation.shape)
 
@@ -146,9 +150,9 @@ class DQN:
         # check to replace target parameters
         if self.learn_step_counter % self.replace_target_iter == 0:
             self.sess.run(self.replace_target_op)
-            print('#'*200)
+
             print('\ntarget_params_replaced\n')
-            print('#'*200)
+
         # sample batch memory from all memory
         if self.memory_counter > self.memory_size:
             sample_index = np.random.choice(self.memory_size, size=self.batch_size)
@@ -169,6 +173,13 @@ class DQN:
         batch_index = np.arange(self.batch_size, dtype=np.int32)
         eval_act_index = batch_memory[:, self.n_features].astype(int)
         reward = batch_memory[:, self.n_features + 1]
+
+    ##############################################################################################################
+        # print("\n\n batch_index: {} ({})".format(batch_index, len(batch_index)))
+        # print("\n\n eval_act_index: {} ({})".format(eval_act_index, len(eval_act_index)))
+        # print("\n\n batch_memory: {}\n batch_memory.shape: {}".format(batch_memory, batch_memory.shape))
+    ##############################################################################################################
+        # print("\n\n q_target: {}\n q_target.shape: {}".format(q_target, q_target.shape))
 
         q_target[batch_index, eval_act_index] = reward + self.gamma * np.max(q_next, axis=1)
 
