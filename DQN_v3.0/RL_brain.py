@@ -20,6 +20,7 @@ tf.set_random_seed(1)
 class DQN:
     def __init__(
             self,
+            n_currencys,
             n_actions,
             n_features,
             learning_rate=0.01,
@@ -31,6 +32,7 @@ class DQN:
             e_greedy_increment=None,
             output_graph=False,
     ):
+        self.n_currencys = n_currencys
         self.n_actions = n_actions
         self.n_features = n_features
         self.lr = learning_rate
@@ -47,7 +49,7 @@ class DQN:
 
         # initialize zero memory [s, a, r, s_]
         # self.memory = np.zeros((self.memory_size, n_features * 4 + 2))
-        self.memory = np.zeros((self.memory_size, n_features * 6 + 2))
+        self.memory = np.zeros((self.memory_size, self.n_features * self.n_currencys * 2 + 2))
         # print("@"*30)
         # print(len(self.memory))
         # print("@"*30)
@@ -98,14 +100,14 @@ class DQN:
     def _build_net(self):
         # ------------------ build evaluate_net ------------------
         # self.x = tf.placeholder(tf.float32, [None, 600])
-        self.x = tf.placeholder(tf.float32, [None, 900], name = 's')
+        self.x = tf.placeholder(tf.float32, [None, self.n_features * self.n_currencys], name = 's')
         # self.s = tf.reshape(self.x, [-1,2,300,1])
-        self.s = tf.reshape(self.x, [-1,3,300,1])
+        self.s = tf.reshape(self.x, [-1, self.n_currencys, self.n_features, 1])
         # W = tf.Variable(tf.zeros([self.n_features*2,7]))
-        W = tf.Variable(tf.zeros([self.n_features * 3,7]))
+        W = tf.Variable(tf.zeros([self.n_features * self.n_currencys, self.n_actions]))
         b = tf.Variable(tf.zeros([7]))
 
-        self.q_target = tf.placeholder(tf.float32, [None, 7], name='Q_target')  # for calculating loss
+        self.q_target = tf.placeholder(tf.float32, [None, self.n_actions], name='Q_target')  # for calculating loss
 
         #########################################################
         with tf.variable_scope('eval_net'):
@@ -125,15 +127,15 @@ class DQN:
                 W_fc1 = self.weight_variable([3 * 3200, 100])  # 这一行要改，用colab 打印 输入 来协助完成
                 b_fc1 = self.bias_variable([100])                # 这一行要改，用colab 打印 输入 来协助完成
 
-                h_pool1_flat = tf.reshape(h_pool1, [-1, 3*3200])
+                h_pool1_flat = tf.reshape(h_pool1, [-1, 3 * 3200])
                 h_fc1 = tf.nn.relu(tf.matmul(h_pool1_flat, W_fc1) + b_fc1)
 
 
                 # self.keep_prob = tf.placeholder(tf.float32)
                 # h_fc1_drop = tf.nn.dropout(h_fc1, self.keep_prob)
             with tf.variable_scope('l2'):
-                W_fc2 = self.weight_variable([100, 7]) # 可以把10 改成 7，也就是 action_space
-                b_fc2 = self.bias_variable([7])         # 可以把10 改成 7，也就是 action_space
+                W_fc2 = self.weight_variable([100, self.n_actions]) # 可以把10 改成 7，也就是 action_space
+                b_fc2 = self.bias_variable([self.n_actions])         # 可以把10 改成 7，也就是 action_space
 
                 self.q_eval=tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
                 print("\n\n self.q_eval.shape: {}".format(self.q_eval.shape))
@@ -147,9 +149,9 @@ class DQN:
         # ------------------ build target_net ------------------
 
         # self.x_ = tf.placeholder(tf.float32, [None, 600],name = 's_' )
-        self.x_ = tf.placeholder(tf.float32, [None, 900],name = 's_' )
+        self.x_ = tf.placeholder(tf.float32, [None, self.n_features * self.n_currencys], name = 's_' )
         # self.s_ = tf.reshape(self.x_, [-1,2,300,1])
-        self.s_ = tf.reshape(self.x_, [-1,3,300,1])
+        self.s_ = tf.reshape(self.x_, [-1, self.n_currencys, self.n_features, 1])
 
         #self.s_ = tf.placeholder(tf.float32, [-1,2,self.n_features,1],name = 's_' )    # input
         with tf.variable_scope('target_net'):
@@ -178,8 +180,8 @@ class DQN:
                 # self.keep_prob = tf.placeholder(tf.float32)
                 # h_fc1_drop = tf.nn.dropout(h_fc1, self.keep_prob)
             with tf.variable_scope('l2'):
-                W_fc2 = self.weight_variable([100, 7]) # 可以把10 改成 7，也就是 action_space
-                b_fc2 = self.bias_variable([7])         # 可以把10 改成 7，也就是 action_space
+                W_fc2 = self.weight_variable([100, self.n_actions]) # 可以把10 改成 7，也就是 action_space
+                b_fc2 = self.bias_variable([self.n_actions])         # 可以把10 改成 7，也就是 action_space
 
                 self.q_next=tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
 
@@ -236,16 +238,16 @@ class DQN:
         # print(self.s)
 
         # temp_s_ = batch_memory[:, -self.n_features*2:]
-        temp_s_ = batch_memory[:, -self.n_features*3:]
+        temp_s_ = batch_memory[: , -self.n_features * self.n_currencys :]
         # temp_s_ = batch_memory[:, -self.n_features:]
         # feed_s_ = np.array(temp_s_).reshape(-1,2,300,1)
-        feed_s_ = np.array(temp_s_).reshape(-1,3,300,1)
+        feed_s_ = np.array(temp_s_).reshape(-1, self.n_currencys, self.n_features, 1)
 
         # temp_s = batch_memory[:, :self.n_features*2]
-        temp_s = batch_memory[:, :self.n_features*3]
+        temp_s = batch_memory[: , : self.n_features * self.n_currencys]
         # temp_s = batch_memory[:, :self.n_features]
         # feed_s = np.array(temp_s).reshape(-1,2,300,1)
-        feed_s = np.array(temp_s).reshape(-1,3,300,1)
+        feed_s = np.array(temp_s).reshape(-1, self.n_currencys, self.n_features, 1)
 
 
         # q_next = self.sess.run(self.q_next, feed_dict={
@@ -278,8 +280,8 @@ class DQN:
         q_target = q_eval.copy()
 
         batch_index = np.arange(self.batch_size, dtype=np.int32)
-        eval_act_index = batch_memory[:, self.n_features*3].astype(int)
-        reward = batch_memory[:, self.n_features*3 + 1]
+        eval_act_index = batch_memory[:, self.n_features * self.n_currencys].astype(int)
+        reward = batch_memory[: , self.n_features * self.n_currencys + 1]
 
         # print("TEMP^FEED "*20)
         #

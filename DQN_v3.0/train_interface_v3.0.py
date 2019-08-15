@@ -14,7 +14,7 @@ time_end = '2018-04-19T03:26:00.000000000Z'
 def run_model():
     step = 0
 
-    for episode in range(10):
+    for episode in range(2):
         observation, TI_initial, initial_time = env.reset()
         TI_initial_balance = copy.deepcopy(TI_initial)
 
@@ -67,8 +67,8 @@ if __name__ == "__main__":
 ###########################################################################################
 
 
-    env = FX(TI_train, _base_currency = 'EUR')
-    DQN = DQN(env.n_actions, env.n_features,
+    env = FX(TI_train, _base_currency = 'EUR', _n_features = 300)
+    DQN = DQN(len(env.TI_initial.all_currency_list), env.n_actions, env.n_features,
                       learning_rate=0.01,
                       reward_decay=0.9,
                       e_greedy=0.9,
