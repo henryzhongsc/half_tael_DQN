@@ -26,7 +26,7 @@ class DQN:
             reward_decay=0.9,
             e_greedy=0.9,
             replace_target_iter=300,
-            memory_size=800,
+            memory_size=500,
             batch_size=32,
             e_greedy_increment=None,
             output_graph=False,
@@ -52,9 +52,9 @@ class DQN:
         # print(len(self.memory))
         # print("@"*30)
         # consist of [target_net, evaluate_net]
-        print('before build net')
+
         self._build_net()
-        print('after build net')
+
         t_params = tf.get_collection('target_net_params')
         e_params = tf.get_collection('eval_net_params')
         self.replace_target_op = [tf.assign(t, e) for t, e in zip(t_params, e_params)]
@@ -85,9 +85,10 @@ class DQN:
         # temp = tf.nn.conv2d(x, W, strides=[1, 2, 25, 1], padding='SAME')
         # temp_filter = tf.Variable(tf.random_normal([2, 2, 1, 1]))
         temp = tf.nn.conv2d(x, filter=W, strides=[1, 1, 1, 1], padding='SAME')
-        print('CONV2d !#!'*20)
-        print(x, W, temp)
-        print('CONV2d !#!'*20)
+        print('CONV2d !#!'*5)
+        print("\n\n x: {} \n W: {} \n temp: {} ".format(x, W, temp))
+
+        print('CONV2d !#!'*5)
         return temp
 
     def max_pool_2x2(self,x):
@@ -95,11 +96,9 @@ class DQN:
 
 
     def _build_net(self):
-
-        print('in build net')
         # ------------------ build evaluate_net ------------------
         # self.x = tf.placeholder(tf.float32, [None, 600])
-        self.x = tf.placeholder(tf.float32, [None, 900])
+        self.x = tf.placeholder(tf.float32, [None, 900], name = 's')
         # self.s = tf.reshape(self.x, [-1,2,300,1])
         self.s = tf.reshape(self.x, [-1,3,300,1])
         # W = tf.Variable(tf.zeros([self.n_features*2,7]))
@@ -184,7 +183,7 @@ class DQN:
 
                 self.q_next=tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
 
-            print('out build net')
+
 
 
     def store_transition(self, s, a, r, s_):
@@ -193,10 +192,10 @@ class DQN:
 
         transition = np.hstack((s, [a, r], s_))
 
-        print('TRANS $'*20)
-        print(transition[0:10])
-        print(transition[-10:])
-        print('TRANS $'*20)
+        # print('TRANS $'*20)
+        # print(transition[0:10])
+        # print(transition[-10:])
+        # print('TRANS $'*20)
 
         index = self.memory_counter % self.memory_size
         self.memory[index, :] = transition
@@ -207,9 +206,14 @@ class DQN:
 
         observation = observation[np.newaxis, :]
 
+        # print('observation\n')
+        # print(observation)
+        # print(observation.shape)
+
         if np.random.uniform() < self.epsilon:
             # forward feed the observation and get q value for every actions
             actions_value = self.sess.run(self.q_eval, feed_dict={self.x: observation})
+            # actions_value = self.sess.run(self.q_eval, feed_dict={self.s: observation})
             action = np.argmax(actions_value)
         else:
             action = np.random.randint(0, self.n_actions)
@@ -228,8 +232,8 @@ class DQN:
             sample_index = np.random.choice(self.memory_counter, size=self.batch_size)
         batch_memory = self.memory[sample_index, :]
 
-        print('SELF.S &'*20)
-        print(self.s)
+        # print('SELF.S &'*20)
+        # print(self.s)
 
         # temp_s_ = batch_memory[:, -self.n_features*2:]
         temp_s_ = batch_memory[:, -self.n_features*3:]
@@ -244,57 +248,70 @@ class DQN:
         feed_s = np.array(temp_s).reshape(-1,3,300,1)
 
 
-        q_next = self.sess.run(self.q_next, feed_dict={
+        # q_next = self.sess.run(self.q_next, feed_dict={
+        #         self.s_: feed_s_,  # fixed params
+        #         self.s: feed_s,  # newest params
+        #     })
+        #
+        # # print('@'*30)
+        #
+        # q_eval = self.sess.run(self.q_eval, feed_dict={
+        #         self.s_: feed_s_,  # fixed params
+        #         self.s: feed_s,  # newest params
+        #     })
+
+        q_next, q_eval = self.sess.run([self.q_next, self.q_eval], feed_dict={
                 self.s_: feed_s_,  # fixed params
                 self.s: feed_s,  # newest params
             })
 
         # print('@'*30)
 
-        q_eval = self.sess.run(self.q_eval, feed_dict={
-                self.s_: feed_s_,  # fixed params
-                self.s: feed_s,  # newest params
-            })
 
 
-        print("self.s_: ",self.s_)
-        print("self.s: ",self.s)
-
-        print('SELF.S &'*20)
+        # print("self.s_: ",self.s_)
+        # print("self.s: ",self.s)
+        #
+        # print('SELF.S &'*20)
 
         # change q_target w.r.t q_eval's action
         q_target = q_eval.copy()
 
         batch_index = np.arange(self.batch_size, dtype=np.int32)
-        eval_act_index = batch_memory[:, self.n_features].astype(int)
-        # eval_act_index = [0] * 32
-        reward = batch_memory[:, self.n_features + 1]
+        eval_act_index = batch_memory[:, self.n_features*3].astype(int)
+        reward = batch_memory[:, self.n_features*3 + 1]
 
-        print("TEMP^FEED "*20)
+        # print("TEMP^FEED "*20)
+        #
+        # print("\n\n\n temp_s_: {}\n temp_s_.shape: {}".format(temp_s_, temp_s_.shape))
+        # print("\n\n\n feed_s_: {}\n feed_s_.shape: {}".format(feed_s_, feed_s_.shape))
+        # print("\n\n\n temp_s: {}\n temp_s.shape: {}".format(temp_s, temp_s.shape))
+        # print("\n\n\n feed_s: {}\n feed_s.shape: {}".format(feed_s, feed_s.shape))
+        #
+        # print("TEMP^FEED "*20)
+        #
+        # print("REWARD^ "*20)
+        # print("batch_index: {} ({})\neval_act_index: {} ({})\n\n\nq_target[batch_index, eval_act_index]: {}\nq_target[b, e].shape: {}\n\n\nq_target: {}\nq_target.shape: {}".format(batch_index, len(batch_index), eval_act_index, len(eval_act_index), q_target[batch_index, eval_act_index], q_target[batch_index, eval_act_index].shape, q_target, q_target.shape))
 
-        print("\n\n\n temp_s_: {}\n temp_s_.shape: {}".format(temp_s_, temp_s_.shape))
-        print("\n\n\n feed_s_: {}\n feed_s_.shape: {}".format(feed_s_, feed_s_.shape))
-        print("\n\n\n temp_s: {}\n temp_s.shape: {}".format(temp_s, temp_s.shape))
-        print("\n\n\n feed_s: {}\n feed_s.shape: {}".format(feed_s, feed_s.shape))
+    ##############################################################################################################
+        # print("\n\n batch_index: {} ({})".format(batch_index, len(batch_index)))
+        # print("\n\n eval_act_index: {} ({})".format(eval_act_index, len(eval_act_index)))
+        # print("\n\n batch_memory: {}\n batch_memory.shape: {}".format(batch_memory, batch_memory.shape))
+    ##############################################################################################################
 
-        print("TEMP^FEED "*20)
+        # print("\n\n q_target: {}\n q_target.shape: {}".format(q_target, q_target.shape))
 
-        print("REWARD^ "*20)
-        print("batch_index: {} ({})\neval_act_index: {} ({})\n\n\nq_target[batch_index, eval_act_index]: {}\nq_target[b, e].shape: {}\n\n\nq_target: {}\nq_target.shape: {}".format(batch_index, len(batch_index), eval_act_index, len(eval_act_index), q_target[batch_index, eval_act_index], q_target[batch_index, eval_act_index].shape, q_target, q_target.shape))
-
-
-
-        print("\n\n\nreward: {}\nreward.shape: {}".format(reward, reward.shape))
-        print("\n\n\nnp.max(q_next): {}\nnp.max(q_next).shape: {}".format(np.max(q_next, axis=1), (np.max(q_next, axis=1).shape)))
-        print("\n\n\nq_target: {}\nq_target.shape: {}".format(q_target, q_target.shape))
-        print("\n\n\nq_next: {}\nq_next.shape: {}".format(q_next, q_next.shape))
+        # print("\n\n\nreward: {}\nreward.shape: {}".format(reward, reward.shape))
+        # print("\n\n\nnp.max(q_next): {}\nnp.max(q_next).shape: {}".format(np.max(q_next, axis=1), (np.max(q_next, axis=1).shape)))
+        # print("\n\n q_target: {}\n q_target.shape: {}".format(q_target, q_target.shape))
+        # print("\n\n\nq_next: {}\nq_next.shape: {}".format(q_next, q_next.shape))
 
         #ValueError: operands could not be broadcast together with shapes (32,) (3200,)
         q_target[batch_index, eval_act_index] = reward + self.gamma * np.max(q_next, axis=1)
 
         # print(q_target[batch_index, eval_act_index])
 
-        print("REWARD^ "*20)
+        # print("REWARD^ "*20)
 
         # train eval network
         _, self.cost = self.sess.run([self._train_op, self.loss],
