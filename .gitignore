@@ -1,4 +1,5 @@
 # Ignored folders
+logs/*
 BreakoutNoFrameskip-v4/*
 playground/*
 
