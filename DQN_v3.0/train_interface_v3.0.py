@@ -7,8 +7,8 @@ sys.path.append('.')
 import trade_interface as TI
 
 
-time_initial = '2018-04-13T18:30:00.000000000Z'
-time_end = '2018-04-19T03:26:00.000000000Z'
+# time_initial = '2018-04-13T18:30:00.000000000Z'
+# time_end = '2018-04-19T03:26:00.000000000Z'
 
 
 def run_model():
@@ -56,25 +56,34 @@ if __name__ == "__main__":
 
 ###########################################################################################
 
-    _account_name = 'DQN_v1.0_trial_data_5000_line'
-    _currency_balance = {'USD': 0, 'EUR': 100000, 'GBP': 0}
+    _account_name = 'DQN_v3.0_trial_data_4c_1000_row'
+    _currency_balance = {'USD': 0, 'EUR': 100000, 'GBP': 0, 'JPY': 0}
+    # _currency_balance = {'USD': 0, 'EUR': 100000, 'GBP': 0, 'JPY': 0, 'AUD': 300} # Five curriencies
     _from = "2018-04-13T18:30:00Z"
-    # _to = "2018-04-19T03:27:00Z" # 4800 rows.
-    _to = "2018-04-16T09:30:00Z" # 904 rows
+    _to = "2018-04-16T11:10:00Z" # 1000 rows
     _interval = "M1"
+
+    # _account_name = 'DQN_v3.0_trial_data_890_row'
+    # _currency_balance = {'USD': 0, 'EUR': 100000, 'GBP': 0}
+    # _from = "2018-04-13T18:30:00Z"
+    # _to = "2018-04-16T09:30:00Z" # 890 rows
+    # _interval = "M1"
+
+
     TI_train = TI.Trade_Interface(_account_name, _currency_balance, _from, _to, _interval)
 
 ###########################################################################################
 
 
     env = FX(TI_train, _base_currency = 'EUR', _n_features = 300)
-    DQN = DQN(len(env.TI_initial.all_currency_list), env.n_actions, env.n_features,
+    # print(len(env.TI_initial.currency_pairs))
+    DQN = DQN(len(env.TI_initial.currency_pairs), env.n_actions, env.n_features,
                       learning_rate=0.01,
                       reward_decay=0.9,
                       e_greedy=0.9,
                       replace_target_iter=200,
                       memory_size=2000,
-                      # output_graph=True
+                      output_graph=True
                       )
     run_model()
 
