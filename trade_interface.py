@@ -64,13 +64,16 @@ def execution_report(decorated):
 
 class Trade_Interface:
     @account_input_report
-    def __init__(self, _account_name, _currency_balance, _from_time, _to_time, _request_interval, _arena_folder = None):
+    def __init__(self, _account_name, _currency_balance, _from_time, _to_time, _request_interval, _arena_folder = None, _output_arena_csv = True, _output_raw_csv = False):
         self.account_name = _account_name
         self.currency_balance = _currency_balance
         self.from_time = _from_time
         self.to_time = _to_time
         self.request_interval = _request_interval
         self.all_currency_list = [k for k in self.currency_balance]
+
+        self.output_arena_csv = _output_arena_csv
+        self.output_raw_csv = _output_raw_csv
 
         self.account_input_eval()
 
@@ -131,7 +134,7 @@ class Trade_Interface:
         for i in currency_pairs:
             OI_temp = OI.Oanda_Interface(my_account_id, my_access_token)
             try:
-                OR_temp = OI_temp.get_history_price(self.from_time, self.to_time, self.request_interval, i, close_price_only_flag)
+                OR_temp = OI_temp.get_history_price(self.from_time, self.to_time, self.request_interval, i, close_price_only_flag, _output_raw_csv = self.output_raw_csv)
             except OI.oandapyV20.exceptions.V20Error as e:
                 raise OI_Onanda_Error(e)
             except ValueError as e:
@@ -146,7 +149,8 @@ class Trade_Interface:
 
 
         arena_filename = arena_csv_export_dir + '_'.join(self.all_currency_list) + '_' + self.from_time[0:19] + '_' + self.to_time[0:19] + '_' + self.request_interval + '.csv'
-        arena_df.to_csv(arena_filename, index = None, header = True)
+        if self.output_arena_csv:
+            arena_df.to_csv(arena_filename, index = None, header = True)
 
 
         OR_arena = OI.Onada_Record(arena_df, arena_filename, self.from_time, self.to_time, self.request_interval, self.all_currency_list)

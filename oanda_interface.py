@@ -41,7 +41,7 @@ class Oanda_Interface:
         self.nationality = "USA"
         self.client = oandapyV20.API(access_token=self.access_token)
 
-    def get_history_price(self, _from, _to, _interval, _currency_pair, close_price_only = False, nan_fill = True):
+    def get_history_price(self, _from, _to, _interval, _currency_pair, close_price_only = False, nan_fill = True, _output_raw_csv = False):
         _params = {
             "from": _from,
             "to": _to,
@@ -60,11 +60,14 @@ class Oanda_Interface:
             df = df.rename(index=str, columns={'close_price': _currency_pair + '_close', 'volume': _currency_pair + '_volume'})
             # print(df)
             df = df.fillna(method='ffill')
-        df.to_csv(csv_filename, index = None, header = True)
+
+        if _output_raw_csv:
+            df.to_csv(csv_filename, index = None, header = True)
+            print("\n\n## The requested record has been successfully exported. ##")
 
 
         temp_OR = Onada_Record(df, csv_filename, _from, _to, _interval, _currency_pair)
-        print("\n\n## The requested record has been successfully exported. ##")
+        print("\n\n## The requested record has been successfully retrieved. ##")
         temp_OR.record_review()
         return temp_OR
 
