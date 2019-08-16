@@ -2,6 +2,7 @@
 logs/*
 BreakoutNoFrameskip-v4/*
 playground/*
+raw_data/*
 
 # macOS
 **/.DS_Store
