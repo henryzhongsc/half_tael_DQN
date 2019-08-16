@@ -62,7 +62,7 @@ class FX:
 
         self.step_count = 0
         self.start_day = self.n_features
-        self.obs = self.data_env[:, 0 : self.start_day].reshape((len(self.TI_train.all_currency_list) * self.start_day,))
+        self.obs = self.data_env[:, 0 : self.start_day].reshape((len(self.TI_train.currency_pairs) * self.start_day,))
         self.obs_time = self.data_time[0 : self.start_day]
 
         del self.TI_train
@@ -101,10 +101,9 @@ class FX:
 
 
         if self.step_count < self.max_usable_row - self.n_features:
-            print('!'*50)
-            print('been there', self.step_count)
-            print('!'*50)
-            self.obs = self.data_env[:, self.step_count : (self.start_day + self.step_count)].reshape((len(c_list) * self.start_day,))
+            print('Step: {}'.format(self.step_count))
+
+            self.obs = self.data_env[:, self.step_count : (self.start_day + self.step_count)].reshape((len(self.TI_train.currency_pairs) * self.start_day,))
             self.obs_time = self.data_time[self.step_count : (self.start_day + self.step_count)]
 
         elif self.step_count == self.max_usable_row - self.n_features:
@@ -112,7 +111,7 @@ class FX:
             print('$')
             print(self.data_env)
             print(self.data_env.shape)
-            self.obs = self.data_env[:, (self.max_usable_row - self.n_features) : ].reshape((len(c_list) * self.start_day,))
+            self.obs = self.data_env[:, (self.max_usable_row - self.n_features) : ].reshape((len(self.TI_train.currency_pairs) * self.start_day,))
             self.obs_time = self.data_time[(self.max_usable_row - self.n_features) : ]
 
 
