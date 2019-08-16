@@ -18,11 +18,32 @@
 ---
 ## Meeting
 
-### 2019-08-12 | Scrum #7 | Henry, Steven
+### 2019-08-17 | Scrum #10 | Henry (end-of-internship review).
+* **Henry**
+    1. Release [half_tael_DQN v3.0: Virtual Trading Platform with DQN v3.0](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
+        * Accomplished everything in the [related milestone](https://github.com/choH/half_tael_DQN/milestone/5).
+    * Release [half_tael_v4.0: Textual output + Improved cohesion + Documentations](https://github.com/choH/half_tael_DQN/releases/tag/v4.0).
+        * Accomplished everything in the [related milestone](https://github.com/choH/half_tael_DQN/milestone/6).
+    * Develop [Anita v2.0: Basic framework for persona-driven reward influencing interface](https://github.com/choH/half_tael_DQN/milestone/4).
+
+### 2019-08-16 | Scrum #9 | Henry (report to Ching-Yung Lin and Oscar Tseng).
+* **Henry**
+    1. ✅ Bugfix [cost (loss) graph converges way too quick and smooth.](https://github.com/choH/half_tael_DQN/issues/15).
+
+
+### 2019-08-14 | Scrum #8 | Henry.
+* **Henry**
+    1. ✅ 🚧 Refactor half_tael_v2.0 to v3.0, in compliant with DQN_v2.5 (multiple currency model working with the trading platform).
+        * Delivered a runnable demo with certain freedom on params (`3` price info at the same timestamp.
+        * Bugfix required on [cost (loss) graph converges way too quick and smooth.](https://github.com/choH/half_tael_DQN/issues/15).
+    * ~~Anita v2.0~~
+        * Postponed as legacy Anita is unusable, check **2019-08-08 | Legacy Anita plot hole discovered | Henry** in section **Development Journal** for details.
+
+### 2019-08-12 | Scrum #7 | Henry, Steven.
 * **Henry**
     1. ✅ Test the reward design (for Anita).
     * ~~Anita v2.0~~
-            * Postponed due to prioritized on debugging DQN v2.5.
+        * Postponed due to prioritized on debugging DQN v2.5.
     * ✅ DQN v2.5: Debugged and partially adjusted the CNN + DQN model which supports multiple (>2) currencies based on Steven X.'s design ([ef6e716](https://github.com/choH/half_tael_DQN/commit/ef6e716af132541a0720bcb456f602c4f13cba06)). Presented a runnable demo only on [a specific dummy data set](https://github.com/choH/half_tael_DQN/tree/v2.0/DQV_v2.5/EUR_GBP.csv) -- Henry.
         * Main works presented as [f7259b3](https://github.com/choH/half_tael_DQN/commit/f7259b3eff2cf9e0d9886ea613d87bee958bdb68). Stored as [DQN_v2.5](https://github.com/choH/half_tael_DQN/tree/v2.0/master/DQN_v2.5).
 
@@ -31,7 +52,7 @@
         * Works presented as [ef6e716](https://github.com/choH/half_tael_DQN/commit/ef6e716af132541a0720bcb456f602c4f13cba06). Need debug.
         * Absent, but marked as "green check" since goal (DQN v2.5) accomplished -- Henry.
 
-### 2019-08-07 | Scrum #6 | Henry, Steven
+### 2019-08-07 | Scrum #6 | Henry, Steven.
 * **Henry**
     1. ✅ Understand CNN basic.
 * **Steven**
@@ -39,7 +60,7 @@
     * ❌ 🚧 DQN v2.5.
         * Postpone to 2019-08-09, but made significant progress on understanding the mapping of matrix convolution.
 
-### 2019-08-06 | Scrum #5 | Henry, Steven
+### 2019-08-06 | Scrum #5 | Henry, Steven.
 * ~~Steven absent, postpone to 2019-08-06 to discuss DQN v2.5.~~
 * ❌ 🚧 DQN v2.5.
     * Tried to utilize CNN to scan input with multiple dimension (support trading among multiple (>2) currencies). But it is indeed technically challenged since:
@@ -56,7 +77,7 @@
             * [论文笔记之：Deep Recurrent Q-Learning for Partially Observable MDPs | uuummmmiiii](https://zhuanlan.zhihu.com/p/37294342)
             * [Deep Recurrent Q-Learning for Partially Observable MDPs | Matthew Hausknecht, Peter Stone](https://arxiv.org/abs/1507.06527v3)
 
-### 2019-08-02 | Scrum #4 | Henry, Steven
+### 2019-08-02 | Scrum #4 | Henry, Steven.
 * **Goal**
     * **Henry**
     1. Integrate Steven's trial DQN model (two-currency) with Henry's custom virtual trading platform.
@@ -77,7 +98,7 @@
         2. ❌ 🚧 Work in progress as required to set up with server, will deliver on 2019-08-05. Check [milestone #3](https://github.com/choH/half_tael_DQN/milestone/3)
 
 
-### 2019-07-30 | Scrum #3 | Henry, Steven, Jian
+### 2019-07-30 | Scrum #3 | Henry, Steven, Jian.
 * **Goals**
     * **Henry**
         1. Draft version control standard and contribution guideline (2019-07-26).
@@ -105,7 +126,7 @@
 
 
 
-### 2019-07-24 | Scrum #2 | Henry, Jian, Steven
+### 2019-07-24 | Scrum #2 | Henry, Jian, Steven.
 * **Goals**:
     * **Henry**
         1. Implement trading interface.
@@ -134,7 +155,7 @@
             * After discussion, we all agree it is doable and such task is postpone to 2019-07-30.
         * ✅ Introduced some fundamental DQN features (remember, replay).
 
-### 2019-07-19 | Scrum #1 | Henry, Steven
+### 2019-07-19 | Scrum #1 | Henry, Steven.
 * **Goals**
     * **ALL**:
         1. Get familiar with basic Q-learning and DQN concept in general.
@@ -165,14 +186,18 @@
 
 
 
-### 2019-07-11 | Kick-off briefing | Anul Sinha, Henry, Jian, Steven
+### 2019-07-11 | Kick-off briefing | Anul Sinha, Henry, Jian, Steven.
 * Anul gave a presentation of his `forex` side-project, mainly regarding the method of interaction with OANDA, his model try-out, and why he abandoned this project.
 * Due to the lacks of documentation of Anul's work, we decided to not to take over his project (also because he has moved on to a more combined design base on his `forex`), but to build our own bot. However, we will take his code as an important reference, especially regarding the OANDA API part and model environment setup.
 
 ---
 ## Development Journal
 
-### 2019-08-15 | Bugfix cost converges too quick & smooth | Henry
+### 2019-08-16 | half_tael_DQN v3.0 release | Henry.
+* Check [half_tael_v3.0: Refactor DQN_v2.5 to work with virtual trading platform](https://github.com/choH/half_tael_DQN/milestone/5?closed=1).
+    * Most effort spent into [Replace hardcore setting in half_tael_v3.0 model to accept dynamic input](https://github.com/choH/half_tael_DQN/issues/17) by [3ef23cf](https://github.com/choH/half_tael_DQN/commit/3ef23cf8e6bebec8754116296b71142e718c3770).
+
+### 2019-08-15 | Bugfix cost converges too quick & smooth | Henry.
 * Fixed the issued regarding [Cost (loss) graph converges way too quick and smooth](https://github.com/choH/half_tael_DQN/issues/15).
     * Wrong index for `a, r` in `batch_memory` while retrieving `eval_act_index`. So when replacing the reward(s), it is not the `a, r` being replaced, but two `_close` prices data at `batch_memory[: , self.n_features]` and `batch_memory[: , self.n_features + 1]` (therefore it is usually `0` or `1` as we use `as type(int)` during the retrieval) .
     * Changed to:
@@ -188,7 +213,7 @@
     * CNN `conv2d()` part not yet done, but fixed all reshape-related setting to accept dynamic input.
 
 
-### 2019-08-14 | Redesigned the setting on CNN  | Henry, with help from [Ziyu, CHEN](https://www.linkedin.com/in/zailchen17/).
+### 2019-08-14 | Redesigned seetings of CNN  | Henry, with help from [Ziyu, CHEN](https://www.linkedin.com/in/zailchen17/).
 
 * As Steven X. is absent for three days and unresponsive on IM for four days probably due to some unexpected urgencies, I seek Ziyu for help.
 * Ziyu noticed the original `strides` were set to `strides = [1, 2, 25, 1]`, combine with`padding = 'SAME'` and `filter = [6, 6, 1, 32]` on input `[-1, 3, 300, 1]`, which effectively "over-padded" the input. as:
@@ -228,16 +253,16 @@
 
 
 
-### 2019-08-13 | Refactored DQN_v2.5 to work with the trading platform | Henry
+### 2019-08-13 | Refactored DQN_v2.5 to work with the trading platform | Henry.
 * Be able to trade among three currencies with hardcore setting used in [`RL_brain.py`](https://github.com/choH/half_tael_DQN/commit/5ce65e38a0fdb52e428a2963e8bada26e299fb21).
 * Problem regarding cost converging too fast and smooth remains unsolved, [`cost_log.txt`](https://github.com/choH/half_tael_DQN/commit/0d7164e8ce7b0621088a3715c014f630048bf799) saved for future investigation.
 
-### 2019-08-11 | Bugfix and partial adjustments on DQN_v2.0, DQN_v2.5 delivered | Henry
+### 2019-08-11 | Bugfix and partial adjustments on DQN_v2.0, DQN_v2.5 delivered | Henry.
 * Debugged on Steven's sketch code [ef6e716](https://github.com/choH/half_tael_DQN/commit/ef6e716af132541a0720bcb456f602c4f13cba06) with various `reshape` manipulations regarding `self.memory`, `store_transition` and `batch_memory`'s slicing in `feed_dict`.
 * Several cosmetic on monitory print-outs.
 * [Cost converges unreasonable fast and smooth](https://github.com/choH/half_tael_DQN/tree/v2.0/DQV_v2.5/cost_log.txt), potentially overfit, need investigation.
 
-### 2019-08-09 | Debug DQN_v2.0 | Henry, Steven
+### 2019-08-09 | Debug DQN_v2.0 | Henry, Steven.
 * Debug DQV_v2.0
     * solved bugs related to `self.s` and `self.s_` for `placeholder` and `reshape`.
     * solved bugs related to `self.x` and `self.x_` on `conv2d()`.
@@ -249,7 +274,7 @@
     self.memory[index, :] = transition
     ```
 
-### 2019-08-08 | Legacy Anita plot hole discovered | Henry
+### 2019-08-08 | Legacy Anita plot hole discovered | Henry.
 
 * **Findings:**
     * After some careful review of [legacy_ref/anita folder](https://github.com/choH/half_tael_DQN/tree/master/legacy_ref/anita), I found that the mapping is between **personality** and **financial products**. e.g. (letter referred Big Five Personality Traits)
@@ -264,7 +289,7 @@
 * **Solution:** My thinking is I will discard all Anita legacy and use some technical/fundamental analysis indicators to evaluate the "suitableness between a `trade_action` and given indicator" and therefore influent the reward. How a personality is defined by the indicators will left to future development.
 
 
-### 2019-08-01 | Delivered half_tael_v2.0 running on DQN v2.0 | Henry
+### 2019-08-01 | Delivered half_tael_v2.0 running on DQN v2.0 | Henry.
 * Implemented `balance_protection` feature on `trade_interface.py`. If the balance of sell currency is not enough to execute the requested trade, such trade will be canceled. The trade log will mark such trade as "failed." ([commit `#b735aff`](https://github.com/choH/half_tael_DQN/commit/b735aff1ccaf9ff9b34e6b6a215974597ef54e58))
 * Discussed with Steven on the action update policy, decided the model does not need to know if an action is actually executed since the NN design will understand that at this `state` the `x` action will have bad reward (since equal balance will result in a reward of `-1`).
 * Delivered half_tael_v2.0 by [commit `#6a051da`](https://github.com/choH/half_tael_DQN/commit/6a051dab9e63ec483e97f8b39b5fe6e1d5910e3f), Still hardcored to GBP due to the fact that DQN v1.0 only supports two-currency. Thus the non-base_currency is set manually. Will automate such part when refactoring with DQN v2.5 to avoid reengineering.  
@@ -304,7 +329,7 @@
 ...
 ```
 
-### 2019-07-31 | Starting to refactor DQN v1.0 | Henry
+### 2019-07-31 | Starting to refactor DQN v1.0 | Henry.
 * Till [30ec22c](https://github.com/choH/half_tael_DQN/commit/30ec22c343cb27f5338b1454d63b035df3b340ec), a understanding of DQN v1.0 is built.
 * Bug fix on account cumulation with `execute_trade()` from `trade_interface.py`.
 * Update hardcore setting (`n_features = 300`, record length to `4800` etc, currency as `EUR` and `GBP`) with relatively more universal adaptability.
@@ -312,23 +337,23 @@
     * Ask Steven if the model need to know that some of its actions are not executed due to the balance issue.
 
 
-### 2019-07-30 | Finished basic DQN learning | Henry
+### 2019-07-30 | Finished basic DQN learning | Henry.
 * Finished most DQN part ([4.3](https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-3-DQN3/), up to date with what DQN v1.0 uses).
     * Check [issue #2](https://github.com/choH/half_tael_DQN/issues/2).
 
 
-### 2019-07-29 | Dev branches base on half_tael_v1.0 | Henry
+### 2019-07-29 | Dev branches base on half_tael_v1.0 | Henry.
 * Branches [half_tael_v2.0](https://github.com/choH/half_tael_DQN/tree/half_tael_v2.0), [DQN_v2.5](https://github.com/choH/half_tael_DQN/tree/DQN_v2.5), and [anita_v1.1](https://github.com/choH/half_tael_DQN/tree/anita_v1.1) checked out from this commit — aka [Release half_tale_DQN v1.0: Virtual Trading Platform + Trial DQN](https://github.com/choH/half_tael_DQN/releases/tag/v1.0). ([commit `#113431e`](https://github.com/choH/half_tael_DQN/commit/113431e8247f200f5a0800b23e355072c5a9280b))
 
-### 2019-07-26 | Initial commit for trial DQN between two currency | Steven, Henry
+### 2019-07-26 | Initial commit for trial DQN between two currency | Steven, Henry.
 * Initial commit for trial DQN between two currency -- Steven.
 * Release tag v1.0 set -- Henry.
     * [half_tale_DQN v1.0: Virtual Trading Platform + Trial DQN](https://github.com/choH/half_tael_DQN/releases)
 
-### 2019-07-25 | Draft contributors' guideline for the project | Henry
+### 2019-07-25 | Draft contributors' guideline for the project | Henry.
 * Research git `rebase` and git `branch`. Designed and drafted [`CONTRIBUTING.md`](https://github.com/choH/half_tael_DQN/blob/master/CONTRIBUTING.md) by [commit `#dd7e0ce`](https://github.com/choH/half_tael_DQN/commit/dd7e0ce97c59fd023e22cda412bf0aa8ba18a44f) to specify the workflow of this project.
 
-### 2019-07-24 | Discussed merging Steven's experimental DQN code with Henry's trading environment code | Henry, Steve
+### 2019-07-24 | Discussed merging Steven's experimental DQN code with Henry's trading environment code | Henry, Steve.
 * Discussed the design and concern of merging Steven's experimental DQN code with Henry's trading environment code, particularly in:
     * How to support trading between multiple currencies (> 2) while making the machine realize some `_close` value is in the same time.
     * Possibility of using `vector` as first layer nodes in ANN/RNN design.
@@ -336,7 +361,7 @@
         * Increase `request_interval` from `M1` to `M5`.
         * Fill in `np.nan` cell gradual increment/decrement according to non-empty neighborhood cells, while setting `_volume` to `0`.
 
-### 2019-07-24 | Drafted [`User Manual for trade_interface.py.md`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/User%20Manual%20for%20%60trade_interface.py%60.md), implemented `checkout_all_in()` method | Henry
+### 2019-07-24 | Drafted [`User Manual for trade_interface.py.md`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/User%20Manual%20for%20%60trade_interface.py%60.md), implemented `checkout_all_in()` method | Henry.
 * Drafted [`User Manual for trade_interface.py.md`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/User%20Manual%20for%20%60trade_interface.py%60.md) with demo code available at [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/train_interface_demo.py).
 * Implemented `checkout_all_in()` method in `trade_interface.py` to checkout all currency(s) in account to a particular currency (e.g. `USD`).
 * Debugged with Steven on his trial DQN model.
@@ -360,7 +385,7 @@
 
 
 
-### 2019-07-23 | Implemented custom exceptions handling, and stand alone training input portal | Henry
+### 2019-07-23 | Implemented custom exceptions handling, and stand alone training input portal | Henry.
 * Now all input should goes to — or in a form which is similar to — `train_interface.py` with the login info saved in `config.py`
 * Custom exceptions handling implemented, e.g.
 
@@ -398,7 +423,7 @@
 * Add feature to retrieve one trade action by `action_id` from `trade_log`.
 
 
-### 2019-07-22 | Fully supports trading among multiple currency | Henry
+### 2019-07-22 | Fully supports trading among multiple currency | Henry.
 * Bug fixed for perviously mentioned [commit `#8248b6f`](https://github.com/choH/half_tael_DQN/commit/8248b6ff8fbd73be7c2fc52935574d90ea422b9f), trading among multiple currency is now fully supported ([commit `#443e4d1`](https://github.com/choH/half_tael_DQN/commit/443e4d16b9baf9f1c0d23cf85e7aaa3376fec320)).
 
     ```
@@ -440,7 +465,7 @@
 
 
 
-### 2019-07-19 | Refactored trading interface to handle trading among multiple currency (Bug-fixing in progress) | Henry
+### 2019-07-19 | Refactored trading interface to handle trading among multiple currency (Bug-fixing in progress) | Henry.
 
 * Refactored the `trade_interface.py` to handle multiple currency.
     * Bug on `market_LUT()` price retrive, see [commit `#8248b6f`](https://github.com/choH/half_tael_DQN/commit/8248b6ff8fbd73be7c2fc52935574d90ea422b9f).
@@ -458,7 +483,7 @@
 * Updated `oanda_interface.py` to wrap `DataFrame` return into a custom class `Oanda_Record`, so that when passed to other method info regarding such record shall preserve.
 * Setting goals and time for next two scrum meetings.
 
-### 2019-07-18 | Developed internal trading interface for model testing | Henry
+### 2019-07-18 | Developed internal trading interface for model testing | Henry.
 * Developed a `Trade_Interface` class to regulate allowed trading behavior and review portal:
     * Behaviors: short, long.
     * Review: account, trade log.
@@ -485,7 +510,7 @@
     ```
 * Marked places which can be improved in future (exception-handling, decorator log generation).
 
-### 2019-07-17 | Developed wrapper functions output pricing record | Henry
+### 2019-07-17 | Developed wrapper functions output pricing record | Henry.
 * Developed a set of wrapper functions in `oanda_interface.py`, which can interact with `oandapyV20` API and output pricing record according to user requested currency pair, start time, end time, interval.
 * Output is available in both `DataFrame` and CSV file with command line confirmation on both request and export stage:
 
@@ -508,7 +533,7 @@
 
 * Experienced with [commit-message-emoji](https://github.com/dannyfritz/commit-message-emoji).
 
-### 2019-07-11 | Finished Q-learning courses | Henry
+### 2019-07-11 | Finished Q-learning courses | Henry.
 * Finished the *Q-learning* section of the [Morvan](https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/) course.
 * Started the DQN section.
 * Hand over the pervious project to be fully committed on this one.
