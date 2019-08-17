@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
+
+tf.logging.set_verbosity(tf.logging.ERROR)
 np.random.seed(1)
 tf.set_random_seed(1)
 
@@ -105,8 +107,8 @@ class DQN:
                 # print(h_pool1)
 
 
-                n_rows_temp = np.prod(h_pool1.shape.as_list()[1: ])# 9600 for 3 currencies.
-                print(tf.size(h_pool1), type(tf.size(h_pool1)))
+                n_rows_temp = np.prod(h_pool1.shape.as_list()[1: ]) # 9600 for 3 currencies.
+                # print(tf.size(h_pool1), type(tf.size(h_pool1)))
                 # print(n_rows_temp, type(n_rows_temp))
                 # W_fc1 = self.weight_variable([3 * 3200, 100])
                 # W_fc1 = self.weight_variable([self.n_currency_pairs * 3200, 100])
@@ -138,7 +140,6 @@ class DQN:
                 b_fc2 = self.bias_variable([self.n_actions])
 
                 self.q_eval=tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
-                print("\n\n self.q_eval.shape: {}".format(self.q_eval.shape))
 
         with tf.variable_scope('loss'):
             self.loss = tf.reduce_mean(tf.squared_difference(self.q_target, self.q_eval))
@@ -233,9 +234,8 @@ class DQN:
 
     def plot_cost(self):
         import matplotlib.pyplot as plt
-
-        print('COST LOG: ')
-        print(self.cost_his)
+        # print('COST LOG: ')
+        # print(self.cost_his)
         plt.plot(np.arange(len(self.cost_his)), self.cost_his)
         plt.ylabel('Cost')
         plt.xlabel('training steps')
