@@ -12,7 +12,7 @@ import oanda_interface as OI
 from decimal import *
 import itertools
 
-from config import *
+from oanda_config import *
 
 
 
@@ -145,7 +145,7 @@ class Trade_Interface:
         arena_df = pd.concat((i.record_df.set_index('time') for i in currency_ORs), axis=1, join='outer', sort=True).reset_index()
         arena_df = arena_df.rename(index=str, columns={'index': 'time'})
         arena_df = arena_df.fillna(method='ffill')
-        print("NaN value within arena_df: {}".format(arena_df.isnull().sum().sum()))
+        # print("NaN value within arena_df: {}".format(arena_df.isnull().sum().sum()))
 
 
         arena_filename = arena_csv_export_dir + '_'.join(self.all_currency_list) + '_' + self.from_time[0:19] + '_' + self.to_time[0:19] + '_' + self.request_interval + '.csv'
@@ -271,7 +271,7 @@ class Trade_Interface:
 
 
     def trade_log_review(self, tar_action_id = False, raw_flag = False):
-        print("#### Displaying the {} trade log of account \"{}\" (action: {}) ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name, 'ALL' if not tar_action_id else tar_action_id))
+        print("#### Displaying the {} trade log of account \"{}\" (action: {}) ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name, 'ALL' if tar_action_id is False else tar_action_id))
 
         if tar_action_id is False:
             log_to_display = self.trade_log
@@ -315,7 +315,7 @@ class Trade_Interface:
                 print("\t\t{:25}{} {}".format('Buy Currency Balance: ', i['buy_currency_balance'], i['buy_currency']))
                 print("\n")
 
-        print("#### The {} trade log of account \"{}\" has been successfully displayed (action: {}) ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name, 'ALL' if not tar_action_id else tar_action_id))
+        print("#### The {} trade log of account \"{}\" has been successfully displayed (action: {}) ####\n".format('RAW' if raw_flag else 'READABLE', self.account_name,  'ALL' if tar_action_id is False else tar_action_id))
 
     def account_review(self):
         df = self.arena.record_df
