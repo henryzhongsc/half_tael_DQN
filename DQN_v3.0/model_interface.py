@@ -1,90 +1,112 @@
 from FX_env import FX
 from RL_brain import DQN
 
+import contextlib
+import json
+import os
 import copy
 import sys
 sys.path.append('.')
+# print(sys.path)
+from model_config import *
+
+
 import trade_interface as TI
 
 
-# time_initial = '2018-04-13T18:30:00.000000000Z'
-# time_end = '2018-04-19T03:26:00.000000000Z'
+def run_model(_train_episode = 100,
+                _learn_threshold = 200,
+                _learn_interval = 5,
+                _base_currency = 'USD',
+                _trade_log_mode = 'NONE',
+                _trade_log_raw = False,
+                _trade_log_to_file = False,
+                _show_checkout = True,
+                _show_step = True):
 
-
-def run_model():
     step = 0
 
-    for episode in range(2):
+    for episode in range(_train_episode):
         observation, TI_initial, initial_time = env.reset()
         TI_initial_balance = copy.deepcopy(TI_initial)
+        train_name = TI_initial.account_name
 
         while True:
             action = DQN.choose_action(observation)
-            observation_, reward, done, TI_end, end_time = env.step(action)
-
+            observation_, reward, done, TI_end, end_time = env.step(action, print_step = _show_step)
             DQN.store_transition(observation, action, reward, observation_)
-            if (step > 200) and (step % 5 == 0):
+
+            if (step > _learn_threshold) and (step % _learn_interval == 0):
                 DQN.learn()
             observation = observation_
 
             if done:
-                print('#'*20 + 'game over' + '#'*20)
+                print('$'*20 + ' GAME OVER ' + '$'*20)
 
                 TI_initial_balance.account_name = 'Initial_Checkout_Review' + ' (episode: ' + str(episode+1) + ')'
-                TI_initial_balance.checkout_all_in(initial_time, 'EUR')
-                TI_initial_balance.account_review()
-
-                print('@'*20)
-                TI_end.trade_log_review(tar_action_id = 0)
-                TI_end.trade_log_review(tar_action_id = 'LAST')
-                print('@'*20)
-
-
+                TI_initial_balance.checkout_all_in(initial_time, _base_currency)
                 TI_end_balance = copy.deepcopy(TI_end)
                 TI_end_balance.account_name = 'End_Checkout_Review' + ' (episode: ' + str(episode+1) + ')'
-                TI_end_balance.checkout_all_in(end_time, 'EUR')
-                TI_end_balance.account_review()
+                TI_end_balance.checkout_all_in(end_time, _base_currency)
 
+                if _show_checkout == True:
+                    TI_initial_balance.account_review()
+                    TI_end_balance.account_review()
 
-                # TI_end_balance.trade_log_review()
+                if _trade_log_mode == False:
+                    pass
+                elif _trade_log_mode == 'ALL':
+                    TI_end_balance.trade_log_review(raw_flag = _trade_log_raw)
+                elif _trade_log_raw == 'TWOENDS':
+                    TI_end.trade_log_review(tar_action_id = 0, raw_flag = _trade_log_raw)
+                    TI_end.trade_log_review(tar_action_id = 'LAST', raw_flag = _trade_log_raw)
+                else:
+                    print('Invalid _trade_log_mode input ({}). Must be \'ALL\', \'TWOENDS\', or False'.format(_trade_log_mode))
+                    return -1
+
+                if _trade_log_to_file:
+                    trade_log_file_name = './logs/trade_logs/' + str(train_name)
+                    if _trade_log_raw == False:
+                        log_file = open(trade_log_file_name + '.txt', 'w+')
+                        with contextlib.redirect_stdout(log_file):
+                            TI_end.trade_log_review()
+                        print("### READABLE trade_log of {} successfully exported to: ###\n\t\t{}".format(str(train_name), trade_log_file_name + '.txt'))
+                    else:
+                        log_file = open(trade_log_file_name + '.json', 'w+')
+                        json.dump(TI_end.trade_log, log_file, indent = 4)
+                        print("### RAW trade_log of {} successfully exported to: ###\n\t\t{}".format(str(train_name), trade_log_file_name + '.json'))
+                    log_file.close()
+
                 break
-
             step += 1
 
 
 if __name__ == "__main__":
 
-###########################################################################################
+    TI_train = TI.Trade_Interface(config_account_name, config_currency_balance, config_from, config_to, config_interval)
 
-    _account_name = 'DQN_v3.0_trial_data_4c_1000_row'
-    _currency_balance = {'USD': 0, 'EUR': 100000, 'GBP': 0, 'JPY': 0}
-    # _currency_balance = {'USD': 0, 'EUR': 100000, 'GBP': 0, 'JPY': 0, 'AUD': 300} # Five curriencies
-    _from = "2018-04-13T18:30:00Z"
-    _to = "2018-04-16T11:10:00Z" # 1000 rows
-    _interval = "M1"
+    env = FX(TI_train,
+            _base_currency = config_base_currency,
+            _n_features = config_n_features)
 
-    # _account_name = 'DQN_v3.0_trial_data_890_row'
-    # _currency_balance = {'USD': 0, 'EUR': 100000, 'GBP': 0}
-    # _from = "2018-04-13T18:30:00Z"
-    # _to = "2018-04-16T09:30:00Z" # 890 rows
-    # _interval = "M1"
+    DQN = DQN(len(env.TI_initial.currency_pairs),
+                env.n_actions,
+                env.n_features,
+                learning_rate = config_learning_rate,
+                reward_decay = config_reward_decay,
+                e_greedy = config_e_greedy,
+                replace_target_iter = config_replace_target_iter,
+                memory_size = config_memory_size,
+                output_graph = config_output_graph)
 
-
-    TI_train = TI.Trade_Interface(_account_name, _currency_balance, _from, _to, _interval)
-
-###########################################################################################
-
-
-    env = FX(TI_train, _base_currency = 'EUR', _n_features = 300)
-    # print(len(env.TI_initial.currency_pairs))
-    DQN = DQN(len(env.TI_initial.currency_pairs), env.n_actions, env.n_features,
-                      learning_rate=0.01,
-                      reward_decay=0.9,
-                      e_greedy=0.9,
-                      replace_target_iter=200,
-                      memory_size=2000,
-                      output_graph=True
-                      )
-    run_model()
+    run_model(_train_episode = config_train_episode,
+                _learn_threshold = config_learn_threshold,
+                _learn_interval = config_learn_interval,
+                _base_currency = config_base_currency,
+                _trade_log_mode = config_trade_log_mode,
+                _trade_log_raw = config_trade_log_raw,
+                _trade_log_to_file = config_trade_log_to_file,
+                _show_checkout = config_show_checkout,
+                _show_step = config_show_step)
 
     DQN.plot_cost()
