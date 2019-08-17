@@ -13,7 +13,7 @@ import datetime
 import pandas as pd
 import numpy as np
 
-from config import *
+from oanda_config import *
 
 ###############################################################################
 two_currency_csv_export_dir = './raw_data/'
