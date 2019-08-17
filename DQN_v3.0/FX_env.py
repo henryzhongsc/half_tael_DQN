@@ -4,8 +4,8 @@ import time
 import sys
 import copy
 
-from os.path import dirname, abspath
-file_parent_dir = dirname(dirname(abspath(__file__)))
+# from os.path import dirname, abspath
+# file_parent_dir = dirname(dirname(abspath(__file__)))
 
 sys.path.append('.')
 import trade_interface as TI
@@ -72,7 +72,7 @@ class FX:
 
 
 
-    def step(self, action):
+    def step(self, action, print_step = False):
         current_time = self.obs_time[-1]
 
         c_list = self.TI_train.all_currency_list
@@ -101,16 +101,13 @@ class FX:
 
 
         if self.step_count < self.max_usable_row - self.n_features:
-            print('Step: {}'.format(self.step_count))
+            if print_step == True:
+                print('Step: {}'.format(self.step_count))
 
             self.obs = self.data_env[:, self.step_count : (self.start_day + self.step_count)].reshape((len(self.TI_train.currency_pairs) * self.start_day,))
             self.obs_time = self.data_time[self.step_count : (self.start_day + self.step_count)]
 
         elif self.step_count == self.max_usable_row - self.n_features:
-            print('dats_env len: ',len(self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)]))
-            print('$')
-            print(self.data_env)
-            print(self.data_env.shape)
             self.obs = self.data_env[:, (self.max_usable_row - self.n_features) : ].reshape((len(self.TI_train.currency_pairs) * self.start_day,))
             self.obs_time = self.data_time[(self.max_usable_row - self.n_features) : ]
 
