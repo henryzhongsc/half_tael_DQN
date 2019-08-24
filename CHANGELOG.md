@@ -18,12 +18,14 @@
 ---
 ## Meeting
 
-### 2019-08-17 | Scrum #10 | Henry (end-of-internship review).
+### 2019-08-25 | Scrum #10 | Henry (end-of-internship review).
 * **Henry**
-    1. Release [half_tael_DQN v3.0: Virtual Trading Platform with DQN v3.0](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
+    1. ✅ Release [half_tael_DQN v3.0: Virtual Trading Platform with DQN v3.0](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
         * Accomplished everything in the [related milestone](https://github.com/choH/half_tael_DQN/milestone/5).
-    * Release [half_tael_v4.0: Textual output + Improved cohesion + Documentations](https://github.com/choH/half_tael_DQN/releases/tag/v4.0).
+        * Works presented as [half_tael_DQN v3.0: Virtual Trading Platform with DQN v3.0](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
+    * ✅ Release [half_tael_v4.0: Textual output + Improved cohesion + Documentations](https://github.com/choH/half_tael_DQN/releases/tag/v4.0).
         * Accomplished everything in the [related milestone](https://github.com/choH/half_tael_DQN/milestone/6).
+        * Works presented as [DQN_v3.0 with improved cohesion, textual output, and documentation](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
     * Develop [Anita v2.0: Basic framework for persona-driven reward influencing interface](https://github.com/choH/half_tael_DQN/milestone/4).
 
 ### 2019-08-16 | Scrum #9 | Henry (report to Ching-Yung Lin and Oscar Tseng).
