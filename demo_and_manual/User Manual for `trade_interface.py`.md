@@ -107,7 +107,7 @@ This class method will perform a virtual trade decision you made on `_time`, exc
     ```
     		action_id:               6
     		trade_time:              2019-01-01T23:55:00.000000000Z
-    		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY (successed)
+    		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY (succeed)
     		Sell Currency Balance:   29986.708793946465 USD
     		Buy Currency Balance:    26692.75 JPY   
     ```
