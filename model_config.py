@@ -20,6 +20,7 @@ config_interval = "M1"
 # FX config.
 config_base_currency = 'USD'
 config_n_features = 300
+config_anita_switch = True
 
 
 # DQN config.
@@ -38,7 +39,6 @@ config_learn_interval = 5
 config_base_currency = 'USD'
 config_trade_log_mode = False
 #False, 'TWOENDS', 'ALL'
-config_trade_log_raw = True
 config_trade_log_to_file = True
 config_show_checkout = True
 config_show_step = False
