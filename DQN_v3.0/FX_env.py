@@ -9,21 +9,22 @@ import copy
 
 sys.path.append('.')
 import trade_interface as TI
+from anita.anita_interface import *
+from anita.anita_interface import Anita_Trait as AT
+from anita.anita_interface import Anita_Persona as AP
+
 
 
 class FX:
 
-    def __init__(self, _TI_account, _base_currency = 'USD', _n_features = 300):
-        #super(Maze, self).__init__()
+    def __init__(self, _TI_account, _base_currency = 'USD', _n_features = 300, _anita_switch = False):
+        self.anita_switch = _anita_switch
+
         self.action_space = ['hold','buy_100_A','sell_100_A','buy_100_B','sell_100_B','buy_100_C','sell_100_C']
-        # self.action_space = ['hold','buy_100','sell_100','buy_200','sell_200','buy_300','sell_300']
         self.n_actions = len(self.action_space)
-        self.n_features = _n_features # each time, we consider 300 days historical records
+        self.n_features = _n_features
         self.step_count = 0
         self.base_currency = _base_currency
-
-
-        # self.start_day = 300
 
         self.obs = []
         self.data_env = []
@@ -81,7 +82,8 @@ class FX:
 
         # ['hold','buy_100_A','sell_100_A','buy_100_B','sell_100_B','buy_100_C','sell_100_C']
         if action == 0:
-            pass
+            # pass
+            self.TI_train.execute_trade(current_time, c_list[0], c_list[1], 0)
         elif action == 1:
             self.TI_train.execute_trade(current_time, c_list[0], c_list[1], 100, _trade_unit_in_buy_currency = False)
         elif action == 2:
@@ -112,38 +114,16 @@ class FX:
             self.obs_time = self.data_time[(self.max_usable_row - self.n_features) : ]
 
 
-        # # 更新 observation 的状态
-        # if self.step_count < 4500:
-        #     #self.obs = self.data_env[(0 + self.step_count):(self.start_day + self.step_count)]
-        #
-        #     self.obs = self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)].reshape((600,))
-        #     #self.obs =np.concatenate(np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]),
-        #     #                         np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]))
-        #     #print(self.obs.shape)
-        # elif self.step_count == 4500:
-        #
-        #
-        #     temp_obs = self.data_env[:,(0+self.step_count):(self.start_day + self.step_count)]
-        #     #self.obs = self.obs =np.concatenate(np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]),
-        #     #                                    np.asarray(self.data_env[(0+self.step_count):(self.start_day + self.step_count)]))
-        #     print('^')
-        #     print(temp_obs.shape)
-        #     print(self.data_env[:, -1])
-        #     print(self.data_env[: , -1].shape)
-        #     temp_obs = np.append(temp_obs, self.data_env[:, -1])
-        #     # temp_obs = np.append(temp_obs, self.data_env[-1])
-        #     print('*')
-        #     print(len(temp_obs))
-        #     print(temp_obs.shape)
-        #     temp_obs.reshape((600,))
-        #     self.obs = temp_obs
-            #print
-            #print(self.obs)
+        reward, done = self.eval_reward(current_time)
 
-        # reward function
+        s_ = np.asarray(self.obs)
+        return s_, reward, done, self.TI_train, self.data_time[-1]
+
+
+    def eval_reward(self, _current_time):
         initial_checkout_balance = self.TI_initial.currency_balance[self.base_currency]
         TI_checkout = copy.deepcopy(self.TI_train)
-        TI_checkout.checkout_all_in(current_time, self.base_currency)
+        TI_checkout.checkout_all_in(_current_time, self.base_currency)
         current_checkout_balance = TI_checkout.currency_balance[self.base_currency]
 
         if (current_checkout_balance > initial_checkout_balance) & (self.step_count == self.max_usable_row - self.n_features):
@@ -156,8 +136,15 @@ class FX:
             reward = 0
             done = False
 
+        final_reward = reward
+        if self.anita_switch == True and reward != 0:
+            TI_AT = copy.deepcopy(self.TI_train)
+            AT_reward = AT(TI_AT, self.n_features, self.n_actions)
+            AP_reward = AP('Anita_placeholder_avatar', AT_reward)
+            final_reward = reward + AP_reward.anita_reward
+            print('$$ Final reward ({}) = DQN reward ({}) + Anita reward ({}) $$'.format(final_reward, reward, AP_reward.anita_reward))
 
-        s_ = np.asarray(self.obs)
+        return final_reward, done
 
-        return s_, reward, done, self.TI_train, self.data_time[-1]
+
 
