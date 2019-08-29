@@ -19,7 +19,6 @@ def run_model(_train_episode = 100,
                 _learn_interval = 5,
                 _base_currency = 'USD',
                 _trade_log_mode = 'NONE',
-                _trade_log_raw = False,
                 _trade_log_to_file = False,
                 _show_checkout = True,
                 _show_step = True):
@@ -57,7 +56,7 @@ def run_model(_train_episode = 100,
                     pass
                 elif _trade_log_mode == 'ALL':
                     TI_end_balance.trade_log_review(raw_flag = _trade_log_raw)
-                elif _trade_log_raw == 'TWOENDS':
+                elif _trade_log_mode == 'TWOENDS':
                     TI_end.trade_log_review(tar_action_id = 0, raw_flag = _trade_log_raw)
                     TI_end.trade_log_review(tar_action_id = 'LAST', raw_flag = _trade_log_raw)
                 else:
@@ -66,16 +65,17 @@ def run_model(_train_episode = 100,
 
                 if _trade_log_to_file:
                     trade_log_file_name = './logs/trade_logs/' + str(train_name)
-                    if _trade_log_raw == False:
-                        log_file = open(trade_log_file_name + '.txt', 'w+')
-                        with contextlib.redirect_stdout(log_file):
-                            TI_end.trade_log_review()
-                        print("### READABLE trade_log of {} successfully exported to: ###\n\t\t{}".format(str(train_name), trade_log_file_name + '.txt'))
-                    else:
-                        log_file = open(trade_log_file_name + '.json', 'w+')
-                        json.dump(TI_end.trade_log, log_file, indent = 4)
-                        print("### RAW trade_log of {} successfully exported to: ###\n\t\t{}".format(str(train_name), trade_log_file_name + '.json'))
-                    log_file.close()
+
+                    log_file_readable = open(trade_log_file_name + '.txt', 'w+')
+                    with contextlib.redirect_stdout(log_file_readable):
+                        TI_end.trade_log_review()
+                    print("### READABLE trade_log of {} successfully exported to: ###\n\t\t{}".format(str(train_name), trade_log_file_name + '.txt'))
+                    log_file_readable.close()
+
+                    log_file_raw = open(trade_log_file_name + '.json', 'w+')
+                    json.dump(TI_end.trade_log, log_file_raw, indent = 4)
+                    print("### RAW trade_log of {} successfully exported to: ###\n\t\t{}".format(str(train_name), trade_log_file_name + '.json'))
+                    log_file_raw.close()
 
                 break
             step += 1
@@ -87,7 +87,8 @@ if __name__ == "__main__":
 
     env = FX(TI_train,
             _base_currency = config_base_currency,
-            _n_features = config_n_features)
+            _n_features = config_n_features,
+            _anita_switch = config_anita_switch)
 
     DQN = DQN(len(env.TI_initial.currency_pairs),
                 env.n_actions,
@@ -104,7 +105,6 @@ if __name__ == "__main__":
                 _learn_interval = config_learn_interval,
                 _base_currency = config_base_currency,
                 _trade_log_mode = config_trade_log_mode,
-                _trade_log_raw = config_trade_log_raw,
                 _trade_log_to_file = config_trade_log_to_file,
                 _show_checkout = config_show_checkout,
                 _show_step = config_show_step)
