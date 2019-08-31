@@ -200,8 +200,14 @@
 ---
 ## Development Journal
 
-### 2019-08-31 | half_tael_DQN v4.0 release | Henry.
-* Placeholder
+### 2019-08-31 | half_tael_DQN v4.5 release | Henry.
+* Goals
+    * Update [`CHANGELOG.md`](https://github.com/choH/half_tael_DQN/blob/master/CHANGELOG.md) and [🔰 User Manual for `anita_interface.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/User%20Manual%20for%20anita_interface.py.md).
+    * Remove (and regenerate to discard the published one) OANDA credential.
+    * Fix command line instruction mistake in [README.md](https://github.com/choH/half_tael_DQN/blob/master/README.md) *Run* section.
+    * Update [`README.md`](https://github.com/choH/half_tael_DQN/blob/master/README.md) with information regarding anita_v2.0.
+    * Bugfix log output directory — and also raw_data folder? — not exist issue (with `mkdir`).
+    * Provide a `Trade_Interface config` input with longer time duration.
 
 ### 2019-08-29 | anita_v2.0 code portion done | Henry.
 * Coded [anita_v2.0](https://github.com/choH/half_tael_DQN/blob/anita_v2.0/anita/anita_interface.py).
