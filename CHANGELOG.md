@@ -18,6 +18,11 @@
 ---
 ## Meeting
 
+### 2019-08-31 | Scrum #11 | Henry (final delivery for Graphen.ai).
+* ✅ Develop [Anita v2.0: Basic framework for persona-driven reward influencing interface](https://github.com/choH/half_tael_DQN/milestone/4).
+* Provide and fix all documentation properly.
+* Release half_tael_v4.5.
+
 ### 2019-08-25 | Scrum #10 | Henry (end-of-internship review).
 * **Henry**
     1. ✅ Release [half_tael_DQN v3.0: Virtual Trading Platform with DQN v3.0](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
@@ -26,7 +31,7 @@
     * ✅ Release [half_tael_v4.0: Textual output + Improved cohesion + Documentations](https://github.com/choH/half_tael_DQN/releases/tag/v4.0).
         * Accomplished everything in the [related milestone](https://github.com/choH/half_tael_DQN/milestone/6).
         * Works presented as [DQN_v3.0 with improved cohesion, textual output, and documentation](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
-    * Develop [Anita v2.0: Basic framework for persona-driven reward influencing interface](https://github.com/choH/half_tael_DQN/milestone/4).
+    * ❌ 🚧 Develop [Anita v2.0: Basic framework for persona-driven reward influencing interface](https://github.com/choH/half_tael_DQN/milestone/4).
 
 ### 2019-08-16 | Scrum #9 | Henry (report to Ching-Yung Lin and Oscar Tseng).
 * **Henry**
@@ -194,6 +199,17 @@
 
 ---
 ## Development Journal
+
+### 2019-08-31 | half_tael_DQN v4.0 release | Henry.
+* Placeholder
+
+### 2019-08-29 | anita_v2.0 code portion done | Henry.
+* Coded [anita_v2.0](https://github.com/choH/half_tael_DQN/blob/anita_v2.0/anita/anita_interface.py).
+    * Code mainly delivered as commit [`c4aece1`](https://github.com/choH/half_tael_DQN/commit/c4aece134ae937f96fb0ca64faa3736ca76dd4a6) and [`e9fdf04`](https://github.com/choH/half_tael_DQN/commit/e9fdf042078ad0a3cc653cac712723458868e089).
+    * A "first-draft" [user manual for `anita_interface.py`](https://github.com/choH/half_tael_DQN/blob/anita_v2.0/demo_and_manual/User%20Manual%20for%20anita_interface.py.md) is also written by [`f73a207`](https://github.com/choH/half_tael_DQN/commit/f73a207e5f0e8ff7db64bcdbdd4bb66a9885e7f5)
+### 2019-08-25 | half_tael_DQN v4.0 release | Henry.
+* Check [half_tael_DQN v4.0: DQN_v3.0 with improved cohesion, textual output, and documentation](https://github.com/choH/half_tael_DQN/releases/tag/v4.0).
+    * Most effort spent into documenting the project.
 
 ### 2019-08-16 | half_tael_DQN v3.0 release | Henry.
 * Check [half_tael_v3.0: Refactor DQN_v2.5 to work with virtual trading platform](https://github.com/choH/half_tael_DQN/milestone/5?closed=1).
