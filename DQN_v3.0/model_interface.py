@@ -64,7 +64,10 @@ def run_model(_train_episode = 100,
                     return -1
 
                 if _trade_log_to_file:
-                    trade_log_file_name = './logs/trade_logs/' + str(train_name)
+                    trade_log_base_dir = './logs/trade_logs/'
+                    if not os.path.exists(trade_log_base_dir):
+                        os.makedirs(trade_log_base_dir)
+                    trade_log_file_name = trade_log_base_dir + str(train_name)
 
                     log_file_readable = open(trade_log_file_name + '.txt', 'w+')
                     with contextlib.redirect_stdout(log_file_readable):
