@@ -14,6 +14,8 @@ config_interval = "D"
 # config_to = "2018-04-16T11:10:00Z" # 1000 rows
 # config_interval = "M1"
 
+config_output_arena_csv = True
+config_output_raw_csv = False
 ###########################################################################################
 
 

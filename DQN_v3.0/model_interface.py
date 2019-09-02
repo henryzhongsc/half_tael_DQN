@@ -86,7 +86,7 @@ def run_model(_train_episode = 100,
 
 if __name__ == "__main__":
 
-    TI_train = TI.Trade_Interface(config_account_name, config_currency_balance, config_from, config_to, config_interval)
+    TI_train = TI.Trade_Interface(config_account_name, config_currency_balance, config_from, config_to, config_interval, config_output_arena_csv, config_output_raw_csv)
 
     env = FX(TI_train,
             _base_currency = config_base_currency,

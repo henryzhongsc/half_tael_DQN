@@ -64,7 +64,7 @@ def execution_report(decorated):
 
 class Trade_Interface:
     @account_input_report
-    def __init__(self, _account_name, _currency_balance, _from_time, _to_time, _request_interval, _arena_folder = None, _output_arena_csv = True, _output_raw_csv = False):
+    def __init__(self, _account_name, _currency_balance, _from_time, _to_time, _request_interval, _output_arena_csv = True, _output_raw_csv = False):
         self.account_name = _account_name
         self.currency_balance = _currency_balance
         self.from_time = _from_time
@@ -150,6 +150,8 @@ class Trade_Interface:
 
         arena_filename = arena_csv_export_dir + '_'.join(self.all_currency_list) + '_' + self.from_time[0:19] + '_' + self.to_time[0:19] + '_' + self.request_interval + '.csv'
         if self.output_arena_csv:
+            if not os.path.exists(arena_csv_export_dir):
+                os.makedirs(arena_csv_export_dir)
             arena_df.to_csv(arena_filename, index = None, header = True)
 
 

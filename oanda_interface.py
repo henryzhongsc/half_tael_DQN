@@ -10,6 +10,7 @@ from oandapyV20.contrib.factories import InstrumentsCandlesFactory
 
 import time
 import datetime
+import os
 import pandas as pd
 import numpy as np
 
@@ -54,6 +55,8 @@ class Oanda_Interface:
         df = existed_df.rename(index=str, columns={"mid.o": "open_price", "mid.h": "high_price", "mid.l": "low_price", "mid.c": "close_price"})
         df = df.reindex(columns=['time', 'open_price', 'high_price', 'low_price', 'close_price', 'complete', 'volume'])
 
+        if not os.path.exists(two_currency_csv_export_dir):
+            os.makedirs(two_currency_csv_export_dir)
         csv_filename = two_currency_csv_export_dir + _currency_pair + '_' + _from[0:19] + '_' + _to[0:19] + '_' + _interval + '.csv'
         if close_price_only:
             df = df.drop(['open_price', 'high_price', 'low_price', 'complete'], axis =1)
