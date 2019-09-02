@@ -142,7 +142,15 @@ class Trade_Interface:
 
             currency_ORs.append(OR_temp)
 
-        arena_df = pd.concat((i.record_df.set_index('time') for i in currency_ORs), axis=1, join='outer', sort=True).reset_index()
+        # for i in currency_ORs:
+        #     print('{} has unique index: {}'.format(i.currency_pair, i.record_df.set_index('time').index.is_unique))
+        #     print(i.record_df.set_index('time')[i.record_df.set_index('time').index.duplicated()])
+
+        currency_ORs_dfs = [i.record_df.set_index('time') for i in currency_ORs]
+        currency_ORs_dfs = [i.loc[~i.index.duplicated(keep='first')] for i in currency_ORs_dfs]
+
+
+        arena_df = pd.concat([i for i in currency_ORs_dfs], axis=1, join='outer', sort=True).reset_index()
         arena_df = arena_df.rename(index=str, columns={'index': 'time'})
         arena_df = arena_df.fillna(method='ffill')
         # print("NaN value within arena_df: {}".format(arena_df.isnull().sum().sum()))
