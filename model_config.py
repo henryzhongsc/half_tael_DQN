@@ -1,5 +1,5 @@
 ###########################################################################################
-# Trade_Interface config.
+# trade_interface config.
 
 config_account_name = 'DQN_v3.0_4c_55_month'
 config_currency_balance = {'USD': 100000, 'EUR': 100000, 'GBP': 100000, 'JPY': 100000}
@@ -14,18 +14,20 @@ config_interval = "D"
 # config_to = "2018-04-16T11:10:00Z" # 1000 rows
 # config_interval = "M1"
 
+
 config_output_arena_csv = True
 config_output_raw_csv = False
+
 ###########################################################################################
 
 
-# FX config.
+# FX_env config.
 config_base_currency = 'USD'
 config_n_features = 300
-config_anita_switch = True
+config_anita_switch = False
 
 
-# DQN config.
+# RL_brain config.
 config_learning_rate = 0.01
 config_reward_decay = 0.9
 config_e_greedy = 0.9
@@ -34,7 +36,7 @@ config_memory_size = 2000
 config_output_graph = False
 
 
-# run_model() config.
+# model_interface config.
 config_train_episode = 2
 config_learn_threshold = 200
 config_learn_interval = 5
