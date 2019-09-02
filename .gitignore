@@ -1,3 +1,6 @@
+# Ignore Oanda Config info
+oanda_config.py
+
 # Ignored folders
 logs/*
 BreakoutNoFrameskip-v4/*
