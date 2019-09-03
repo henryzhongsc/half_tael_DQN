@@ -18,20 +18,22 @@
 ---
 ## Meeting
 
-### 2019-08-31 | Scrum #11 | Henry (final delivery for Graphen.ai).
-* ✅ Develop [Anita v2.0: Basic framework for persona-driven reward influencing interface](https://github.com/choH/half_tael_DQN/milestone/4).
-* Provide and fix all documentation properly.
-* Release half_tael_v4.5.
+### 2019-09-02 | Scrum #11 | Henry (final delivery for Graphen.ai).\
+* **Henry**
+    1. ✅ Developed [Anita v2.0: Basic framework for persona-driven reward influencing interface](https://github.com/choH/half_tael_DQN/milestone/4).
+    2. ✅ Accomplished everything in the [half_tael_v4.5: Refactor to work with Anita_v2.0 + Proper documentation](https://github.com/choH/half_tael_DQN/milestone/8).
+    3. ✅ Released [half_tael_DQN v4.5](https://github.com/choH/half_tael_DQN/releases/tag/v4.5).
+
 
 ### 2019-08-25 | Scrum #10 | Henry (end-of-internship review).
 * **Henry**
     1. ✅ Release [half_tael_DQN v3.0: Virtual Trading Platform with DQN v3.0](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
         * Accomplished everything in the [related milestone](https://github.com/choH/half_tael_DQN/milestone/5).
         * Works presented as [half_tael_DQN v3.0: Virtual Trading Platform with DQN v3.0](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
-    * ✅ Release [half_tael_v4.0: Textual output + Improved cohesion + Documentations](https://github.com/choH/half_tael_DQN/releases/tag/v4.0).
+    2. ✅ Release [half_tael_v4.0: Textual output + Improved cohesion + Documentations](https://github.com/choH/half_tael_DQN/releases/tag/v4.0).
         * Accomplished everything in the [related milestone](https://github.com/choH/half_tael_DQN/milestone/6).
         * Works presented as [DQN_v3.0 with improved cohesion, textual output, and documentation](https://github.com/choH/half_tael_DQN/releases/tag/v3.0).
-    * ❌ 🚧 Develop [Anita v2.0: Basic framework for persona-driven reward influencing interface](https://github.com/choH/half_tael_DQN/milestone/4).
+    3. ❌ 🚧 Develop [Anita v2.0: Basic framework for persona   -driven reward influencing interface](https://github.com/choH/half_tael_DQN/milestone/4).
 
 ### 2019-08-16 | Scrum #9 | Henry (report to Ching-Yung Lin and Oscar Tseng).
 * **Henry**
@@ -43,15 +45,15 @@
     1. ✅ 🚧 Refactor half_tael_v2.0 to v3.0, in compliant with DQN_v2.5 (multiple currency model working with the trading platform).
         * Delivered a runnable demo with certain freedom on params (`3` price info at the same timestamp.
         * Bugfix required on [cost (loss) graph converges way too quick and smooth.](https://github.com/choH/half_tael_DQN/issues/15).
-    * ~~Anita v2.0~~
+    2. ~~Anita v2.0~~
         * Postponed as legacy Anita is unusable, check **2019-08-08 | Legacy Anita plot hole discovered | Henry** in section **Development Journal** for details.
 
 ### 2019-08-12 | Scrum #7 | Henry, Steven.
 * **Henry**
     1. ✅ Test the reward design (for Anita).
-    * ~~Anita v2.0~~
+    2. ~~Anita v2.0~~
         * Postponed due to prioritized on debugging DQN v2.5.
-    * ✅ DQN v2.5: Debugged and partially adjusted the CNN + DQN model which supports multiple (>2) currencies based on Steven X.'s design ([ef6e716](https://github.com/choH/half_tael_DQN/commit/ef6e716af132541a0720bcb456f602c4f13cba06)). Presented a runnable demo only on [a specific dummy data set](https://github.com/choH/half_tael_DQN/tree/v2.0/DQV_v2.5/EUR_GBP.csv) -- Henry.
+    3. ✅ DQN v2.5: Debugged and partially adjusted the CNN + DQN model which supports multiple (>2) currencies based on Steven X.'s design ([ef6e716](https://github.com/choH/half_tael_DQN/commit/ef6e716af132541a0720bcb456f602c4f13cba06)). Presented a runnable demo only on [a specific dummy data set](https://github.com/choH/half_tael_DQN/tree/v2.0/DQV_v2.5/EUR_GBP.csv) -- Henry.
         * Main works presented as [f7259b3](https://github.com/choH/half_tael_DQN/commit/f7259b3eff2cf9e0d9886ea613d87bee958bdb68). Stored as [DQN_v2.5](https://github.com/choH/half_tael_DQN/tree/v2.0/master/DQN_v2.5).
 
 * **Steven**
@@ -200,14 +202,14 @@
 ---
 ## Development Journal
 
-### 2019-08-31 | half_tael_DQN v4.5 release | Henry.
-* Goals
-    * Update [`CHANGELOG.md`](https://github.com/choH/half_tael_DQN/blob/master/CHANGELOG.md) and [🔰 User Manual for `anita_interface.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/User%20Manual%20for%20anita_interface.py.md).
-    * Remove (and regenerate to discard the published one) OANDA credential.
-    * Fix command line instruction mistake in [README.md](https://github.com/choH/half_tael_DQN/blob/master/README.md) *Run* section.
-    * Update [`README.md`](https://github.com/choH/half_tael_DQN/blob/master/README.md) with information regarding anita_v2.0.
-    * Bugfix log output directory — and also raw_data folder? — not exist issue (with `mkdir`).
-    * Provide a `Trade_Interface config` input with longer time duration.
+### 2019-09-02 | half_tael_DQN v4.5 release | Henry.
+* Update [`CHANGELOG.md`](https://github.com/choH/half_tael_DQN/blob/master/CHANGELOG.md) and [🔰 User Manual for `anita_interface.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/User%20Manual%20for%20anita_interface.py.md).
+* Remove (and regenerate to discard the published one) OANDA credential.
+* Fix command line instruction mistake in [README.md](https://github.com/choH/half_tael_DQN/blob/master/README.md) *Run* section.
+* Update [`README.md`](https://github.com/choH/half_tael_DQN/blob/master/README.md) with information regarding anita_v2.0.
+* Bugfix log output directory — and also raw_data folder? — not exist issue (with `mkdir`).
+* Provide a `Trade_Interface config` input with longer time duration.
+* Generate dynamic `action_list` base on input account currencies (`self.TI_train.all_currency_list`).
 
 ### 2019-08-29 | anita_v2.0 code portion done | Henry.
 * Coded [anita_v2.0](https://github.com/choH/half_tael_DQN/blob/anita_v2.0/anita/anita_interface.py).
