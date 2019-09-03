@@ -1,18 +1,18 @@
 ###########################################################################################
 # trade_interface config.
 
-config_account_name = 'DQN_v3.0_4c_55_month'
-config_currency_balance = {'USD': 100000, 'EUR': 100000, 'GBP': 100000, 'JPY': 100000}
-config_from = "2015-01-01T00:00:00Z"
-config_to = "2019-08-01T00:00:00Z" # 1202 rows
-config_interval = "D"
-
-
-# config_account_name = 'DQN_v3.0_4c_1000_row'
+# config_account_name = 'DQN_v3.0_4c_55_month'
 # config_currency_balance = {'USD': 100000, 'EUR': 100000, 'GBP': 100000, 'JPY': 100000}
-# config_from = "2018-04-13T18:30:00Z"
-# config_to = "2018-04-16T11:10:00Z" # 1000 rows
-# config_interval = "M1"
+# config_from = "2015-01-01T00:00:00Z"
+# config_to = "2019-08-01T00:00:00Z" # 1202 rows
+# config_interval = "D"
+
+
+config_account_name = 'DQN_v3.0_4c_1000_row'
+config_currency_balance = {'USD': 100000, 'EUR': 100000, 'GBP': 100000, 'JPY': 100000}
+config_from = "2018-04-13T18:30:00Z"
+config_to = "2018-04-16T11:10:00Z" # 1000 rows
+config_interval = "M1"
 
 
 config_output_arena_csv = True
