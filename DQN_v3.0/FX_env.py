@@ -3,6 +3,7 @@ import numpy as np
 import time
 import sys
 import copy
+import itertools
 
 # from os.path import dirname, abspath
 # file_parent_dir = dirname(dirname(abspath(__file__)))
@@ -18,10 +19,11 @@ from anita.anita_interface import Anita_Persona as AP
 class FX:
 
     def __init__(self, _TI_account, _base_currency = 'USD', _n_features = 300, _anita_switch = False):
-        self.anita_switch = _anita_switch
 
-        self.action_space = ['hold','buy_100_A','sell_100_A','buy_100_B','sell_100_B','buy_100_C','sell_100_C']
-        self.n_actions = len(self.action_space)
+        self.TI_train = copy.deepcopy(_TI_account)
+        self.TI_initial = copy.deepcopy(_TI_account)
+
+        self.n_actions = len(self.TI_initial.currency_pairs) * 2 + 1
         self.n_features = _n_features
         self.step_count = 0
         self.base_currency = _base_currency
@@ -29,8 +31,7 @@ class FX:
         self.obs = []
         self.data_env = []
 
-        self.TI_train = copy.deepcopy(_TI_account)
-        self.TI_initial = copy.deepcopy(_TI_account)
+        self.anita_switch = _anita_switch
 
 
         df = self.TI_initial.arena.record_df
@@ -80,27 +81,22 @@ class FX:
         c_list.remove(self.base_currency)
         c_list.insert(0, self.base_currency)
 
-        # ['hold','buy_100_A','sell_100_A','buy_100_B','sell_100_B','buy_100_C','sell_100_C']
-        if action == 0:
-            # pass
-            self.TI_train.execute_trade(current_time, c_list[0], c_list[1], 0)
-        elif action == 1:
-            self.TI_train.execute_trade(current_time, c_list[0], c_list[1], 100, _trade_unit_in_buy_currency = False)
-        elif action == 2:
-            self.TI_train.execute_trade(current_time, c_list[1], c_list[0], 100)
-        elif action == 3:
-            self.TI_train.execute_trade(current_time, c_list[0], c_list[2], 100, _trade_unit_in_buy_currency = False)
-        elif action == 4:
-            self.TI_train.execute_trade(current_time, c_list[2], c_list[0], 100)
-        elif action == 5:
-            self.TI_train.execute_trade(current_time, c_list[1], c_list[2], 100, _trade_unit_in_buy_currency = False)
-        elif action == 6:
-            self.TI_train.execute_trade(current_time, c_list[2], c_list[1], 100)
+        c_tuples = list(itertools.combinations(c_list, 2))
+        action_list = []
+        for i in c_tuples:
+            action_list.append(i)
+            action_list.append(i[::-1])
+
+        if action % 2 == 0 and action <= self.n_actions - 2:
+            self.TI_train.execute_trade(current_time, action_list[action][0], action_list[action][1], 100)
+        elif action % 2 != 0 and action <= self.n_actions - 2:
+            self.TI_train.execute_trade(current_time, action_list[action][0], action_list[action][1], 100, _trade_unit_in_buy_currency = False)
+        elif action == self.n_actions - 1:
+            self.TI_train.execute_trade(current_time, action_list[0][0], action_list[0][1], 0)
         else:
             print("Invalid action input = {}".format(action))
             return -1
         self.step_count += 1
-
 
         if self.step_count < self.max_usable_row - self.n_features:
             if print_step == True:
