@@ -2,7 +2,7 @@
 
 > This file serves as the user manual for interacting with [`trade_interface`](https://github.com/choH/half_tael_DQN/blob/master/trade_interface.py). By convention, we name the file contains such interactions as `train_interface_SomethingReasonable.py`, e.g. [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/train_interface_demo.py).
 >
-> 📌 v1.0 | 2019.07.24 | Henry Zhong
+> 📌 v2.0 | 2019-09-02 | Henry Zhong
 
 ---
 ## 1. What does [`trade_interface`](https://github.com/choH/half_tael_DQN/blob/master/trade_interface.py) do?
@@ -19,27 +19,38 @@ import copy
 ## 2. Supported Methods
 
 
-### 2.1. Trade_Interface(_account_name, _currency_balance, _from, _to, _interval)
+### 2.1. Trade_Interface(self, _account_name, _currency_balance, _from_time, _to_time, _request_interval, _output_arena_csv = True, _output_raw_csv = False)
 * **`_account_name`**:
     * `str`
     * a descriptive name of this account, should be distinguishable from other accounts.
 * **`_currency_balance`**:
     * `dict`, `k = str` and `v = int/float`.
     * Forms like `{'USD': 30000, 'JPY': 30000, 'GBP': 30000}`. Where there must be `currency_pair` — checkout *Section 5.1. Supported `currenct_pair`s* —  between every two keys within dict.
-* **`_from`**
+* **`_from_time`**
     * `str`
     * Forms like `"YYYY-MM-DDTHH:MM:SSZ"`, setting the starting time point.
-* **`_to`**
+* **`_to_time`**
     * `str`
     * Forms like `"YYYY-MM-DDTHH:MM:SSZ"`, setting the ending time point.
     * Must be later than `_from` chronologically.
-* **`_interval`**
+* **`_request_interval`**
     * `str`
     * Must be supported in *Section 5.2. Supported `request_interval`s*.
+* **`_output_arena_csv`**
+    * Keyword argument, default to `True`.
+    * `True`: Output arena DataFrame (joint price data between all currencies) as CSV files to [./arena_data/](https://github.com/choH/half_tael_DQN/tree/master/arena_data) folder.
+        * If the output directory does not exist, make such directory.
+    * `False`: Do not output any arena_data CSV file.
+*  **`_output_raw_csv`**
+    * Keyword argument, default to `False`.
+     * `True`: Output arena DataFrame (joint price data between all currencies) as CSV files to `./raw_data/` folder (ignore by [`.gitignore`](https://github.com/choH/half_tael_DQN/blob/master/.gitignore)).
+        * If the output directory does not exist, make such directory.
+    * `False`: Do not output any raw_data CSV file.
 
 This class method will build a virtual account with access to trading record (defined by `_from`, `_to`, `_interval`, and `k` in `_currency_balance`) you specified. It will also register your account name and balance as stated in `_account_name` and `_currency_balance` respectively.
 
-### 2.2. execute_trade(_time, _sell_currency, _buy_currency, _trade_unit, _trade_unit_in_buy_currency = True, review_checkout_only = False)
+### 2.2. execute_trade(_time, _sell_currency, _buy_currency, _trade_unit, _trade_unit_in_buy_currency = True, review_checkout_only = False, balance_protection = True)
+
 * **`_time`**
     * `str`
     * Forms like `"YYYY-MM-DDTHH:MM:SSZ"`, setting the execution time of this specific trade.
@@ -107,7 +118,7 @@ This class method will perform a virtual trade decision you made on `_time`, exc
     ```
     		action_id:               6
     		trade_time:              2019-01-01T23:55:00.000000000Z
-    		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY (succeed)
+    		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY (succeeded)
     		Sell Currency Balance:   29986.708793946465 USD
     		Buy Currency Balance:    26692.75 JPY   
     ```
@@ -217,7 +228,7 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 ### 5.3. Sample Output of [`train_interface_demo.py`](https://github.com/choH/half_tael_DQN/blob/master/demo_and_manual/train_interface_demo.py).
 
 ```
-## The requested record has been successfully exported. ##
+## The requested record has been successfully retrieved. ##
 	file path:          ./raw_data/USD_JPY_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
 	currency pair(s):   USD_JPY
 	from:               2019-01-01T00:00:00Z
@@ -226,7 +237,7 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 	total rows:         90
 
 
-## The requested record has been successfully exported. ##
+## The requested record has been successfully retrieved. ##
 	file path:          ./raw_data/GBP_USD_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
 	currency pair(s):   GBP_USD
 	from:               2019-01-01T00:00:00Z
@@ -235,7 +246,7 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 	total rows:         98
 
 
-## The requested record has been successfully exported. ##
+## The requested record has been successfully retrieved. ##
 	file path:          ./raw_data/GBP_JPY_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
 	currency pair(s):   GBP_JPY
 	from:               2019-01-01T00:00:00Z
@@ -243,7 +254,6 @@ e.g. `_currency_pair = {'USD': 30000, 'JPY': 30000, 'GBP': 30000}` requires `USD
 	interval:           M1
 	total rows:         117
 
-NaN value within arena_df: 0
 
 ### The requested ARENA record has been successfully exported. ###
 	file path:          ./arena_data/USD_JPY_GBP_2019-01-01T00:00:00_2019-01-02T00:00:00_M1.csv
@@ -252,6 +262,7 @@ NaN value within arena_df: 0
 	to:                 2019-01-02T00:00:00Z
 	interval:           M1
 	total rows:         118
+
 
 ##### Displaying information regarding account "Initial_Checkout_Review". #####
 
@@ -272,49 +283,49 @@ NaN value within arena_df: 0
 
 		action_id:               0
 		trade_time:              2019-01-01T22:30:00.000000000Z
-		Trade Decision:          Sold 12.744200000000001 USD for 10 GBP (successed)
+		Trade Decision:          Sold 12.744200000000001 USD for 10 GBP (succeeded)
 		Sell Currency Balance:   29987.2558 USD
 		Buy Currency Balance:    30010 GBP
 
 
 		action_id:               1
 		trade_time:              2019-01-01T22:41:00.000000000Z
-		Trade Decision:          Sold 15.69242840329541 GBP for 20 USD (successed)
+		Trade Decision:          Sold 15.69242840329541 GBP for 20 USD (succeeded)
 		Sell Currency Balance:   29994.307571596706 GBP
 		Buy Currency Balance:    30007.2558 USD
 
 
 		action_id:               2
 		trade_time:              2019-01-01T22:55:00.000000000Z
-		Trade Decision:          Sold 0.21462297896694807 GBP for 30 JPY (successed)
+		Trade Decision:          Sold 0.21462297896694807 GBP for 30 JPY (succeeded)
 		Sell Currency Balance:   29994.092948617737 GBP
 		Buy Currency Balance:    30030 JPY
 
 
 		action_id:               3
 		trade_time:              2019-01-01T22:59:00.000000000Z
-		Trade Decision:          Sold 5591.040000000001 JPY for 40 GBP (successed)
+		Trade Decision:          Sold 5591.040000000001 JPY for 40 GBP (succeeded)
 		Sell Currency Balance:   24438.96 JPY
 		Buy Currency Balance:    30034.092948617737 GBP
 
 
 		action_id:               4
 		trade_time:              2019-01-01T23:02:00.000000000Z
-		Trade Decision:          Sold 5482.9 JPY for 50 USD (successed)
+		Trade Decision:          Sold 5482.9 JPY for 50 USD (succeeded)
 		Sell Currency Balance:   18956.059999999998 JPY
 		Buy Currency Balance:    30057.2558 USD
 
 
 		action_id:               5
 		trade_time:              2019-01-01T23:05:00.000000000Z
-		Trade Decision:          Sold 0.547006053533659 USD for 60 JPY (successed)
+		Trade Decision:          Sold 0.547006053533659 USD for 60 JPY (succeeded)
 		Sell Currency Balance:   30056.708793946465 USD
 		Buy Currency Balance:    19016.059999999998 JPY
 
 
 		action_id:               6
 		trade_time:              2019-01-01T23:55:00.000000000Z
-		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY (successed)
+		Trade Decision:          Sold 70 USD for 7676.6900000000005 JPY (succeeded)
 		Sell Currency Balance:   29986.708793946465 USD
 		Buy Currency Balance:    26692.75 JPY
 
