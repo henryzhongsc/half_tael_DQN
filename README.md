@@ -25,15 +25,38 @@ half_tale_DQN is composite by three main blocks of code:
     * Constituted by
     * To operate this evaluator, check
 
-## Run
+## 3. Run
 
-Identify a version of DQN model you'd like to run with, go into such folder (e.g. [./DQN_v3.0](https://github.com/choH/half_tael_DQN/tree/master/DQN_v3.0)), locate the `train_interace.py` file, then run against it within your IDE.
+1. Register a *fxTrade Practice* account at [OANDA](https://www1.oanda.com/register/#/sign-up/demo). Then look up your `account_number` at [Manage Funds --> My Fund --> Account Summary --> v20 Account Number](https://www.oanda.com/demo-account/funding/); and obtain your OANDA's API token by visiting [Manage API Access --> Generate/Revoke](https://www.oanda.com/demo-account/tpa/personal_token).
 
-Or `cd` into the desired model folder with terminal, then:
+2. Edit [`oanda_config.py`](https://github.com/choH/half_tael_DQN/blob/master/oanda_config.py) by assigning your account number and API token to `my_account_id` and `my_access_token` respectively (as `str`).
 
+
+1. Edit [`model_config.py`](https://github.com/choH/half_tael_DQN/blob/master/model_config.py) with the desired parameters you'd like.
+
+
+1. You can either identify a version of DQN model you'd like to run with, go into such folder (e.g. [./DQN_v3.0](https://github.com/choH/half_tael_DQN/tree/master/DQN_v3.0)), locate the `train_interace.py` file, then run against it within your IDE.
+
+    Or in terminal, `cd` into the root folder of `half_tael_DQN`, identify the folder which contains your desired version of model, then:
+    ```
+    python3 model_version_folder/train_interace.py
+    ```
+
+    As for the example of [./DQN_v3.0](https://github.com/choH/half_tael_DQN/tree/master/DQN_v3.0), the command should be:
+    ```
+    python3 DQN_v3.0/train_interface.py  
+    ```
+
+## 4. Contribution
+
+**To get involved, you are expected to uphold [`CONTRIBUTING.md`](https://github.com/choH/half_tael_DQN/blob/master/CONTRIBUTING.md).**
+
+If you are from [Graphen.ai](https://www.graphen.ai) and want to carry on this project, you are recommended to branch out from tag [`v4.5`](https://github.com/choH/half_tael_DQN/releases/tag/v4.5) like:
 ```
-python3 train_interace.py
+git checkout -b your_branch_name v4.5
 ```
+as later version of half_tael_DQN might detach the [Anita](https://github.com/choH/half_tael_DQN/tree/master/anita) evaluator as it is a property of Graphen.ai.
+
 
 ## Limitation
 
