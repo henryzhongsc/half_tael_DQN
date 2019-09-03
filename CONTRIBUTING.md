@@ -2,7 +2,15 @@
 
 > This file serves as the contributors' guidelines for the [half_tael_DQN](https://github.com/choH/half_tael_DQN) project.
 >
-> 📌 v2.0 | 2019.08.17 | Henry Zhong
+> 📌 v3.0 | 2019.09.02 | Henry Zhong
+
+---
+
+As you are contributing to this project, it is assumed that you have your OANDA credentials assigned in [`oanda_config.py`](https://github.com/choH/half_tael_DQN/blob/master/oanda_config.py). To protect your privacy and to keep the integrity of this repository, please do:
+```
+git update-index --assume-unchanged oanda_config.py
+```
+So that `git` will stop tracking future changes to `oanda_config.py`.
 
 ---
 ## 1. Commit Message.
