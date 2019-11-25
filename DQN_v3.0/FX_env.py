@@ -116,11 +116,10 @@ class FX:
         return s_, reward, done, self.TI_train, self.data_time[-1]
 
 
-    def eval_reward(self, _current_time):
-        initial_checkout_balance = self.TI_initial.currency_balance[self.base_currency]
-        TI_checkout = copy.deepcopy(self.TI_train)
-        TI_checkout.checkout_all_in(_current_time, self.base_currency)
-        current_checkout_balance = TI_checkout.currency_balance[self.base_currency]
+    def eval_reward(self, _current_time, _initial_time):
+        TI_initial_checkout = copy.deepcopy(self.TI_initial)
+        TI_initial_checkout.checkout_all_in(_initial_time, self.base_currency)
+        initial_checkout_balance = TI_initial_checkout.currency_balance[self.base_currency]
 
         if (current_checkout_balance > initial_checkout_balance) & (self.step_count == self.max_usable_row - self.n_features):
             reward = 1
