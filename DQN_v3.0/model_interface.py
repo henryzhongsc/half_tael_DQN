@@ -19,6 +19,7 @@ def run_model(_train_episode = 100,
                 _learn_interval = 5,
                 _base_currency = 'USD',
                 _trade_log_mode = 'NONE',
+                _trade_log_raw = False,
                 _trade_log_to_file = False,
                 _show_checkout = True,
                 _show_step = True):
@@ -47,6 +48,7 @@ def run_model(_train_episode = 100,
                 TI_end_balance = copy.deepcopy(TI_end)
                 TI_end_balance.account_name = 'End_Checkout_Review' + ' (episode: ' + str(episode+1) + ')'
                 TI_end_balance.checkout_all_in(end_time, _base_currency)
+                print('MI: Initial Time: {}; End Time: {}'.format(initial_time, end_time))
 
                 if _show_checkout == True:
                     TI_initial_balance.account_review()
@@ -108,6 +110,7 @@ if __name__ == "__main__":
                 _learn_interval = config_learn_interval,
                 _base_currency = config_base_currency,
                 _trade_log_mode = config_trade_log_mode,
+                _trade_log_raw = config_trade_log_raw,
                 _trade_log_to_file = config_trade_log_to_file,
                 _show_checkout = config_show_checkout,
                 _show_step = config_show_step)

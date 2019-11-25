@@ -56,6 +56,8 @@ class FX:
         self.data_time = list(df['time'].iloc[0 : (self.max_usable_row)])
         self.obs_time = []
 
+        print('len(self.data_env) {}; len(self.data_time) {}'.format(len(self.data_env), len(self.data_time)))
+
         self.reset()
 
 
@@ -66,11 +68,14 @@ class FX:
         self.start_day = self.n_features
         self.obs = self.data_env[:, 0 : self.start_day].reshape((len(self.TI_train.currency_pairs) * self.start_day,))
         self.obs_time = self.data_time[0 : self.start_day]
+        print('FX reset() self.obs_time[-1] {}'.format(self.obs_time[-1]))
+        self.initial_time = self.data_time[0]
 
         del self.TI_train
         self.TI_train = copy.deepcopy(self.TI_initial)
 
-        return np.asarray(self.obs), self.TI_train, self.data_time[0] #输出是一个 1D array
+        return np.asarray(self.obs), self.TI_train, self.initial_time
+
 
 
 
@@ -102,18 +107,18 @@ class FX:
             if print_step == True:
                 print('Step: {}'.format(self.step_count))
 
-            self.obs = self.data_env[:, self.step_count : (self.start_day + self.step_count)].reshape((len(self.TI_train.currency_pairs) * self.start_day,))
-            self.obs_time = self.data_time[self.step_count : (self.start_day + self.step_count)]
+            self.obs = self.data_env[:, self.step_count : (self.n_features + self.step_count)].reshape((len(self.TI_train.currency_pairs) * self.start_day,))
+            self.obs_time = self.data_time[self.step_count : (self.n_features + self.step_count)]
 
         elif self.step_count == self.max_usable_row - self.n_features:
             self.obs = self.data_env[:, (self.max_usable_row - self.n_features) : ].reshape((len(self.TI_train.currency_pairs) * self.start_day,))
             self.obs_time = self.data_time[(self.max_usable_row - self.n_features) : ]
 
 
-        reward, done = self.eval_reward(current_time)
+        reward, done = self.eval_reward(current_time, self.initial_time)
 
         s_ = np.asarray(self.obs)
-        return s_, reward, done, self.TI_train, self.data_time[-1]
+        return s_, reward, done, self.TI_train, self.obs_time[-1]
 
 
     def eval_reward(self, _current_time, _initial_time):
@@ -121,18 +126,24 @@ class FX:
         TI_initial_checkout.checkout_all_in(_initial_time, self.base_currency)
         initial_checkout_balance = TI_initial_checkout.currency_balance[self.base_currency]
 
-        if (current_checkout_balance > initial_checkout_balance) & (self.step_count == self.max_usable_row - self.n_features):
-            reward = 1
-            done = True
-        elif (current_checkout_balance <= initial_checkout_balance)  & (self.step_count == self.max_usable_row - self.n_features):
-            reward = -1
+        TI_current_checkout = copy.deepcopy(self.TI_train)
+        TI_current_checkout.checkout_all_in(_current_time, self.base_currency)
+        current_checkout_balance = TI_current_checkout.currency_balance[self.base_currency]
+
+        if self.step_count == self.max_usable_row - self.n_features:
+            reward = (current_checkout_balance / initial_checkout_balance) - 1
             done = True
         else:
             reward = 0
             done = False
 
+        # print('Reward ({}) = ( Current ({}) / Initial ({}) ) - 1       Step {}'.format(reward, current_checkout_balance, initial_checkout_balance, self.step_count))
+        if done == True:
+            print('Reward ({}) = ( Current ({}) / Initial ({}) ) - 1       Step {}'.format(reward, current_checkout_balance, initial_checkout_balance, self.step_count))
+            print('FX: Initial Time: {}; Current Time: {}'.format(_initial_time, _current_time))
+
         final_reward = reward
-        if self.anita_switch == True and reward != 0:
+        if self.anita_switch == True and done == False:
             TI_AT = copy.deepcopy(self.TI_train)
             AT_reward = AT(TI_AT, self.n_features, self.n_actions)
             AP_reward = AP('Anita_placeholder_avatar', AT_reward)
